@@ -4,6 +4,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Inter, bundled for the extension's own pages (popup, welcome) only. This stylesheet is not part of the
+  in-page overlay, and the font is not exposed to websites, so web pages and the overlay keep their own fonts.
+  Latin only (about 48 KB); other scripts use the system font. Licence: ./fonts/Inter-LICENSE.txt (SIL OFL 1.1).
+*/
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: url('./fonts/inter-latin-wght-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @layer base {
   html {
     font-family: theme('fontFamily.sans');

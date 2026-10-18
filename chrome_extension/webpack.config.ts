@@ -97,6 +97,8 @@ export default (_env: unknown, argv: { mode?: string }): Configuration[] => {
           test: /[\\/]node_modules[\\/]onnxruntime-web[\\/]/,
           parser: { importMeta: { url: false } },
         },
+        // The pages' bundled font (see src/ui/styles/pages.css): emitted as a file next to the pages' stylesheet.
+        { test: /\.woff2$/, type: 'asset/resource', generator: { filename: 'assets/[name].[contenthash:8][ext]' } },
         { test: /\.css$/, oneOf: [inlineStylesheet, { use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'] }] },
       ],
     },
