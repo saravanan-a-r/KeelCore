@@ -36,7 +36,11 @@ function themeColors() {
 
 /**
  * Declares the theme variables.
- *   scheme 'system'   `selector` follows the system's light or dark setting.
+ *   scheme 'system'   `selector` follows the system's light or dark setting,
+ *                     unless the page picks one with `data-theme="light"` or
+ *                     `data-theme="dark"` on the selector's element (the
+ *                     popup's theme setting); a page that never sets it keeps
+ *                     following the system.
  *   scheme <theme>    `selector` always uses that theme.
  * Either way, `theme-<name>` classes switch any element and its children to
  * that theme (the welcome page's hero is `theme-inverse`).
@@ -46,6 +50,7 @@ function themeVariables({ selector, scheme }) {
     if (scheme === 'system') {
       addBase({ [selector]: declarations('light') });
       addBase({ '@media (prefers-color-scheme: dark)': { [selector]: declarations('dark') } });
+      for (const name of ['light', 'dark']) addBase({ [`${selector}[data-theme="${name}"]`]: { ...declarations(name), 'color-scheme': name } });
     } else {
       addBase({ [selector]: declarations(scheme) });
     }
