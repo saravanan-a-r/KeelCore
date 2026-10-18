@@ -71,7 +71,7 @@ export interface SiteAccessOffer extends AccessOffer {
 /** Where the in-place download stands, as the card shows it. */
 export type SetupView =
   | { readonly phase: 'checking' }
-  | { readonly phase: 'offer'; readonly totalBytes: number; /** The styles that come with it, when the service worker says. */ readonly styles?: readonly StyleId[] }
+  | { readonly phase: 'offer'; readonly totalBytes: number; /** The styles that come with it, the one asked for first. */ readonly styles: readonly StyleId[] }
   | { readonly phase: 'downloading'; readonly verifying: boolean; readonly receivedBytes: number; readonly totalBytes: number; readonly bytesPerSecond: number }
   | { readonly phase: 'done' }
   | { readonly phase: 'failed'; readonly error: ErrorPayload };

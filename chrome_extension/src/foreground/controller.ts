@@ -28,7 +28,7 @@ import { formatDuration } from '../shared/format';
 import { isJobEvent, isSetupEvent, type AccessOfferReply, type AccessResult, type ForegroundMessage, type JobEvent, type JobRequest, type Point, type SetupEvent, type SetupNeed, type SetupRequest, type StartJobReply, type WokeFromRest } from '../shared/messages';
 import type { SettingsFocus } from '../shared/popupIntent';
 import { keepLoadedLabel } from '../shared/settings';
-import { isStyleId, STYLE_IDS, STYLES, styleLabel, type StyleId } from '../shared/styles';
+import { STYLE_IDS, STYLES, styleLabel, type StyleId } from '../shared/styles';
 import { takeHeldSelection } from './heldSelection';
 import { applyRewrite, isUnchanged, reselect } from './target/apply';
 import { captureTarget, splitWhitespace, targetRect, type EditTarget } from './target/capture';
@@ -125,19 +125,22 @@ function newJobId(): string {
   return `page-${Date.now().toString(36)}-${jobCount}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** What a missing model or style needs, from the error that reported it; null for any other error. */
-function setupNeed(error: ErrorPayload): { need: SetupNeed; subject: SetupState['subject'] } | null {
-  if (error.code === 'MODEL_NOT_DOWNLOADED') return { need: { kind: 'model' }, subject: { kind: 'model' } };
+/**
+ * What a missing model or style needs, from the error that reported it; null for any other error.
+ * A missing model is downloaded with `style`, the style the user asked for, when there is one.
+ */
+function setupNeed(error: ErrorPayload, style: StyleId | null): { need: SetupNeed; subject: SetupState['subject'] } | null {
+  if (error.code === 'MODEL_NOT_DOWNLOADED') return { need: style ? { kind: 'model', style } : { kind: 'model' }, subject: { kind: 'model' } };
   if (error.code !== 'STYLE_NOT_DOWNLOADED') return null;
   // The error names the style it needs by its label.
-  const style = STYLES.find((candidate) => candidate.label === error.details?.adapter);
-  return style ? { need: { kind: 'style', style: style.id }, subject: { kind: 'style', name: style.label } } : null;
+  const adapter = STYLES.find((candidate) => candidate.label === error.details?.adapter);
+  return adapter ? { need: { kind: 'style', style: adapter.id }, subject: { kind: 'style', name: adapter.label } } : null;
 }
 
 function setupView(event: SetupEvent): SetupView {
   switch (event.kind) {
     case 'setup/offer':
-      return event.styles ? { phase: 'offer', totalBytes: event.totalBytes, styles: event.styles } : { phase: 'offer', totalBytes: event.totalBytes };
+      return { phase: 'offer', totalBytes: event.totalBytes, styles: event.styles };
     case 'setup/progress':
       return { phase: 'downloading', verifying: event.verifying, receivedBytes: event.receivedBytes, totalBytes: event.totalBytes, bytesPerSecond: event.bytesPerSecond };
     case 'setup/done':
@@ -161,7 +164,7 @@ export class ForegroundController {
 
   handleMessage(message: ForegroundMessage): StartJobReply {
     if (message.kind === 'echo/notice') {
-      if (!this.offerSetup(message.error, this.selectionAnchor(), isStyleId(message.style) ? message.style : null)) this.toastError(message.error, null);
+      if (!this.offerSetup(message.error, this.selectionAnchor(), message.style ?? null)) this.toastError(message.error, null);
       return { ok: true };
     }
     if (message.kind === 'echo/style-menu') return this.openMenu(message.point);
@@ -363,7 +366,7 @@ export class ForegroundController {
   }
 
   private now(): number {
-    return (this.deps.now ?? (() => performance.now()))();
+    return this.deps.now?.() ?? performance.now();
   }
 
   /** How long the model took to wake up, and that a longer keep-awake time would skip it. */
@@ -494,7 +497,7 @@ export class ForegroundController {
                 this.toast({
                   tone: 'error',
                   title: 'Undo unavailable',
-                  message: 'The text was edited after it was replaced. Press Ctrl+Z (⌘Z on Mac) in the field to undo.',
+                  message: 'The text was edited after it was replaced. Press Ctrl+Z (Cmd+Z on Mac) in the field to undo.',
                   actions: [],
                   anchor: job.anchor,
                 });
@@ -519,9 +522,11 @@ export class ForegroundController {
   private fail(error: ErrorPayload): void {
     const job = this.active;
     if (!job) return;
-    if (setupNeed(error) && this.deps.connectSetup) {
+    if (setupNeed(error, job.style) && this.deps.connectSetup) {
+      // The working card goes either way: the download card takes its place, or the error toast when it can't be offered.
       this.end();
-      if (this.offerSetup(error, job.anchor, job.style)) return;
+      if (!this.offerSetup(error, job.anchor, job.style)) this.toastError(error, job.anchor);
+      return;
     }
     this.end(error.code === 'CANCELLED' ? undefined : this.errorToast(error, job.anchor));
   }
@@ -543,7 +548,7 @@ export class ForegroundController {
    * case (or the card can't be offered), and the caller shows the toast.
    */
   private offerSetup(error: ErrorPayload, anchor: AnchorRect | null, style: StyleId | null): boolean {
-    const found = setupNeed(error);
+    const found = setupNeed(error, style);
     const { connectSetup } = this.deps;
     if (!found || !connectSetup) return false;
     this.closeSetup();
@@ -590,7 +595,7 @@ export class ForegroundController {
       this.setupPort = null;
       store.updateSetup({ phase: 'failed', error: { code: 'DISCONNECTED' } });
     });
-    port.postMessage({ kind: 'setup/open', need: found.need.kind === 'model' && style ? { kind: 'model', style } : found.need });
+    port.postMessage({ kind: 'setup/open', need: found.need });
     return true;
   }
 

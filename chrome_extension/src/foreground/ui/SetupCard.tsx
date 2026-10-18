@@ -1,10 +1,10 @@
-import { useEffect, useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { describeError } from '../../shared/errors';
 import { formatBytes, formatList, formatTimeLeft } from '../../shared/format';
 import { styleLabel, type StyleId } from '../../shared/styles';
 import { Logo } from '../../ui/brand/Logo';
 import { BUTTON, GAP, offerPosition, SECONDARY_BUTTON } from './cardKit';
-import type { SetupState } from './overlayStore';
+import type { SetupState, SetupView } from './overlayStore';
 
 const SETUP_WIDTH = 420;
 /** The card's height, close enough to decide whether it fits below the text or above it. */
@@ -13,10 +13,18 @@ const SETUP_HEIGHT = 240;
 const DONE_MS = 30_000;
 
 /** "This one-time download includes the Concise and Professional styles and stays on this device." */
-function includes(styles: readonly StyleId[] | undefined): string {
-  if (!styles || styles.length === 0) return 'This is a one-time download that stays on this device.';
+function includes(styles: readonly StyleId[]): string {
+  if (styles.length === 0) return 'This is a one-time download that stays on this device.';
   const names = formatList(styles.map(styleLabel));
   return `This one-time download includes the ${names} ${styles.length === 1 ? 'style' : 'styles'} and stays on this device.`;
+}
+
+type Downloading = Extract<SetupView, { phase: 'downloading' }>;
+
+/** How far the download is, 0-100; checking the files counts as the end. */
+function downloadPercent(view: Downloading): number {
+  if (view.verifying) return 100;
+  return view.totalBytes > 0 ? Math.min(100, Math.floor((view.receivedBytes / view.totalBytes) * 100)) : 0;
 }
 
 /** The words for each moment of the download. */
@@ -37,12 +45,11 @@ export function setupCopy(setup: SetupState): { title: string; body: string } {
         : { title: `Download the ${name} style`, body: 'Rewriting in this style needs it on your device. This is a one-time download that stays on this device.' };
     case 'downloading': {
       if (view.verifying) return { title: 'Verifying the download', body: 'Making sure every file arrived intact.' };
-      const percent = view.totalBytes > 0 ? Math.min(100, Math.floor((view.receivedBytes / view.totalBytes) * 100)) : 0;
       const parts = [view.totalBytes > 0 ? `${formatBytes(view.receivedBytes)} of ${formatBytes(view.totalBytes)}` : 'Connecting…'];
       if (view.bytesPerSecond > 0 && view.totalBytes > 0) {
         parts.push(`${formatBytes(view.bytesPerSecond)}/s`, formatTimeLeft((view.totalBytes - view.receivedBytes) / view.bytesPerSecond));
       }
-      return { title: `Downloading ${what} · ${percent}%`, body: parts.join(' · ') };
+      return { title: `Downloading ${what} · ${downloadPercent(view)}%`, body: parts.join(' · ') };
     }
     case 'done':
       return model
@@ -53,6 +60,36 @@ export function setupCopy(setup: SetupState): { title: string; body: string } {
         : { title: `${name} style installed`, body: 'You can rewrite in this style now.' };
     case 'failed':
       return { title: "Download didn't finish", body: describeError(view.error) };
+  }
+}
+
+interface CardAction {
+  readonly label: string;
+  readonly run: () => void;
+}
+
+/**
+ * The card's buttons for where the download stands, the main one first. Once
+ * it is done, carrying on with the rewrite comes first; settings are for those
+ * who want to change the processor (after a model download only).
+ */
+function cardActions(setup: SetupState): CardAction[] {
+  const close = { label: 'Close', run: setup.close };
+  switch (setup.view.phase) {
+    case 'offer':
+      return [{ label: `Download · ${formatBytes(setup.view.totalBytes)}`, run: setup.download }, { ...close, label: 'Not now' }];
+    case 'failed':
+      return [{ label: 'Try again', run: setup.download }, close];
+    case 'done': {
+      const model = setup.subject.kind === 'model';
+      const actions: CardAction[] = [];
+      if (setup.style) actions.push({ label: `Rewrite now · ${styleLabel(setup.style)}`, run: setup.rewrite });
+      if (model) actions.push({ label: 'Open settings', run: setup.openSettings });
+      if (!(setup.style && model)) actions.push({ ...close, label: 'Done' });
+      return actions;
+    }
+    default:
+      return [];
   }
 }
 
@@ -70,7 +107,7 @@ export function SetupCard({ setup }: { setup: SetupState }) {
   const viewport = { width: window.innerWidth, height: window.innerHeight };
   const width = Math.min(SETUP_WIDTH, viewport.width - 2 * GAP);
   const downloading = view.phase === 'downloading';
-  const percent = view.phase === 'downloading' ? (view.verifying ? 100 : view.totalBytes > 0 ? Math.min(100, Math.floor((view.receivedBytes / view.totalBytes) * 100)) : 0) : 0;
+  const percent = view.phase === 'downloading' ? downloadPercent(view) : 0;
 
   useEffect(() => {
     if (view.phase !== 'done' || hovered) return undefined;
@@ -78,52 +115,7 @@ export function SetupCard({ setup }: { setup: SetupState }) {
     return () => clearTimeout(timer);
   }, [view.phase, hovered, setup.close]);
 
-  let actions: ReactNode = null;
-  if (view.phase === 'offer') {
-    actions = (
-      <>
-        <button type="button" onClick={setup.download} className={BUTTON}>
-          Download · {formatBytes(view.totalBytes)}
-        </button>
-        <button type="button" onClick={setup.close} className={SECONDARY_BUTTON}>
-          Not now
-        </button>
-      </>
-    );
-  } else if (view.phase === 'done') {
-    // What the user came for comes first; settings is for those who want to change the processor.
-    actions = (
-      <>
-        {setup.style ? (
-          <button type="button" onClick={setup.rewrite} className={BUTTON}>
-            Rewrite now · {styleLabel(setup.style)}
-          </button>
-        ) : null}
-        {setup.subject.kind === 'model' ? (
-          <button type="button" onClick={setup.openSettings} className={setup.style ? SECONDARY_BUTTON : BUTTON}>
-            Open settings
-          </button>
-        ) : null}
-        {setup.style && setup.subject.kind === 'model' ? null : (
-          <button type="button" onClick={setup.close} className={setup.subject.kind === 'model' || setup.style ? SECONDARY_BUTTON : BUTTON}>
-            Done
-          </button>
-        )}
-      </>
-    );
-  } else if (view.phase === 'failed') {
-    actions = (
-      <>
-        <button type="button" onClick={setup.download} className={BUTTON}>
-          Try again
-        </button>
-        <button type="button" onClick={setup.close} className={SECONDARY_BUTTON}>
-          Close
-        </button>
-      </>
-    );
-  }
-
+  const actions = cardActions(setup);
   return (
     <div
       role="group"
@@ -168,7 +160,15 @@ export function SetupCard({ setup }: { setup: SetupState }) {
           {downloading ? (
             <p className="_echo_$_m-0 _echo_$_mt-1.5 _echo_$_font-sans _echo_$_text-[13px] _echo_$_leading-5 _echo_$_text-fg-soft">You can close this card. The download continues in the background.</p>
           ) : null}
-          {actions ? <div className="_echo_$_mt-3.5 _echo_$_flex _echo_$_flex-wrap _echo_$_items-center _echo_$_gap-2">{actions}</div> : null}
+          {actions.length > 0 ? (
+            <div className="_echo_$_mt-3.5 _echo_$_flex _echo_$_flex-wrap _echo_$_items-center _echo_$_gap-2">
+              {actions.map((action, index) => (
+                <button key={action.label} type="button" onClick={action.run} className={index === 0 ? BUTTON : SECONDARY_BUTTON}>
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
         <button
           type="button"

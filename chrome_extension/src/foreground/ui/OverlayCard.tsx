@@ -2,16 +2,20 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { styleLabel } from '../../shared/styles';
 import { Logo } from '../../ui/brand/Logo';
 import { AccessOfferCard } from './AccessOfferCard';
+import { BUTTON, GAP } from './cardKit';
 import type { AnchorRect, ReviewState, ToastNote, ToastState, WorkingState } from './overlayStore';
 
 export const CARD_WIDTH = 360;
-const GAP = 10;
+/** Room a toast needs below the text to sit there rather than above it. */
+const TOAST_HEIGHT = 96;
+/** The same for the one-line toast. */
+const SLIM_TOAST_HEIGHT = 56;
 
 /** Below the edited text when there is room, otherwise above it; centred at the bottom without an anchor. */
-export function toastPosition(anchor: AnchorRect | null, viewport: { width: number; height: number }): CSSProperties {
+export function toastPosition(anchor: AnchorRect | null, viewport: { width: number; height: number }, height = TOAST_HEIGHT): CSSProperties {
   if (!anchor) return { left: Math.max(GAP, (viewport.width - CARD_WIDTH) / 2), bottom: 24 };
   const left = Math.min(Math.max(GAP, anchor.left), Math.max(GAP, viewport.width - CARD_WIDTH - GAP));
-  if (anchor.bottom + GAP + 96 <= viewport.height) return { left, top: Math.max(GAP, anchor.bottom + GAP) };
+  if (anchor.bottom + GAP + height <= viewport.height) return { left, top: Math.max(GAP, anchor.bottom + GAP) };
   return { left, bottom: Math.max(GAP, viewport.height - anchor.top + GAP) };
 }
 
@@ -57,10 +61,8 @@ export type CardContent =
   | { readonly kind: 'review'; readonly review: ReviewState }
   | { readonly kind: 'toast'; readonly toast: ToastState };
 
-const BUTTON =
-  '_echo_$_cursor-pointer _echo_$_rounded-lg _echo_$_border-0 _echo_$_bg-accent _echo_$_px-3.5 _echo_$_py-1.5 _echo_$_font-sans _echo_$_text-[14px] _echo_$_font-semibold _echo_$_leading-5 _echo_$_text-on-accent hover:_echo_$_bg-accent-hover focus-visible:_echo_$_outline focus-visible:_echo_$_outline-2 focus-visible:_echo_$_outline-offset-2 focus-visible:_echo_$_outline-focus';
-
-const SECONDARY_BUTTON =
+/** Smaller type than the cards' secondary button: it sits beside Replace and the time taken. */
+const SMALL_SECONDARY_BUTTON =
   '_echo_$_cursor-pointer _echo_$_rounded-lg _echo_$_border _echo_$_border-solid _echo_$_border-sheen/25 _echo_$_bg-sheen/10 _echo_$_px-3 _echo_$_py-1.5 _echo_$_font-sans _echo_$_text-[13px] _echo_$_font-semibold _echo_$_leading-5 _echo_$_text-fg hover:_echo_$_bg-sheen/20 focus-visible:_echo_$_outline focus-visible:_echo_$_outline-2 focus-visible:_echo_$_outline-offset-2 focus-visible:_echo_$_outline-focus';
 
 /**
@@ -145,7 +147,7 @@ export function OverlayCard({ card, onDismiss }: { card: CardContent; onDismiss:
 }
 
 /** The one line of a slim toast: logo, title, the action if any, close. The offer card keeps it as its first line. */
-export function ToastRow({ toast, onDismiss }: { toast: ToastState; onDismiss: () => void }) {
+function ToastRow({ toast, onDismiss }: { toast: ToastState; onDismiss: () => void }) {
   const action = toast.actions[0];
   return (
     <div className="_echo_$_flex _echo_$_min-w-0 _echo_$_items-center _echo_$_gap-3 _echo_$_py-2 _echo_$_pl-3 _echo_$_pr-2">
@@ -184,7 +186,7 @@ function SlimToast({ toast, viewport, onDismiss, onHover }: { toast: ToastState;
   return (
     <div
       role="status"
-      style={{ ...toastPosition(toast.anchor, { width: viewport.width, height: viewport.height + 40 }), width: 'max-content', maxWidth: Math.min(CARD_WIDTH, viewport.width - 2 * GAP), contain: 'layout paint' }}
+      style={{ ...toastPosition(toast.anchor, viewport, SLIM_TOAST_HEIGHT), width: 'max-content', maxWidth: Math.min(CARD_WIDTH, viewport.width - 2 * GAP), contain: 'layout paint' }}
       onMouseDown={(event) => event.preventDefault()}
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
@@ -281,7 +283,7 @@ function ReviewActions({ review }: { review: ReviewState }) {
             ↵
           </span>
         </button>
-        <button type="button" aria-keyshortcuts="Escape" onClick={review.discard} className={SECONDARY_BUTTON}>
+        <button type="button" aria-keyshortcuts="Escape" onClick={review.discard} className={SMALL_SECONDARY_BUTTON}>
           Discard
           <span aria-hidden="true" className={hint}>
             Esc
@@ -299,7 +301,7 @@ function Note({ note, onRun }: { note: ToastNote; onRun: () => void }) {
   return (
     <div className="_echo_$_mt-3 _echo_$_border-0 _echo_$_border-t _echo_$_border-solid _echo_$_border-sheen/15 _echo_$_pt-3">
       <p className="_echo_$_m-0 _echo_$_text-[13px] _echo_$_leading-5 _echo_$_text-fg-soft">{note.text}</p>
-      <button type="button" onClick={onRun} className={`_echo_$_mt-2 ${SECONDARY_BUTTON}`}>
+      <button type="button" onClick={onRun} className={`_echo_$_mt-2 ${SMALL_SECONDARY_BUTTON}`}>
         {note.action.label}
       </button>
     </div>

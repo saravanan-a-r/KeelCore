@@ -168,7 +168,7 @@ describe('the download card', () => {
   };
 
   test('says why, with the size on the button', () => {
-    const { download, close } = state({ phase: 'offer', totalBytes: 866e6 });
+    const { download, close } = state({ phase: 'offer', totalBytes: 866e6, styles: ['professional'] });
     expect(screen.getByRole('group', { name: 'Download the writing model' })).toBeInTheDocument();
     expect(screen.getByText(/needs its writing model first/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Download · 866 MB' }));
