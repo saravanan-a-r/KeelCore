@@ -5,7 +5,7 @@
  * when it is first picked on a page.
  */
 import { formatBytes, formatList } from '../../shared/format';
-import { adapterForStyle, starterAdapter, stylesUsing, type ModelCatalog } from '../../shared/modelInstall';
+import { adapterForStyle, STARTER_STYLE, starterAdapter, stylesUsing, type ModelCatalog } from '../../shared/modelInstall';
 import { STYLE_IDS, STYLES, styleLabel, type StyleId } from '../../shared/styles';
 import { EchoLoader } from '../brand/EchoLoader';
 import type { CatalogState } from '../hooks/useModel';
@@ -19,7 +19,7 @@ export interface ModelSetupCardProps {
   readonly notice?: string;
 }
 
-/** "Rewrites run entirely on your device. Download the writing model and the Professional style once; ..." */
+/** "Rewrites run entirely on your device. Download the writing model and the Professional style once. ..." */
 export function setupDetail(starter: StyleId | null): string {
   const what = starter ? `the writing model and the ${styleLabel(starter)} style` : 'the writing model';
   return `Rewrites run entirely on your device. Download ${what} once. They're stored privately and used on every website.`;
@@ -108,7 +108,7 @@ export function ModelSetupCard({ catalog, onDownload, onRetryCatalog, notice }: 
         <span className="_echo_$_text-sm _echo_$_font-semibold _echo_$_text-fg">Set up EchoMeBetter</span>
       </div>
       <p className="_echo_$_mt-2 _echo_$_text-xs _echo_$_leading-5 _echo_$_text-fg-muted">
-        {setupDetail(catalog.status === 'ready' ? starterAdapter(catalog.catalog)?.style ?? null : 'professional')}
+        {setupDetail(catalog.status === 'ready' ? starterAdapter(catalog.catalog)?.style ?? null : STARTER_STYLE)}
       </p>
 
       {catalog.status === 'ready' ? <Starter catalog={catalog.catalog} onDownload={onDownload} /> : null}
