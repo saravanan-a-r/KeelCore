@@ -4,21 +4,21 @@
  * exist when the worker starts).
  */
 import { computeToRun, GPU_PROBLEM_STORAGE_KEY, parseGpuProblem, readGpuProblem, sameCompute, writeGpuProblem, type ComputeSettings } from '../shared/compute';
-import { toErrorPayload } from '../shared/errors';
-import { isAccessRequest, isOffscreenEventMessage, isOpenSettingsRequest, isReplacedNotice, isShortcutRequest, isStyleMenuRequest, isUiRequest, JOB_PORT_NAME, SETUP_PORT_NAME, type AccessOfferReply, type AccessResult, type EngineEvent, type OffscreenCommand, type StyleMenuRequest, type UiReply, type UiRequest } from '../shared/messages';
+import { toErrorPayload, type ErrorPayload } from '../shared/errors';
+import { isAccessRequest, isOffscreenEventMessage, isOpenSettingsRequest, isReplacedNotice, isShortcutRequest, isStyleMenuRequest, isUiRequest, JOB_PORT_NAME, SETUP_PORT_NAME, type AccessOfferReply, type AccessReply, type AccessResult, type EngineEvent, type OffscreenCommand, type StyleMenuRequest, type UiReply, type UiRequest } from '../shared/messages';
 import { adapterForStyle, modelFrom, newerStyleProblem, readDownloadState, readInstalledModel, styleProblem, writeDownloadState, writeInstalledModel } from '../shared/modelInstall';
 import { fetchCatalog } from '../shared/fetchCatalog';
 import { MODEL_SOURCE_URL } from '../shared/modelSource';
 import { leavePopupIntent, type SettingsFocus } from '../shared/popupIntent';
 import { loadSettings, parseSettings, SETTINGS_STORAGE_KEY, wantsWebsites, type Settings } from '../shared/settings';
-import { platformFromOs, shortcutLabel } from '../shared/shortcuts';
+import { platformFromOs, shortcutLabel, type KeyPlatform } from '../shared/shortcuts';
 import type { StyleId } from '../shared/styles';
 import { readStatus, writeStatus } from '../shared/statusStore';
 import { registerContextMenus } from './contextMenus';
 import { EngineRestarter, readEngineCompute, recordEngineCompute } from './engineRestart';
 import { endRest, IDLE_ALARM, lastActivity, recordActivity, recordRest, shouldUnload, wakingFromRest } from './idleUnloader';
 import { showInstallState } from './installBadge';
-import { SetupBroker, type SetupPortLike } from './setupBroker';
+import { SetupBroker } from './setupBroker';
 import { JobRouter } from './jobRouter';
 import { OffscreenManager } from './offscreenManager';
 import { remoteCatalogCache } from './remoteCatalog';
@@ -51,9 +51,10 @@ function prepareEngine(): void {
     .catch((error: unknown) => writeStatus({ state: 'error', message: error instanceof Error ? error.message : String(error) }));
 }
 
-const remoteCatalog = remoteCatalogCache({ fetchCatalog: () => fetchCatalog() });
+const remoteCatalog = remoteCatalogCache({ fetchCatalog });
 
-async function checkStyle(style: StyleId) {
+/** Why `style` can't rewrite right now, or null when it can. */
+async function checkStyle(style: StyleId): Promise<ErrorPayload | null> {
   const installed = modelFrom(await readInstalledModel(), MODEL_SOURCE_URL);
   const problem = styleProblem(style, installed);
   // A style standing in on another's adapter may have its own on the server by now: offer that instead.
@@ -169,7 +170,7 @@ async function mirrorEngineEvent(event: EngineEvent): Promise<void> {
 }
 
 const setup = new SetupBroker({
-  fetchCatalog: () => fetchCatalog(),
+  fetchCatalog,
   readInstalled: readInstalledModel,
   readDownload: readDownloadState,
   sourceUrl: MODEL_SOURCE_URL,
@@ -186,12 +187,21 @@ const launcher: LauncherDeps = {
   newJobId: () => crypto.randomUUID(),
 };
 
+async function currentPlatform(): Promise<KeyPlatform> {
+  return platformFromOs((await chrome.runtime.getPlatformInfo()).os);
+}
+
+/** The welcome page (and any other page of the extension), as opposed to a website. */
+function isOwnPage(tab: chrome.tabs.Tab | undefined): boolean {
+  return tab?.url?.startsWith(launcher.extensionOrigin) ?? false;
+}
+
 async function applyShortcuts(): Promise<void> {
   const settings = await loadSettings();
   const listening = await activeOnWebsites(wantsWebsites(settings), chrome.permissions);
   await syncShortcutScript(listening, { scripting: chrome.scripting, permissions: chrome.permissions, tabs: chrome.tabs });
   const shortcuts = listening && settings.shortcutsEnabled;
-  const platform = platformFromOs((await chrome.runtime.getPlatformInfo()).os);
+  const platform = await currentPlatform();
   await registerContextMenus(chrome.contextMenus, (style) => (shortcuts ? shortcutLabel(style, platform) : null));
 }
 
@@ -209,8 +219,7 @@ function refreshShortcuts(): void {
  */
 async function featureOn(feature: keyof Pick<Settings, 'shortcutsEnabled' | 'holdMenuEnabled'>, tab: chrome.tabs.Tab): Promise<boolean> {
   if (!(await loadSettings())[feature]) return false;
-  const ownPage = tab.url?.startsWith(launcher.extensionOrigin) ?? false;
-  return ownPage || activeOnWebsites(true, chrome.permissions);
+  return isOwnPage(tab) || activeOnWebsites(true, chrome.permissions);
 }
 
 async function handleShortcut(style: StyleId, sender: chrome.runtime.MessageSender): Promise<void> {
@@ -267,7 +276,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name === JOB_PORT_NAME) router.handlePort(port);
-  else if (port.name === SETUP_PORT_NAME) setup.handlePort(port as unknown as SetupPortLike);
+  else if (port.name === SETUP_PORT_NAME) setup.handlePort(port);
 });
 
 function openSettingsFor(focus: SettingsFocus, windowId: number | undefined): Promise<void> {
@@ -299,12 +308,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return undefined;
   }
   if (isReplacedNotice(message)) {
-    const ownPage = sender.tab?.url?.startsWith(launcher.extensionOrigin) ?? false;
-    offerAfterReplace(ownPage, {
+    offerAfterReplace(isOwnPage(sender.tab), {
       storage: chrome.storage.local,
       hasAccess: () => activeOnWebsites(true, chrome.permissions),
       settings: loadSettings,
-      platform: async () => platformFromOs((await chrome.runtime.getPlatformInfo()).os),
+      platform: currentPlatform,
     })
       .catch((): AccessOfferReply => ({ offer: false }))
       .then(sendResponse);
@@ -316,7 +324,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       openSettings: (focus) => openSettingsFor(focus, sender.tab?.windowId),
     })
       .catch((): AccessResult => 'denied')
-      .then((result) => sendResponse({ result }));
+      .then((result) => sendResponse({ result } satisfies AccessReply));
     return true;
   }
   if (isUiRequest(message)) sendResponse(handleUiRequest(message));

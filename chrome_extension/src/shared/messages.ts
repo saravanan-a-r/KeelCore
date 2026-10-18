@@ -56,7 +56,7 @@ export function isForegroundMessage(value: unknown): value is ForegroundMessage 
   if (typeof value !== 'object' || value === null) return false;
   const message = value as { kind?: unknown; jobId?: unknown; style?: unknown; error?: unknown };
   if (message.kind === 'echo/start-job') return typeof message.jobId === 'string' && isStyleId(message.style);
-  if (message.kind === 'echo/notice') return typeof message.error === 'object' && message.error !== null;
+  if (message.kind === 'echo/notice') return typeof message.error === 'object' && message.error !== null && (message.style === undefined || isStyleId(message.style));
   if (message.kind === 'echo/style-menu') return isPoint((value as { point?: unknown }).point);
   return false;
 }
@@ -150,6 +150,10 @@ export function isAccessRequest(value: unknown): value is AccessRequest {
  */
 export type AccessResult = 'granted' | 'denied' | 'opened';
 
+export interface AccessReply {
+  readonly result: AccessResult;
+}
+
 // ---------------------------------------------------------------------------
 // foreground ⇄ service worker, over a Port named SETUP_PORT_NAME (the model download, in place)
 // ---------------------------------------------------------------------------
@@ -168,7 +172,7 @@ export type SetupRequest =
 /** Where the download stands, for the card to show. */
 export type SetupEvent =
   /** Nothing is downloading: this is what a download would fetch. */
-  | { readonly kind: 'setup/offer'; readonly totalBytes: number; /** The styles the download brings, the one asked for first. */ readonly styles?: readonly StyleId[] }
+  | { readonly kind: 'setup/offer'; readonly totalBytes: number; /** The styles the download brings, the one asked for first. */ readonly styles: readonly StyleId[] }
   | { readonly kind: 'setup/progress'; readonly verifying: boolean; readonly receivedBytes: number; readonly totalBytes: number; readonly bytesPerSecond: number }
   | { readonly kind: 'setup/done' }
   | { readonly kind: 'setup/failed'; readonly error: ErrorPayload };
@@ -190,7 +194,7 @@ export function isSetupEvent(value: unknown): value is SetupEvent {
   const event = value as { kind?: unknown; styles?: unknown; totalBytes?: unknown; receivedBytes?: unknown; error?: unknown; verifying?: unknown; bytesPerSecond?: unknown };
   switch (event.kind) {
     case 'setup/offer':
-      return typeof event.totalBytes === 'number' && (event.styles === undefined || (Array.isArray(event.styles) && event.styles.every(isStyleId)));
+      return typeof event.totalBytes === 'number' && Array.isArray(event.styles) && event.styles.every(isStyleId);
     case 'setup/progress':
       return typeof event.verifying === 'boolean' && typeof event.receivedBytes === 'number' && typeof event.totalBytes === 'number' && typeof event.bytesPerSecond === 'number';
     case 'setup/done':

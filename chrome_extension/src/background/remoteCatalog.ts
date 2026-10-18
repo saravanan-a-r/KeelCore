@@ -21,21 +21,27 @@ export function remoteCatalogCache(deps: RemoteCatalogDeps): () => Promise<Model
   let pending: Promise<ModelCatalog | null> | null = null;
   return () => {
     if (kept && now() < kept.until) return Promise.resolve(kept.catalog);
-    pending ??= Promise.race([
-      deps.fetchCatalog(),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)),
-    ]).then(
-      (catalog) => {
-        kept = { catalog, until: now() + KEEP_MS };
-        return catalog;
-      },
-      () => {
-        kept = { catalog: null, until: now() + RETRY_MS };
-        return null;
-      },
-    ).finally(() => {
-      pending = null;
-    });
+    if (!pending) {
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const timeout = new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS);
+      });
+      pending = Promise.race([deps.fetchCatalog(), timeout])
+        .then(
+          (catalog) => {
+            kept = { catalog, until: now() + KEEP_MS };
+            return catalog;
+          },
+          () => {
+            kept = { catalog: null, until: now() + RETRY_MS };
+            return null;
+          },
+        )
+        .finally(() => {
+          clearTimeout(timer);
+          pending = null;
+        });
+    }
     return pending;
   };
 }

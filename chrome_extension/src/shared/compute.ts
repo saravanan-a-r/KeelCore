@@ -71,12 +71,6 @@ export interface RunningOn {
   readonly threads: number;
 }
 
-export function isRunningOn(value: unknown): value is RunningOn {
-  if (typeof value !== 'object' || value === null) return false;
-  const running = value as { processor?: unknown; threads?: unknown };
-  return (PROCESSORS as readonly unknown[]).includes(running.processor) && typeof running.threads === 'number';
-}
-
 // ---------------------------------------------------------------------------
 // Finding a usable GPU
 // ---------------------------------------------------------------------------
