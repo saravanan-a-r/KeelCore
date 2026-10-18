@@ -16,9 +16,33 @@ import { greedyGenerate, type GreedyResult } from './generation/greedyDecoder';
 import type { ModelManifest } from './manifest';
 import { T5Runner, type AdapterPair, type T5Geometry, type TensorFactory } from './onnx/t5Runner';
 import { PromptBuilder } from './prompt/promptBuilder';
-import { undoInputTransforms } from './prompt/textTransforms';
+import { applyInputTransforms, undoInputTransforms } from './prompt/textTransforms';
 import { Tokenizer } from './tokenizer/tokenizer';
 import type { InferenceSession } from 'onnxruntime-web';
+
+/**
+ * Every style chunks long input the same way; only the expansion ratio
+ * differs, because each adapter was trained with its own target/input
+ * length bound (SFT_adapter_rephrase/adapter_config.yml `styles.<style>`,
+ * or the style-neutral default for a style without its own block). A
+ * chunk's raw text is kept small enough that even a full-ratio rewrite of
+ * it still fits `limits.maxNewTokens`, so splitting removes INPUT_TOO_LONG
+ * and OUTPUT_TOO_LONG instead of trading one for the other.
+ */
+const MAX_EXPANSION: Record<StyleId, number> = {
+  professional: 1.6, // styles.professional.max_length_ratio
+  concise: 1.15, // styles.concise.max_length_ratio (concise must not expand)
+  elaborate: 3.0, // no styles.elaborate block: the shared data.max_length_ratio default
+  friendly: 3.0, // no styles.friendly block: the shared data.max_length_ratio default
+  grammar: 3.0, // no styles.grammar block: the shared data.max_length_ratio default
+};
+
+/** A run of text that goes through the model, or a separator carried through untouched. */
+type Segment = { readonly kind: 'chunk'; readonly text: string } | { readonly kind: 'join'; readonly text: string };
+
+const PARAGRAPH_SPLIT = /(\n{2,})/;
+const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
+const WORD_SPLIT = /\s+/;
 
 export interface RewriteOptions {
   readonly signal?: AbortSignal;
@@ -113,12 +137,135 @@ export class RewriteEngine {
     await Promise.all(this.sessions.map((session) => session.release()));
   }
 
-  async rewrite({ manifest, adapterId, adapter, text }: RewriteRequest, options: RewriteOptions = {}): Promise<RewriteResult> {
+  /**
+   * Identical to the pre-chunking engine for every call that already
+   * succeeded: only a request that would have failed (input over the
+   * frame's limit, or a single shot running past maxNewTokens) takes the
+   * chunked path, so nothing that worked before changes.
+   */
+  async rewrite(request: RewriteRequest, options: RewriteOptions = {}): Promise<RewriteResult> {
+    const { inputLimit, chunkBudget } = this.chunkBudgets(request.manifest, request.adapterId);
+    if (this.measureTokens(request.manifest, request.text) > inputLimit) {
+      return this.rewriteChunked(request, options, chunkBudget);
+    }
+    try {
+      return await this.rewriteOnce(request, options);
+    } catch (error) {
+      if (error instanceof EchoError && error.code === 'OUTPUT_TOO_LONG') {
+        return this.rewriteChunked(request, options, chunkBudget);
+      }
+      throw error;
+    }
+  }
+
+  /** The original one-shot path: exactly what every style ran before chunking existed. */
+  private async rewriteOnce({ manifest, adapterId, adapter, text }: RewriteRequest, options: RewriteOptions): Promise<RewriteResult> {
     const inputIds = this.promptIds(manifest, adapterId, text);
     const result = await this.generateIds(manifest, inputIds, adapter, options);
     if (!result.finished) throw new EchoError('OUTPUT_TOO_LONG', { limit: manifest.limits.maxNewTokens });
     const output = this.decode(manifest, result.ids).trim();
     if (output.length === 0) throw new EchoError('EMPTY_RESULT');
     return { text: output, inputTokens: inputIds.length, outputTokens: result.ids.length };
+  }
+
+  /** Tokens `text` alone would add to the prompt, exactly as the frame would encode it. */
+  private measureTokens(manifest: ModelManifest, text: string): number {
+    if (text.length === 0) return 0;
+    return this.tokenizer.encode(applyInputTransforms(text, manifest.inputTransforms)).length;
+  }
+
+  /**
+   * `inputLimit`: the raw-text budget the frame has room for -- exceeding
+   * this is what `promptIds` itself would refuse with INPUT_TOO_LONG.
+   * `chunkBudget`: the smaller, output-ratio-aware size actually used once
+   * chunking has been decided on, so a chunk's rewrite also fits
+   * `maxNewTokens`. Frame overhead is measured from the manifest itself (an
+   * empty prompt build), so it tracks the real frame, not a hardcoded guess.
+   */
+  private chunkBudgets(manifest: ModelManifest, adapterId: StyleId): { inputLimit: number; chunkBudget: number } {
+    const overhead = this.promptIds(manifest, adapterId, '').length;
+    const inputLimit = Math.max(1, manifest.limits.maxInputTokens - overhead);
+    const outputBudget = Math.max(1, Math.floor(manifest.limits.maxNewTokens / MAX_EXPANSION[adapterId]));
+    return { inputLimit, chunkBudget: Math.min(inputLimit, outputBudget) };
+  }
+
+  /** Pack `pieces` (already in order) into as few `joiner`-joined strings as fit under `budget` tokens each. */
+  private packSegments(manifest: ModelManifest, pieces: readonly string[], budget: number, joiner: string): string[] {
+    const packed: string[] = [];
+    let current = '';
+    for (const piece of pieces) {
+      const candidate = current ? `${current}${joiner}${piece}` : piece;
+      if (this.measureTokens(manifest, candidate) <= budget) {
+        current = candidate;
+        continue;
+      }
+      if (current) packed.push(current);
+      if (this.measureTokens(manifest, piece) <= budget) {
+        current = piece;
+      } else {
+        packed.push(...this.hardFragment(manifest, piece, budget));
+        current = '';
+      }
+    }
+    if (current) packed.push(current);
+    return packed;
+  }
+
+  /** A single sentence (or paragraph) too big on its own: fall back to word groups, or give up honestly. */
+  private hardFragment(manifest: ModelManifest, text: string, budget: number): string[] {
+    const words = text.split(WORD_SPLIT).filter((word) => word.length > 0);
+    if (words.length <= 1) {
+      throw new EchoError('INPUT_TOO_LONG', { actual: this.measureTokens(manifest, text), limit: budget });
+    }
+    return this.packSegments(manifest, words, budget, ' ');
+  }
+
+  /** The whole input, as an ordered list of model calls and the text to carry through untouched between them. */
+  private planSegments(manifest: ModelManifest, text: string, budget: number): Segment[] {
+    const segments: Segment[] = [];
+    const paragraphParts = text.split(PARAGRAPH_SPLIT);
+    for (let index = 0; index < paragraphParts.length; index += 2) {
+      const paragraph = paragraphParts[index]!;
+      const separator = paragraphParts[index + 1];
+      const sentences = paragraph.split(SENTENCE_SPLIT).filter((sentence) => sentence.length > 0);
+      const chunks = this.packSegments(manifest, sentences, budget, ' ');
+      chunks.forEach((chunk, chunkIndex) => {
+        if (chunkIndex > 0) segments.push({ kind: 'join', text: ' ' });
+        segments.push({ kind: 'chunk', text: chunk });
+      });
+      if (separator !== undefined) segments.push({ kind: 'join', text: separator });
+    }
+    return segments;
+  }
+
+  /** Professional-only: rewrite each chunk in order, streaming the joined text so far through `onPartial`. */
+  private async rewriteChunked(request: RewriteRequest, options: RewriteOptions, budget: number): Promise<RewriteResult> {
+    const { manifest, adapterId, adapter, text } = request;
+    const segments = this.planSegments(manifest, text, budget);
+    let completed = '';
+    let inputTokens = 0;
+    let outputTokens = 0;
+    for (const segment of segments) {
+      if (options.signal?.aborted) throw new EchoError('CANCELLED');
+      if (segment.kind === 'join') {
+        completed += segment.text;
+        continue;
+      }
+      const prefix = completed;
+      const result = await this.rewriteOnce(
+        { manifest, adapterId, adapter, text: segment.text },
+        {
+          signal: options.signal,
+          onProgress: options.onProgress,
+          onPartial: options.onPartial ? (readText) => options.onPartial!(() => prefix + readText()) : undefined,
+        },
+      );
+      completed = prefix + result.text;
+      inputTokens += result.inputTokens;
+      outputTokens += result.outputTokens;
+    }
+    const output = completed.trim();
+    if (output.length === 0) throw new EchoError('EMPTY_RESULT');
+    return { text: output, inputTokens, outputTokens };
   }
 }
