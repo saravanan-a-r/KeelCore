@@ -35,10 +35,17 @@ export function Logo({ size = 32, title = 'EchoMeBetter' }: { size?: number; tit
   );
 }
 
-export function Wordmark({ className = '' }: { className?: string }) {
+/**
+ * The product name, with "Me" picked out in violet: deep violet on light
+ * backgrounds, light violet on dark ones (both pass WCAG AAA).
+ *   tone 'page'      on the page's own background; follows its theme.
+ *   tone 'on-brand'  on the violet brand header, which is dark in every theme.
+ */
+export function Wordmark({ className = '', tone = 'page' }: { className?: string; tone?: 'page' | 'on-brand' }) {
+  const onBrand = tone === 'on-brand';
   return (
-    <span className={`_echo_$_font-semibold _echo_$_tracking-tight ${className}`}>
-      Echo<span className="_echo_$_text-echo-500">Me</span>Better
+    <span className={`_echo_$_font-semibold _echo_$_tracking-tight ${onBrand ? '_echo_$_text-on-accent' : '_echo_$_text-fg'} ${className}`}>
+      Echo<span className={onBrand ? '_echo_$_text-echo-300' : '_echo_$_text-brand-name'}>Me</span>Better
     </span>
   );
 }
