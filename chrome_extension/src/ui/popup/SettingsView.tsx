@@ -16,7 +16,9 @@ import { ShortcutAccessCard } from '../components/ShortcutAccessCard';
 import { ShortcutKeys } from '../components/ShortcutKeys';
 import { StorageSettings, type StorageSettingsProps } from '../components/StorageSettings';
 import { Switch } from '../components/Switch';
+import { ThemeSettings } from '../components/ThemeSettings';
 import type { WebsiteAvailability } from '../hooks/useShortcuts';
+import type { ThemeChoice } from '../theme';
 
 export const SHORTCUT_NOTE =
   'Shortcuts only act when text is selected in a text box; every other key press goes to the website as usual. If one clashes with a site you use, turn shortcuts off here.';
@@ -35,6 +37,9 @@ export interface SettingsViewProps extends StorageSettingsProps {
   readonly onKeepLoadedChange: (minutes: KeepLoadedMinutes) => void;
   /** Null until the settings have been read. */
   readonly performance?: PerformanceSettingsProps | null;
+  /** Null until the theme has been read; without it the page has no theme setting. */
+  readonly theme?: ThemeChoice | null;
+  readonly onThemeChange?: (theme: ThemeChoice) => void;
   /** The setting to bring forward, when the page was opened for it. */
   readonly focus?: SettingsFocus | null;
   readonly onBack: () => void;
@@ -66,7 +71,7 @@ export function SettingsView(props: SettingsViewProps) {
   // One request for the permission, under the first feature waiting for it.
   const accessCard = (
     <div className="_echo_$_mt-3">
-      <ShortcutAccessCard platform={platform} waiting={waiting} onAllow={props.onAllowSiteAccess} title="One more step: allow on websites" />
+      <ShortcutAccessCard waiting={waiting} onAllow={props.onAllowSiteAccess} title="One more step: allow on websites" />
     </div>
   );
   const keepAwake = props.focus === 'keep-awake';
@@ -105,7 +110,13 @@ export function SettingsView(props: SettingsViewProps) {
       </header>
 
       <div className="_echo_$_space-y-5 _echo_$_px-4 _echo_$_py-4">
-        {props.performance && props.performance.gpu.state !== 'checking' ? (
+        {props.theme && props.onThemeChange ? (
+          <Section id="appearance-title" title="Appearance">
+            <ThemeSettings theme={props.theme} onChange={props.onThemeChange} />
+          </Section>
+        ) : null}
+
+        {props.performance && performanceReady ? (
           <Section id="performance-title" title="Performance" highlight={performanceFocus}>
             <PerformanceSettings {...props.performance} />
           </Section>

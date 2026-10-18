@@ -57,10 +57,10 @@ export function WaysToRewrite({ platform, hold }: { platform?: KeyPlatform; hold
   const [step, setStep] = useState(0);
 
   const onKeyDown = (event: KeyboardEvent) => {
-    const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
-    if (!step) return;
+    const by = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+    if (!by) return;
     event.preventDefault();
-    const next = ways[(ways.indexOf(way) + step + ways.length) % ways.length]!;
+    const next = ways[(ways.indexOf(way) + by + ways.length) % ways.length]!;
     setChosen(next);
     tabs.current[next]?.focus();
   };
@@ -76,30 +76,30 @@ export function WaysToRewrite({ platform, hold }: { platform?: KeyPlatform; hold
             {ways.length > 1 ? 'Whichever you use, the' : 'The'} rewrite appears beside your text, and your text changes only when you choose Replace.
           </p>
         </div>
-      {ways.length > 1 ? (
-        <div role="tablist" aria-label="Ways to rewrite" onKeyDown={onKeyDown} className="_echo_$_flex _echo_$_w-full _echo_$_gap-1 _echo_$_rounded-xl _echo_$_bg-muted _echo_$_p-1 sm:_echo_$_w-auto">
-          {ways.map((id) => (
-            <button
-              key={id}
-              ref={(element) => {
-                tabs.current[id] = element;
-              }}
-              type="button"
-              role="tab"
-              id={`way-tab-${id}`}
-              aria-selected={id === way}
-              aria-controls="way-panel"
-              tabIndex={id === way ? 0 : -1}
-              onClick={() => setChosen(id)}
-              className={`_echo_$_flex-1 _echo_$_cursor-pointer _echo_$_whitespace-nowrap _echo_$_rounded-lg _echo_$_border-0 _echo_$_px-1.5 _echo_$_py-1.5 _echo_$_text-[13px] _echo_$_font-semibold sm:_echo_$_flex-none sm:_echo_$_text-sm sm:_echo_$_px-4 _echo_$_transition focus-visible:_echo_$_outline focus-visible:_echo_$_outline-2 focus-visible:_echo_$_outline-focus ${
-                id === way ? '_echo_$_bg-segment-active _echo_$_text-accent-fg-strong _echo_$_shadow-sm' : '_echo_$_bg-transparent _echo_$_text-fg-soft hover:_echo_$_bg-segment-hover'
-              }`}
-            >
-              {WAYS[id].tab}
-            </button>
-          ))}
-        </div>
-      ) : null}
+        {ways.length > 1 ? (
+          <div role="tablist" aria-label="Ways to rewrite" onKeyDown={onKeyDown} className="_echo_$_flex _echo_$_w-full _echo_$_gap-1 _echo_$_rounded-xl _echo_$_bg-muted _echo_$_p-1 sm:_echo_$_w-auto">
+            {ways.map((id) => (
+              <button
+                key={id}
+                ref={(element) => {
+                  tabs.current[id] = element;
+                }}
+                type="button"
+                role="tab"
+                id={`way-tab-${id}`}
+                aria-selected={id === way}
+                aria-controls="way-panel"
+                tabIndex={id === way ? 0 : -1}
+                onClick={() => setChosen(id)}
+                className={`_echo_$_flex-1 _echo_$_cursor-pointer _echo_$_whitespace-nowrap _echo_$_rounded-lg _echo_$_border-0 _echo_$_px-1.5 _echo_$_py-1.5 _echo_$_text-[13px] _echo_$_font-semibold sm:_echo_$_flex-none sm:_echo_$_text-sm sm:_echo_$_px-4 _echo_$_transition focus-visible:_echo_$_outline focus-visible:_echo_$_outline-2 focus-visible:_echo_$_outline-focus ${
+                  id === way ? '_echo_$_bg-segment-active _echo_$_text-accent-fg-strong _echo_$_shadow-sm' : '_echo_$_bg-transparent _echo_$_text-fg-soft hover:_echo_$_bg-segment-hover'
+                }`}
+              >
+                {WAYS[id].tab}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
       <div
         id="way-panel"

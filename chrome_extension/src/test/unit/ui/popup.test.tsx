@@ -57,7 +57,6 @@ function renderPopup(
       model={model}
       catalog={options.catalog ?? served()}
       modelRemoved={options.modelRemoved ?? false}
-      platform="mac"
       shortcuts={options.shortcuts ?? 'off'}
       holdMenu={options.holdMenu ?? 'off'}
       {...handlers}

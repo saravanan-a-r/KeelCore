@@ -156,7 +156,6 @@ export function WelcomeView(props: WelcomeViewProps) {
           {needsSiteAccess(shortcuts, holdMenu) ? (
             <div className="_echo_$_mt-5">
               <ShortcutAccessCard
-                platform={platform}
                 waiting={{ shortcuts: shortcuts === 'needs-access', holdMenu: holdMenu === 'needs-access' }}
                 onAllow={onAllowSiteAccess}
               />

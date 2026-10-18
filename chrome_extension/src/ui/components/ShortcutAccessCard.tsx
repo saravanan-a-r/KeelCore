@@ -4,7 +4,6 @@
  * what the permission is for.
  */
 import { formatList } from '../../shared/format';
-import type { KeyPlatform } from '../../shared/shortcuts';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON } from './buttons';
 
 export const ACCESS_TITLE = 'Rewrite faster on websites';
@@ -15,19 +14,17 @@ export interface WaitingFeatures {
   readonly holdMenu: boolean;
 }
 
-export function accessExplanation(_platform: KeyPlatform, waiting: WaitingFeatures): string {
+export function accessExplanation(waiting: WaitingFeatures): string {
   const features = [...(waiting.shortcuts ? ['shortcuts'] : []), ...(waiting.holdMenu ? ['press and hold'] : [])];
   return `One-time permission to turn on ${formatList(features)}. Chrome will ask you to confirm. EchoMeBetter only works on text you select, and it never leaves your device.`;
 }
 
 export function ShortcutAccessCard({
-  platform,
   waiting,
   onAllow,
   onNotNow,
   title = ACCESS_TITLE,
 }: {
-  platform: KeyPlatform;
   waiting: WaitingFeatures;
   onAllow: () => void;
   onNotNow?: () => void;
@@ -39,7 +36,7 @@ export function ShortcutAccessCard({
       <h3 id="shortcut-access-title" className="_echo_$_text-sm _echo_$_font-semibold _echo_$_text-fg">
         {title}
       </h3>
-      <p className="_echo_$_mt-1 _echo_$_text-xs _echo_$_leading-5 _echo_$_text-fg-soft">{accessExplanation(platform, waiting)}</p>
+      <p className="_echo_$_mt-1 _echo_$_text-xs _echo_$_leading-5 _echo_$_text-fg-soft">{accessExplanation(waiting)}</p>
       <div className="_echo_$_mt-2.5 _echo_$_flex _echo_$_justify-end _echo_$_gap-2">
         {onNotNow ? (
           <button type="button" onClick={onNotNow} className={SECONDARY_BUTTON}>
