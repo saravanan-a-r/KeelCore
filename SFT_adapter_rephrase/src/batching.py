@@ -2,8 +2,12 @@
 Batch order and padding.
 
 One optimizer step = one *step batch* of `effective_batch_size` examples.
-The step batch is then cut into micro-batches of `batch_size` for gradient
-accumulation. Planning at step granularity is what makes the data order
+The step batch is then cut into micro-batches for gradient accumulation:
+`batch_size` rows each, or -- with `micro_batch_tokens` -- as many rows as fit
+a padded-token budget (target tokens weighted by `target_token_weight`, as
+their vocabulary-wide logits dominate memory), so a step of short rows runs as one large micro-batch
+and a step of long rows as several small ones. Either split sums to the same
+gradient (the loss is normalized by the step's tokens, see `trainer.py`). Planning at step granularity is what makes the data order
 device-independent: a CPU run (16 x 2) and a GPU run (32 x 1) see the same
 examples at the same optimizer step, so a run started on the CPU can be
 resumed on the GPU, and the two runs' curves are directly comparable.
@@ -102,6 +106,33 @@ class StepBatchStream:
 
 def split_micro_batches(indices: Sequence[int], batch_size: int) -> list[list[int]]:
     return [list(indices[i:i + batch_size]) for i in range(0, len(indices), batch_size)]
+
+
+def split_by_token_budget(
+    indices: Sequence[int], shapes: Sequence[tuple[int, int]], budget: int, target_weight: float = 1.0
+) -> list[list[int]]:
+    """
+    Cut a step batch into micro-batches whose padded cost, rows x (longest
+    source + `target_weight` x longest target), stays within `budget`.
+    `shapes[i]` is example i's (source, target) length. Rows are packed shortest first so
+    each micro-batch holds similar lengths; a single row longer than the
+    budget still gets a micro-batch of its own. Deterministic.
+    """
+    order = sorted(indices, key=lambda i: shapes[i][0] + target_weight * shapes[i][1])
+    micro_batches: list[list[int]] = []
+    current: list[int] = []
+    longest_source = longest_target = 0
+    for i in order:
+        source = max(longest_source, shapes[i][0])
+        target = max(longest_target, shapes[i][1])
+        if current and (len(current) + 1) * (source + target_weight * target) > budget:
+            micro_batches.append(current)
+            current, (source, target) = [], shapes[i]
+        current.append(i)
+        longest_source, longest_target = source, target
+    if current:
+        micro_batches.append(current)
+    return micro_batches
 
 
 @dataclass

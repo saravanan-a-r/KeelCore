@@ -9,7 +9,7 @@ import random
 
 import torch
 
-from src.batching import StepBatchPlan, StepBatchStream, collate, split_micro_batches
+from src.batching import StepBatchPlan, StepBatchStream, collate, split_by_token_budget, split_micro_batches
 from src.codec import Frame
 from src.data import SFTExample
 
@@ -67,6 +67,29 @@ def test_stream_resumes_at_the_same_batch_across_an_epoch_boundary():
 
 def test_micro_batches_partition_the_step_batch():
     assert split_micro_batches([5, 6, 7, 8, 9], 2) == [[5, 6], [7, 8], [9]]
+
+
+def test_token_budget_partitions_the_step_batch_within_the_budget():
+    rng = random.Random(0)
+    shapes = [(rng.randint(5, 300), rng.randint(2, 300)) for _ in range(500)]
+    indices = rng.sample(range(500), 32)
+    split = split_by_token_budget(indices, shapes, budget=2000)
+    assert sorted(i for micro in split for i in micro) == sorted(indices)
+    for micro in split:
+        padded = len(micro) * (max(shapes[i][0] for i in micro) + max(shapes[i][1] for i in micro))
+        assert padded <= 2000 or len(micro) == 1
+    assert split == split_by_token_budget(indices, shapes, budget=2000)
+
+
+def test_token_budget_weights_target_tokens():
+    shapes = {0: (10, 10), 1: (10, 10)}
+    assert split_by_token_budget([0, 1], shapes, budget=50) == [[0, 1]]
+    assert split_by_token_budget([0, 1], shapes, budget=50, target_weight=3.0) == [[0], [1]]
+
+
+def test_token_budget_packs_short_rows_together_and_isolates_long_ones():
+    shapes = {0: (10, 10), 1: (10, 10), 2: (10, 10), 3: (900, 900)}
+    assert split_by_token_budget([3, 0, 1, 2], shapes, budget=100) == [[0, 1, 2], [3]]
 
 
 def test_collate_shifts_the_target_and_masks_padding_out_of_the_loss():
