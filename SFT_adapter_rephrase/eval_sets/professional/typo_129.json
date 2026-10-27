@@ -1,0 +1,837 @@
+{
+ "fixed": 117,
+ "total": 129,
+ "rows": [
+  {
+   "input": "i recieve your mesage yesterday and will definately reply tommorow",
+   "output": "I received your message yesterday and will definitely reply tomorrow.",
+   "typos": {
+    "recieve": [
+     "receive",
+     false,
+     false
+    ],
+    "mesage": [
+     "message",
+     true,
+     false
+    ],
+    "definately": [
+     "definitely",
+     true,
+     false
+    ],
+    "tommorow": [
+     "tomorrow",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "pls send the documnet before the begining of the meeting, its realy importent",
+   "output": "Please send the document before the meeting begins; it is really important.",
+   "typos": {
+    "documnet": [
+     "document",
+     true,
+     false
+    ],
+    "begining": [
+     "beginning",
+     false,
+     false
+    ],
+    "realy": [
+     "really",
+     true,
+     false
+    ],
+    "importent": [
+     "important",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "we need to schedual an apointment with the managment becuase the requirment changed",
+   "output": "We need to schedule an appointment with the management because the requirement has changed.",
+   "typos": {
+    "schedual": [
+     "schedule",
+     true,
+     false
+    ],
+    "apointment": [
+     "appointment",
+     true,
+     false
+    ],
+    "managment": [
+     "management",
+     true,
+     false
+    ],
+    "becuase": [
+     "because",
+     true,
+     false
+    ],
+    "requirment": [
+     "requirement",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "thier goverment has not yet adressed the enviroment problem wich occured last year",
+   "output": "The government has not yet addressed the environmental issue that occurred last year.",
+   "typos": {
+    "thier": [
+     "their",
+     false,
+     false
+    ],
+    "goverment": [
+     "government",
+     true,
+     false
+    ],
+    "adressed": [
+     "addressed",
+     true,
+     false
+    ],
+    "enviroment": [
+     "environment",
+     false,
+     false
+    ],
+    "wich": [
+     "which",
+     false,
+     false
+    ],
+    "occured": [
+     "occurred",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "my freind said its wierd that the buisness did not seperate the accounts untill now",
+   "output": "My friend mentioned that it's strange that the business did not separate the accounts until now.",
+   "typos": {
+    "freind": [
+     "friend",
+     true,
+     false
+    ],
+    "wierd": [
+     "weird",
+     false,
+     false
+    ],
+    "buisness": [
+     "business",
+     true,
+     false
+    ],
+    "seperate": [
+     "separate",
+     true,
+     false
+    ],
+    "untill": [
+     "until",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "the informtion you gave was usefull but the comunication from your teem was poor",
+   "output": "The information you provided was useful, but the communication from your team was poor.",
+   "typos": {
+    "informtion": [
+     "information",
+     true,
+     false
+    ],
+    "usefull": [
+     "useful",
+     true,
+     false
+    ],
+    "comunication": [
+     "communication",
+     true,
+     false
+    ],
+    "teem": [
+     "team",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "i am writting to inform you that the shippment was deliverd to the wrong adress",
+   "output": "I am writing to inform you that the shipment was delivered to the incorrect address.",
+   "typos": {
+    "writting": [
+     "writing",
+     true,
+     false
+    ],
+    "shippment": [
+     "shipment",
+     true,
+     false
+    ],
+    "deliverd": [
+     "delivered",
+     true,
+     false
+    ],
+    "adress": [
+     "address",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "please confrim the recipt of the paymant and send me the invoce",
+   "output": "Please confirm the receipt of the payment and send me the invoice.",
+   "typos": {
+    "confrim": [
+     "confirm",
+     true,
+     false
+    ],
+    "recipt": [
+     "receipt",
+     true,
+     false
+    ],
+    "paymant": [
+     "payment",
+     true,
+     false
+    ],
+    "invoce": [
+     "invoice",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "the new employe was suprised by the accomodation and the lenght of the trainning",
+   "output": "The new employee was surprised by the accommodation and the length of the training.",
+   "typos": {
+    "employe": [
+     "employee",
+     true,
+     false
+    ],
+    "suprised": [
+     "surprised",
+     true,
+     false
+    ],
+    "accomodation": [
+     "accommodation",
+     true,
+     false
+    ],
+    "lenght": [
+     "length",
+     true,
+     false
+    ],
+    "trainning": [
+     "training",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "we are experiancing a problm with the databse and cannot acess the reports",
+   "output": "We are experiencing an issue with the database and are unable to access the reports.",
+   "typos": {
+    "experiancing": [
+     "experiencing",
+     true,
+     false
+    ],
+    "problm": [
+     "problem",
+     false,
+     false
+    ],
+    "databse": [
+     "database",
+     true,
+     false
+    ],
+    "acess": [
+     "access",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "teh manger will anwser all questoins at the end of the presentaion",
+   "output": "The manager will answer all questions at the end of the presentation.",
+   "typos": {
+    "teh": [
+     "the",
+     true,
+     false
+    ],
+    "manger": [
+     "manager",
+     true,
+     false
+    ],
+    "anwser": [
+     "answer",
+     true,
+     false
+    ],
+    "questoins": [
+     "questions",
+     true,
+     false
+    ],
+    "presentaion": [
+     "presentation",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "its neccessary to recieve aproval from the suprvisor befor we proceed",
+   "output": "It is necessary to receive approval from the supervisor before we proceed.",
+   "typos": {
+    "neccessary": [
+     "necessary",
+     true,
+     false
+    ],
+    "recieve": [
+     "receive",
+     true,
+     false
+    ],
+    "aproval": [
+     "approval",
+     true,
+     false
+    ],
+    "suprvisor": [
+     "supervisor",
+     true,
+     false
+    ],
+    "befor": [
+     "before",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "i beleive the compnay shoud improve its custmer service imediately",
+   "output": "I believe the company should improve its customer service immediately.",
+   "typos": {
+    "beleive": [
+     "believe",
+     true,
+     false
+    ],
+    "compnay": [
+     "company",
+     true,
+     false
+    ],
+    "shoud": [
+     "should",
+     true,
+     false
+    ],
+    "custmer": [
+     "customer",
+     true,
+     false
+    ],
+    "imediately": [
+     "immediately",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "the resturant was very croweded and the waitor was rude to us",
+   "output": "The restaurant was quite crowded, and the waiter was rude to us.",
+   "typos": {
+    "resturant": [
+     "restaurant",
+     true,
+     false
+    ],
+    "croweded": [
+     "crowded",
+     true,
+     false
+    ],
+    "waitor": [
+     "waiter",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "he is a very inteligent studnet and always compleats his asignments on time",
+   "output": "He is a highly intelligent student and always completes his assignments on time.",
+   "typos": {
+    "inteligent": [
+     "intelligent",
+     true,
+     false
+    ],
+    "studnet": [
+     "student",
+     true,
+     false
+    ],
+    "compleats": [
+     "completes",
+     true,
+     false
+    ],
+    "asignments": [
+     "assignments",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "we will discus the proposel in the next meeting and give our feedbak",
+   "output": "We will discuss the proposal in the next meeting and provide our feedback.",
+   "typos": {
+    "discus": [
+     "discuss",
+     true,
+     false
+    ],
+    "proposel": [
+     "proposal",
+     true,
+     false
+    ],
+    "feedbak": [
+     "feedback",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "sory for the inconvinience, the sevice will be restord shortly",
+   "output": "Sorry for the inconvenience, the service will be restored shortly.",
+   "typos": {
+    "sory": [
+     "sorry",
+     true,
+     false
+    ],
+    "inconvinience": [
+     "inconvenience",
+     true,
+     false
+    ],
+    "sevice": [
+     "service",
+     true,
+     false
+    ],
+    "restord": [
+     "restored",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "can u pls chek if the paymnt went thru becuase i dint get any confirmtion",
+   "output": "Could you please check if the payment went through because I didn't receive any confirmation?",
+   "typos": {
+    "chek": [
+     "check",
+     true,
+     false
+    ],
+    "paymnt": [
+     "payment",
+     true,
+     false
+    ],
+    "becuase": [
+     "because",
+     true,
+     false
+    ],
+    "confirmtion": [
+     "confirmation",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "their is a mistak in the repport and the totals dont mach",
+   "output": "There is a mistake in the report, and the totals do not match.",
+   "typos": {
+    "mistak": [
+     "mistake",
+     true,
+     false
+    ],
+    "repport": [
+     "report",
+     true,
+     false
+    ],
+    "mach": [
+     "match",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "the deadlien is tomorow so we must finnish the projcet tonite",
+   "output": "The deadline is tomorrow, so we need to finish the project tonight.",
+   "typos": {
+    "deadlien": [
+     "deadline",
+     true,
+     false
+    ],
+    "tomorow": [
+     "tomorrow",
+     true,
+     false
+    ],
+    "finnish": [
+     "finish",
+     true,
+     false
+    ],
+    "projcet": [
+     "project",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "pleese find the atached file and let me no if you have any quesitons",
+   "output": "Please locate the attached file and let me know if you have any questions.",
+   "typos": {
+    "pleese": [
+     "please",
+     true,
+     false
+    ],
+    "atached": [
+     "attached",
+     true,
+     false
+    ],
+    "quesitons": [
+     "questions",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "i havent recived the pakage yet and the tracking show no updat",
+   "output": "I have not received the package yet, and the tracking shows no updates.",
+   "typos": {
+    "recived": [
+     "received",
+     true,
+     false
+    ],
+    "pakage": [
+     "package",
+     true,
+     false
+    ],
+    "updat": [
+     "update",
+     false,
+     false
+    ]
+   }
+  },
+  {
+   "input": "our compeny is lokking for an experianced devloper with good knowlege of pyhton",
+   "output": "Our company is looking for an experienced developer with a good knowledge of Python.",
+   "typos": {
+    "compeny": [
+     "company",
+     true,
+     false
+    ],
+    "lokking": [
+     "looking",
+     true,
+     false
+    ],
+    "experianced": [
+     "experienced",
+     true,
+     false
+    ],
+    "devloper": [
+     "developer",
+     true,
+     false
+    ],
+    "knowlege": [
+     "knowledge",
+     true,
+     false
+    ],
+    "pyhton": [
+     "Python",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "the weahter was terible so we cancled the picnik",
+   "output": "The weather was terrible, so we closed the picnic.",
+   "typos": {
+    "weahter": [
+     "weather",
+     true,
+     false
+    ],
+    "terible": [
+     "terrible",
+     true,
+     false
+    ],
+    "cancled": [
+     "canceled",
+     false,
+     false
+    ],
+    "picnik": [
+     "picnic",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "he sugested that we improove the sercurity of the sytem",
+   "output": "He suggested that we improve the security of the system.",
+   "typos": {
+    "sugested": [
+     "suggested",
+     true,
+     false
+    ],
+    "improove": [
+     "improve",
+     true,
+     false
+    ],
+    "sercurity": [
+     "security",
+     true,
+     false
+    ],
+    "sytem": [
+     "system",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "it was a grate oppurtunity and i am verry thankfull for it",
+   "output": "It was a great opportunity, and I am very thankful for it.",
+   "typos": {
+    "grate": [
+     "great",
+     true,
+     false
+    ],
+    "oppurtunity": [
+     "opportunity",
+     true,
+     false
+    ],
+    "verry": [
+     "very",
+     true,
+     false
+    ],
+    "thankfull": [
+     "thankful",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "we apologise for the dellay and apreciate your pateince",
+   "output": "We apologise for the delay and appreciate your patience.",
+   "typos": {
+    "dellay": [
+     "delay",
+     true,
+     false
+    ],
+    "apreciate": [
+     "appreciate",
+     true,
+     false
+    ],
+    "pateince": [
+     "patience",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "the doctr prescibed some medecine for the infction",
+   "output": "The doctor prescribed some medication for the infection.",
+   "typos": {
+    "doctr": [
+     "doctor",
+     true,
+     false
+    ],
+    "prescibed": [
+     "prescribed",
+     true,
+     false
+    ],
+    "medecine": [
+     "medicine",
+     false,
+     false
+    ],
+    "infction": [
+     "infection",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "hte client wnats to chnage the desgin befor the launhc",
+   "output": "The client wants to change the design before the launch.",
+   "typos": {
+    "hte": [
+     "the",
+     true,
+     false
+    ],
+    "wnats": [
+     "wants",
+     true,
+     false
+    ],
+    "chnage": [
+     "change",
+     true,
+     false
+    ],
+    "desgin": [
+     "design",
+     true,
+     false
+    ],
+    "befor": [
+     "before",
+     true,
+     false
+    ],
+    "launhc": [
+     "launch",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "i cant atend the intervew becuse i am sick",
+   "output": "I am unable to attend the interview because I am ill.",
+   "typos": {
+    "atend": [
+     "attend",
+     true,
+     false
+    ],
+    "intervew": [
+     "interview",
+     true,
+     false
+    ],
+    "becuse": [
+     "because",
+     true,
+     false
+    ]
+   }
+  },
+  {
+   "input": "the machien is not workin proprly and nedds repair",
+   "output": "The machine is not functioning properly and requires repair.",
+   "typos": {
+    "machien": [
+     "machine",
+     true,
+     false
+    ],
+    "workin": [
+     "working",
+     false,
+     false
+    ],
+    "proprly": [
+     "properly",
+     true,
+     false
+    ],
+    "nedds": [
+     "needs",
+     false,
+     false
+    ]
+   }
+  }
+ ]
+}

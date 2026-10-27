@@ -1,0 +1,242 @@
+[
+ {
+  "id": 1,
+  "level": "easy",
+  "input": "hi john, i wanted to ask you if you have time tomorow for a quick call",
+  "output": "Hi John,\n\nI wanted to ask if you have time tomorrow to make a quick call."
+ },
+ {
+  "id": 2,
+  "level": "easy",
+  "input": "Please send me the report by friday, its urgent.",
+  "output": "Please send the report by Friday; it is urgent."
+ },
+ {
+  "id": 3,
+  "level": "easy",
+  "input": "Thanks for you help yesterday, it was really helpfull.",
+  "output": "Thank you for your assistance yesterday; it was very helpful."
+ },
+ {
+  "id": 4,
+  "level": "easy",
+  "input": "I am not able to join the meeting today because i have fever.",
+  "output": "I am unable to attend the meeting today due to fever."
+ },
+ {
+  "id": 5,
+  "level": "easy",
+  "input": "can you tell me what is the status of my order",
+  "output": "Could you please inform me about the status of my order?"
+ },
+ {
+  "id": 6,
+  "level": "easy",
+  "input": "We has completed the testing and no bugs was found.",
+  "output": "We have completed the testing, and no bugs were found."
+ },
+ {
+  "id": 7,
+  "level": "easy",
+  "input": "sorry for late reply, i was busy in another project",
+  "output": "Apologies for the delayed response. I was occupied with another project."
+ },
+ {
+  "id": 8,
+  "level": "easy",
+  "input": "Please find attached the document which you asked for.",
+  "output": "Please find attached the document you requested."
+ },
+ {
+  "id": 9,
+  "level": "easy",
+  "input": "he dont know about the change in schedule",
+  "output": "He is unaware of the change in the schedule."
+ },
+ {
+  "id": 10,
+  "level": "easy",
+  "input": "I want to apply for leave from monday to wednesday.",
+  "output": "I would like to apply for leave from Monday to Wednesday."
+ },
+ {
+  "id": 11,
+  "level": "easy",
+  "input": "Your invoice is still pending since two weeks, pay it soon.",
+  "output": "Your invoice has been pending for two weeks; please pay it promptly."
+ },
+ {
+  "id": 12,
+  "level": "easy",
+  "input": "i will inform you once i get the update from client",
+  "output": "I will inform you once I receive the update from the client."
+ },
+ {
+  "id": 13,
+  "level": "easy",
+  "input": "The new laptop have arrived and its working fine.",
+  "output": "The new laptop has arrived and is functioning well."
+ },
+ {
+  "id": 14,
+  "level": "medium",
+  "input": "Do this task by EOD. Dont delay it. Otherwise, it'll be a great problem with me and PM.",
+  "output": "Complete this task by EOD. Do not delay it. Otherwise, it will be a significant issue for me and PM."
+ },
+ {
+  "id": 15,
+  "level": "medium",
+  "input": "hello team, as discussed yesterday we need to finish the migration before the release but some of the services is still not ready so please update me your status asap",
+  "output": "Hello team,\n\nAs discussed yesterday, we need to complete the migration before the release. However, some of the services are still not ready. Please update me with your status as soon as possible."
+ },
+ {
+  "id": 16,
+  "level": "medium",
+  "input": "I am writing to complain about the product i bought last week, it stopped working after two days and your customer care people is not picking my calls",
+  "output": "I am writing to express my concerns regarding the product I purchased last week. It ceased functioning after two days, and the customer care team has not addressed my issues."
+ },
+ {
+  "id": 17,
+  "level": "medium",
+  "input": "Dear sir, I am very much interested in the position of data analyst which was posted on your website, i have 3 years experience in SQL and python and i think i am good fit.",
+  "output": "Dear sir,\n\nI am very interested in the position of data analyst that was posted on your website. I have three years of experience in SQL and Python, and I believe I am a good fit."
+ },
+ {
+  "id": 18,
+  "level": "medium",
+  "input": "the server was down for almost 2 hours in the morning, we dont know the exact reason yet but devops team is looking into it and will share RCA tomorrow",
+  "output": "The server was down for nearly 2 hours in the morning. We are not certain of the exact reason, but the devops team is investigating and will share the RCA tomorrow."
+ },
+ {
+  "id": 19,
+  "level": "medium",
+  "input": "Can you please explain me again how the refund process work, because last time the agent told me different thing and i am confused now.",
+  "output": "Could you please clarify how the refund process works again? Last time, the agent provided different information, and I am now confused."
+ },
+ {
+  "id": 20,
+  "level": "medium",
+  "input": "Our team need more time to complete the module because the requirements got changed in between, and we also lost two days due to the laptop issue.",
+  "output": "Our team requires additional time to complete the module as the requirements were updated in between, and we also lost two days due to the laptop issue."
+ },
+ {
+  "id": 21,
+  "level": "medium",
+  "input": "I would like to request you to kindly reschedule the interview to next week as I have a family function in this weekend and cannot able to attend.",
+  "output": "I would like to request that you reschedule the interview for next week, as I have a family function this weekend and am unable to attend."
+ },
+ {
+  "id": 22,
+  "level": "medium",
+  "input": "Priya was very good in the presentation but the other speakers were boring and not prepared at all, management should do something about it",
+  "output": "Priya was very effective in the presentation, but the other speakers were uninteresting and not well-prepared. Management should address this issue."
+ },
+ {
+  "id": 23,
+  "level": "medium",
+  "input": "we are happy to inform that your application has been selected for next round, the interview will be on 14th march at 11 am in our hyderabad office",
+  "output": "We are pleased to inform you that your application has been selected for the next round. The interview will take place on March 14th at 11 am in our Hyderabad office."
+ },
+ {
+  "id": 24,
+  "level": "medium",
+  "input": "Please dont forget to submit the timesheet every week, if not the payroll will get delay and i cant do anything about that.",
+  "output": "Please ensure to submit the timesheet every week. If not, the payroll process may be delayed, and I will not be able to address that."
+ },
+ {
+  "id": 25,
+  "level": "medium",
+  "input": "I tried to login many times but it showing invalid password, even i reset the password two times and still same issue.",
+  "output": "I attempted to log in multiple times, but it displayed an invalid password. Even after resetting the password twice, the issue persists."
+ },
+ {
+  "id": 26,
+  "level": "medium",
+  "input": "The budget for the campaign is 50000 dollars and we have already spent 32000 so we has to be carefull with the rest of the amount.",
+  "output": "The budget for the campaign is 5000 dollars, and we have already spent 3200, so we need to be cautious with the remaining amount."
+ },
+ {
+  "id": 27,
+  "level": "tough",
+  "input": "Hi Ravi, hope you doing good. I am following up on the mail i sent last monday regarding the vendor contract, we are still waiting for you're confirmation on the payment terms (net 45) and the SLA of 99.9% uptime, without this we cannot proceed to sign and legal team is asking me everyday.",
+  "output": "Hi Ravi,\n\nI hope you are doing well. I am following up on the email I sent last Monday regarding the vendor contract. We are still waiting for your confirmation of the payment terms (net 45) and the SLA of 99.9% uptime. Without this, we cannot proceed to sign, and the legal team is asking me every day."
+ },
+ {
+  "id": 28,
+  "level": "tough",
+  "input": "So basically what happened is the deployment which we did on tuesday night it broke the checkout page for around 40 minutes and customers was not able to pay, we rolled back after seeing the alerts but 312 orders got failed and finance is asking for the impact so can you pls share the numbers from the dashboard",
+  "output": "The deployment we completed on Tuesday night caused the checkout page to break for approximately 40 minutes, preventing customers from making payments. We rolled back the changes after reviewing the alerts, but 312 orders were still rejected. Finance is requesting the details of the impact. Could you please share the numbers from the dashboard?"
+ },
+ {
+  "id": 29,
+  "level": "tough",
+  "input": "dear hiring manager, i am writing this letter to express my interest for the senior backend engineer role at acme corp. in my current company i lead a team of 6 engineers and we reduced the api latency from 800ms to 120ms by moving to redis cache, and i beleive this experience can bring value to your team",
+  "output": "Dear hiring manager,\n\nI am writing this letter to express my interest in the senior backend engineer role at Acme Corp. In my current company, I lead a team of six engineers, and we reduced the API latency from 800ms to 120ms by moving to a Redis cache. I believe this experience can be valuable to your team."
+ },
+ {
+  "id": 30,
+  "level": "tough",
+  "input": "Do this task by EOD. Dont delay it. Otherwise, it'll be a great problem with me and PM. Also, what is the status about the today's standup call. Vivek was good. Other managers are not good and rude.",
+  "output": "Please complete this task by EOD. Do not delay it. Otherwise, it could lead to significant issues with both me and PM. Additionally, could you provide the status of today's standup call? Vivek was good, but other managers are not."
+ },
+ {
+  "id": 31,
+  "level": "tough",
+  "input": "I think we should not go with option B because the cost is very high 2.4M and also the vendor have bad reputation in market, many of our competitors tried them and they faced delays of more than 6 months, option A is little slow but safe.",
+  "output": "We should avoid option B due to the high cost of 2.4M and the vendor's poor market reputation. Many of our competitors have experienced delays exceeding six months, while option A is somewhat slower but still safe."
+ },
+ {
+  "id": 32,
+  "level": "tough",
+  "input": "pls check the code in https://github.com/acme/billing-service/pull/482 and tell me if the function calculate_tax() is correct, because for invoice #INV-2291 the total is showing 1,180.50 instead of 1,200.00 and customer is angry",
+  "output": "Please review the code at https://github.com/acme/billing-service/pull/482 and let me know if the function calculate_tax() is correct. For invoice #INV-2291, the total is showing 1,180.50 instead of 1.200.00, which is causing some concern."
+ },
+ {
+  "id": 33,
+  "level": "tough",
+  "input": "The patient, 54 year old male, came with chest pain since 2 days and the ECG show ST elevation, we gave aspirin 300mg and shifted him to cath lab immediately, family is informed about the condition and consent is taken.",
+  "output": "The patient, a 54-year-old male, experienced chest pain for two days, and the ECG indicated an ST elevation. We administered 300mg of aspirin and transferred him to the cardiac lab immediately. The family was informed about the condition and consent was obtained."
+ },
+ {
+  "id": 34,
+  "level": "tough",
+  "input": "Sir i am writing to you with heavy heart that my father passed away yesterday night and i need to go to my native place for the rituals, i will be unavailable from 12th to 20th, i will try to be reachable on phone if there is any emergency.",
+  "output": "Sir,\n\nI am writing to you with a strong sense of gratitude regarding my father's passing yesterday night. I need to attend the funeral at my home place. I will be unavailable from the 12th to the 20th and will attempt to reach you via phone in case of any emergencies."
+ },
+ {
+  "id": 35,
+  "level": "tough",
+  "input": "yesterday i went office and my manager told me in front of everyone that my work is not good, i felt very bad, i want to talk to HR about this but i dont know how to write the mail that is not too angry but still the HR will take serious",
+  "output": "Yesterday, I visited the office, and my manager informed me that my work is not satisfactory. I feel quite concerned about this. I plan to discuss this with the HR department, but I am unsure how to express my concerns clearly."
+ },
+ {
+  "id": 36,
+  "level": "tough",
+  "input": "Regarding the quarterly review, we noticed that revenue grew 12% YoY but margin is dropping because of increase in cloud cost, ($1.8M vs $1.1M last year), so I suggest we to renegotiate the contract with AWS or move some workloads to on-premise, what you think?",
+  "output": "Regarding the quarterly review, we observed that revenue increased by 12% annually, but the margin has decreased due to an increase in cloud costs ($1.8M vs $1.1M last year). I recommend renegotiation of the contract with AWS or relocating some workloads to on-premise. What are your thoughts?"
+ },
+ {
+  "id": 37,
+  "level": "tough",
+  "input": "Ok so the thing is, our customer want to cancel the subscription but he is saying that he never got the invoice, I checked and the email was send to the old address john.old@mail.com, so please update to john.new@mail.com and refund him the March charge of $49 and tell him sorry from our side",
+  "output": "The issue is that our customer wants to cancel the subscription, but they mentioned that they never received the invoice. I have verified that the email was sent to the old address john.old@mail.com. Please update it to john@new@mail@com and refund the March charge of $49. We would also like to express our apologies to them."
+ },
+ {
+  "id": 38,
+  "level": "tough",
+  "input": "To whom it may concern, this is to certify that Mr. Arun Kumar was working in our organisation from 01/06/2019 to 31/05/2023 as a Senior Accountant and his conduct was good and he have completed all his responsibilites with sincerity, we wish him all the best for future.",
+  "output": "To the individuals concerned, this is to certify that Mr. Arun Kumar worked in our organisation from 01/06/2019 to 31/10/23 as a Senior Accountant. His conduct was good, and he has fulfilled all his responsibilities with sincerity. We wish him all the best for the future."
+ },
+ {
+  "id": 39,
+  "level": "tough",
+  "input": "Team, tomorrow's all hands is cancelled because CEO is travelling, but the product demo will go on as planned at 3 PM IST in room Everest, those who are remote please join using the zoom link shared earlier and keep your mic mute during the demo otherwise there is lot of noise.",
+  "output": "Team, the all-hands meeting is cancelled due to the CEO's travel, but the product demo will proceed as planned at 3 PM IST in Room Everest. For those who are remote, please join using the zoom link provided earlier and keep your microphone muted during the demo to minimize noise."
+ },
+ {
+  "id": 40,
+  "level": "tough",
+  "input": "I have been using your app since 2 years and I love the design, but from last update the notifications are not coming in time, sometimes it comes after 3-4 hours which defeats the purpose, also the dark mode is hurting my eyes, plz fix this soon or i will be forced to switch to your competitor.",
+  "output": "I have been using your app for the past two years and I appreciate the design. However, since the last update, the notifications have not been timely, sometimes arriving after 3-4 hours, which is not ideal. Additionally, the dark mode is causing discomfort for my eyes. Could you please resolve this issue promptly to avoid switching to your competitor's product?"
+ }
+]

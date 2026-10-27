@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "difficulty": "easy",
+    "input": "The meeting is at 3pm.",
+    "output": "The meeting will be held at the time of 3pm."
+  },
+  {
+    "id": 2,
+    "difficulty": "easy",
+    "input": "I like this book.",
+    "output": "I find this book to be quite appealing."
+  },
+  {
+    "id": 3,
+    "difficulty": "easy",
+    "input": "She works at a hospital.",
+    "output": "She is employed at a hospital."
+  },
+  {
+    "id": 4,
+    "difficulty": "easy",
+    "input": "The cat is sleeping on the couch.",
+    "output": "The cat is currently sleeping on the couch."
+  },
+  {
+    "id": 5,
+    "difficulty": "easy",
+    "input": "We need more coffee.",
+    "output": "We require a greater quantity of coffee."
+  },
+  {
+    "id": 6,
+    "difficulty": "easy",
+    "input": "He finished the project.",
+    "output": "He has successfully completed the project."
+  },
+  {
+    "id": 7,
+    "difficulty": "easy",
+    "input": "The weather is nice today.",
+    "output": "The weather has been pleasant today."
+  },
+  {
+    "id": 8,
+    "difficulty": "easy",
+    "input": "Please close the door.",
+    "output": "Please ensure that the door is closed."
+  },
+  {
+    "id": 9,
+    "difficulty": "easy",
+    "input": "I went to the store.",
+    "output": "I proceeded to visit the store."
+  },
+  {
+    "id": 10,
+    "difficulty": "easy",
+    "input": "This car is fast.",
+    "output": "This car is characterized by its swift speed."
+  },
+  {
+    "id": 11,
+    "difficulty": "easy",
+    "input": "The team won the game.",
+    "output": "The team emerged victorious in the game."
+  },
+  {
+    "id": 12,
+    "difficulty": "easy",
+    "input": "Lunch is ready.",
+    "output": "The lunch is now ready to be consumed."
+  },
+  {
+    "id": 13,
+    "difficulty": "easy",
+    "input": "My phone battery died.",
+    "output": "My phone battery has died."
+  },
+  {
+    "id": 14,
+    "difficulty": "medium",
+    "input": "The company released a new product last week, and sales have been steady since then.",
+    "output": "The company recently released a new product, which has been in the market for a considerable amount of time, and the sales have remained consistent over the past week."
+  },
+  {
+    "id": 15,
+    "difficulty": "medium",
+    "input": "Our team missed the deadline because two engineers were out sick.",
+    "output": "Our team was unable to meet the deadline because two of the engineers were ill."
+  },
+  {
+    "id": 16,
+    "difficulty": "medium",
+    "input": "The restaurant was crowded, so we had to wait thirty minutes for a table.",
+    "output": "The restaurant was quite crowded, which meant we had to wait for thirty minutes to secure a table."
+  },
+  {
+    "id": 17,
+    "difficulty": "medium",
+    "input": "She decided to switch careers after working in finance for ten years.",
+    "output": "She decided to transition into new careers after having worked in finance for a period of ten years."
+  },
+  {
+    "id": 18,
+    "difficulty": "medium",
+    "input": "The new policy affects employees who work remotely more than three days a week.",
+    "output": "The new policy is applicable to employees who engage in remote work activities on more than three consecutive days."
+  },
+  {
+    "id": 19,
+    "difficulty": "medium",
+    "input": "I think we should rethink our marketing strategy before the next quarter starts.",
+    "output": "I believe that we should reconsider our marketing strategy prior to the upcoming quarter begins."
+  },
+  {
+    "id": 20,
+    "difficulty": "medium",
+    "input": "The flight got delayed because of bad weather over the mountains.",
+    "output": "The flight was delayed due to adverse weather conditions over the mountains."
+  },
+  {
+    "id": 21,
+    "difficulty": "medium",
+    "input": "He fixed the bug, but the same error showed up again in production.",
+    "output": "He successfully resolved the bug, but the same error reappeared in the production process."
+  },
+  {
+    "id": 22,
+    "difficulty": "medium",
+    "input": "The students were given extra time to finish the exam due to a fire drill.",
+    "output": "The students were granted additional time to complete the exam, as a result of a fire drill."
+  },
+  {
+    "id": 23,
+    "difficulty": "medium",
+    "input": "Our vendor raised prices, so we are looking for a cheaper alternative.",
+    "output": "Our vendor has increased the prices, which means we are in search of a more affordable alternative."
+  },
+  {
+    "id": 24,
+    "difficulty": "medium",
+    "input": "The city plans to build a new park near the river next year.",
+    "output": "The city is planning to construct a new park in close proximity to the river in the upcoming year."
+  },
+  {
+    "id": 25,
+    "difficulty": "medium",
+    "input": "After the merger, two departments had to combine into one team.",
+    "output": "After the merger, two separate departments were required to unite into a single team."
+  },
+  {
+    "id": 26,
+    "difficulty": "medium",
+    "input": "The doctor recommended rest and told her to avoid heavy lifting for a month.",
+    "output": "The doctor recommended rest and advised her to refrain from heavy lifting for a period of one month."
+  },
+  {
+    "id": 27,
+    "difficulty": "tough",
+    "input": "Revenue grew.",
+    "output": "The revenue grew significantly."
+  },
+  {
+    "id": 28,
+    "difficulty": "tough",
+    "input": "Fix it.",
+    "output": "Correct it."
+  },
+  {
+    "id": 29,
+    "difficulty": "tough",
+    "input": "The algorithm, which was trained on a dataset of roughly ten million labeled images collected over three years from five different research institutions, achieved a classification accuracy of 94.2% on the held-out test set, outperforming the previous state-of-the-art model by just under two percentage points.",
+    "output": "The algorithm, which was trained on a dataset containing approximately ten million labeled images collected over a period of three years from five different research institutions, achieved a classification accuracy of 94.2% on the held-out test set. This result significantly outperformed the previous state-of-the-art model, which achieved only a mere two percentage points of accuracy."
+  },
+  {
+    "id": 30,
+    "difficulty": "tough",
+    "input": "Although the initial proposal was rejected by the board due to budget constraints, a revised version incorporating phased funding and a smaller pilot program was approved unanimously three weeks later.",
+    "output": "Although the initial proposal was ultimately rejected by the board due to budget constraints, a revised version, which incorporated phased funding and a smaller pilot program, was approved unanimously three weeks later."
+  },
+  {
+    "id": 31,
+    "difficulty": "tough",
+    "input": "Q3 EBITDA margin contracted 180bps YoY on elevated SG&A, partially offset by a 6% uptick in net revenue retention.",
+    "output": "The Q3 EBITDA margin contracted by 180bps YoY due to an elevated SG&A, which was partially offset by an 8% increase in net revenue retention."
+  },
+  {
+    "id": 32,
+    "difficulty": "tough",
+    "input": "The patient presented with acute abdominal pain, mild fever, and elevated white blood cell count, consistent with early-stage appendicitis.",
+    "output": "The patient presented with an acute abdominal pain, accompanied by a mild fever, and an elevated white blood cell count, which were all indicators of early-stage appendicitis."
+  },
+  {
+    "id": 33,
+    "difficulty": "tough",
+    "input": "git commit -m \"fix bug\" && git push origin main",
+    "output": "git commit -m \"fix bug\" && git push origin main main main"
+  },
+  {
+    "id": 34,
+    "difficulty": "tough",
+    "input": "Steps: 1) preheat oven to 400F 2) season chicken 3) roast for 25 minutes 4) let rest 5 minutes.",
+    "output": "Steps: 1) Preheat the oven to 400 degrees Fahrenheit. 2) Season the chicken. 3) Roast the chicken for 25 minutes. 4) Allow the chicken to rest for 5 minutes before serving."
+  },
+  {
+    "id": 35,
+    "difficulty": "tough",
+    "input": "The committee, comprising representatives from engineering, legal, and finance, convened on three separate occasions to deliberate extensively on the proposed restructuring before ultimately reaching a consensus that was neither unanimous nor particularly enthusiastic, though sufficient to move forward.",
+    "output": "The committee, which comprised representatives from various disciplines such as engineering, legal, and finance, convened on three distinct occasions to engage in a thorough deliberation on the proposed restructuring. Ultimately, they reached a consensus that was neither unanimous nor particularly enthusiastic, and it was sufficiently strong to proceed with the proposed changes."
+  },
+  {
+    "id": 36,
+    "difficulty": "tough",
+    "input": "no",
+    "output": "No"
+  },
+  {
+    "id": 37,
+    "difficulty": "tough",
+    "input": "The experiment failed; however, the failure itself revealed an unexpected interaction between the two variables that the original hypothesis had not accounted for, prompting the researchers to redesign the study entirely.",
+    "output": "The experiment was unsuccessful; however, the failure itself revealed an unexpected interaction between the two variables that had not been accounted for by the original hypothesis. This discovery led to the researchers redesigning the study entirely."
+  },
+  {
+    "id": 38,
+    "difficulty": "tough",
+    "input": "Contact support@example.com or call 1-800-555-0199 if the error persists after restarting the device twice.",
+    "output": "Contact support@example.com or call 1-800-555-0199 if the error persists after restarting the device twice."
+  },
+  {
+    "id": 39,
+    "difficulty": "tough",
+    "input": "Despite repeated warnings from regulators, the firm continued its aggressive expansion into unregulated markets, a decision that would later prove costly when three jurisdictions simultaneously opened investigations into its lending practices.",
+    "output": "Despite repeated warnings from regulators, the firm continued to expand its operations into unregulated markets. This decision would ultimately prove to be costly, as three jurisdictions simultaneously initiated investigations into its lending practices."
+  },
+  {
+    "id": 40,
+    "difficulty": "tough",
+    "input": "It is what it is.",
+    "output": "It is precisely what it is."
+  }
+]

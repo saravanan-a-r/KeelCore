@@ -1,0 +1,362 @@
+[
+ {
+  "id": 1,
+  "level": "easy",
+  "domain": "security",
+  "input": "pls dont share your password with anyone, its against company policy",
+  "output": "Please do not share your password with anyone, as it is against company policy.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 2,
+  "level": "easy",
+  "domain": "security",
+  "input": "we found a vulnerabilty in the login page and fixed it yesterday",
+  "output": "We identified a vulnerability in the login page and resolved it yesterday.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 3,
+  "level": "easy",
+  "domain": "security",
+  "input": "You must enable two factor authentification on your account.",
+  "output": "You need to enable two-factor authentication on your account.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 4,
+  "level": "easy",
+  "domain": "security",
+  "input": "the firewall blocked the suspicous traffic from that ip",
+  "output": "The firewall blocked the suspicious traffic from that IP.",
+  "comment": "Good, fixed 'ip' to 'IP'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 5,
+  "level": "easy",
+  "domain": "security",
+  "input": "please update your antivirus, its out of date since 3 months",
+  "output": "Please update your antivirus software as it has been out of date for the past three months.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 6,
+  "level": "easy",
+  "domain": "legal",
+  "input": "this agreement is valid for one year from the date of signing",
+  "output": "This agreement is valid for one year from the date of signing.",
+  "comment": "Unchanged (already fine)",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 7,
+  "level": "easy",
+  "domain": "legal",
+  "input": "The tenant must pay the rent before 5th of every month.",
+  "output": "The tenant must pay the rent by the 5th of every month.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 8,
+  "level": "easy",
+  "domain": "legal",
+  "input": "i hereby confirm that all the informations provided are true",
+  "output": "I hereby confirm that all the provided information is accurate.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 9,
+  "level": "easy",
+  "domain": "legal",
+  "input": "both parties has agreed to keep this matter confidencial",
+  "output": "Both parties have agreed to maintain this matter as confidential.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 10,
+  "level": "easy",
+  "domain": "legal",
+  "input": "The company is not liable for any lose or damage.",
+  "output": "The company is not liable for any loss or damage.",
+  "comment": "Good, fixed 'lose'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 11,
+  "level": "easy",
+  "domain": "legal",
+  "input": "please sign the NDA and send it back to us by monday",
+  "output": "Please sign the NDA and return it to us by Monday.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 12,
+  "level": "easy",
+  "domain": "security",
+  "input": "a phishing mail was recieved by many employees today, dont click on the link",
+  "output": "A phishing email was received by many employees today. Please do not click on the link.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 13,
+  "level": "easy",
+  "domain": "legal",
+  "input": "he want to file a complaint against his employer for unpaid salary",
+  "output": "He wishes to file a complaint against his employer for unpaid salary.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 14,
+  "level": "medium",
+  "domain": "security",
+  "input": "Our team detected an unauthorised login attempt from russia at 3:15 AM, the account was locked automatically and we has reset the credentials as a precaution.",
+  "output": "Our team identified an unauthorized login attempt from Russia at 3:15 AM. The account was automatically locked, and we have reset the credentials as a precaution.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 15,
+  "level": "medium",
+  "domain": "security",
+  "input": "the pen test report shows that the api is vulnerable to sql injection and the passwords are stored in plain text which is a serious risk, please fix this on priority",
+  "output": "The pen test report indicates that the API is vulnerable to SQL injection, and the passwords are stored in plain text, which poses a serious risk. Please address this issue at your priority.",
+  "comment": "OK, but 'on priority' became the awkward 'at your priority'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 16,
+  "level": "medium",
+  "domain": "security",
+  "input": "All employees are requested to complete the security awareness training before 30th june otherwise their access to the VPN will be suspended",
+  "output": "All employees are requested to complete the security awareness training by June 30th. Failure to do so will result in their access to the VPN being suspended.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 17,
+  "level": "medium",
+  "domain": "security",
+  "input": "We got a ransomware alert on server SRV-04, the machine is isolated from network now and backup team is checking the last clean backup of friday night.",
+  "output": "We received a ransomware alert on server SRV-04. The machine is now isolated from the network, and the backup team is verifying the last clean backup from Friday night.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 18,
+  "level": "medium",
+  "domain": "security",
+  "input": "I think the third party vendor have access to our customer data without proper encryption, we need to audit them before renewing the contract",
+  "output": "It appears that the third-party vendor has access to our customer data without proper encryption. We need to audit them before renewing the contract.",
+  "comment": "Good, but 'I think' became 'It appears'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 19,
+  "level": "medium",
+  "domain": "legal",
+  "input": "The lessee shall not sublet the premises or any part of it without the prior written consent of the lessor, failing which the lease will be terminated immediately.",
+  "output": "The lessee shall not sublet the premises or any part of it without the prior written consent of the lessor. If this is not obtained, the lease will be terminated immediately.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 20,
+  "level": "medium",
+  "domain": "legal",
+  "input": "As per clause 7 of the contract the supplier is suppose to deliver the goods within 30 days, but they delivered after 52 days so we are claiming a penalty of 2% per week",
+  "output": "According to clause 7 of the contract, the supplier is required to deliver the goods within 30 days. However, they delivered after 52 days, resulting in a penalty of 2% per week.",
+  "comment": "Meaning drift: 'we are claiming a penalty' became 'resulting in a penalty'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 21,
+  "level": "medium",
+  "domain": "legal",
+  "input": "i am writing to give you notice that i will terminate the employment agreement with effect from 1st august as per the 60 days notice period mentioned in my contract",
+  "output": "I am writing to inform you that I will terminate the employment agreement with effect from August 1st, as per the 60-day notice period specified in my contract.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 22,
+  "level": "medium",
+  "domain": "legal",
+  "input": "The employee agrees to not disclose any confidential information during employement and for a period of 2 years after leaving the company.",
+  "output": "The employee agrees to refrain from disclosing any confidential information during employment and for a period of two years following the company's exit.",
+  "comment": "OK, but 'after leaving the company' became the odd 'the company's exit'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 23,
+  "level": "medium",
+  "domain": "legal",
+  "input": "our lawyer advised that we should not sign the settlement until the court gives the final order, otherwise we may loose our right to appeal",
+  "output": "Our lawyer advised that we should not sign the settlement until the court provides the final order, as this could jeopardize our right to appeal.",
+  "comment": "Good, fixed 'loose'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 24,
+  "level": "medium",
+  "domain": "legal",
+  "input": "Under GDPR the user have a right to request deletion of his personal data and we must respond within 30 days of the request.",
+  "output": "Under GDPR, users have the right to request the deletion of their personal data, and we must respond within 30 days of the request.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 25,
+  "level": "medium",
+  "domain": "legal",
+  "input": "the buyer has paid an advance of 5,00,000 rupees and the balance will be paid at the time of registration of the property",
+  "output": "The buyer has paid an advance of 5,00,010 rupees, and the remaining amount will be paid upon property registration.",
+  "comment": "**Wrong number:** 5,00,000 became 5,00,010",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 26,
+  "level": "medium",
+  "domain": "security",
+  "input": "Please do not use public wifi for accessing the company email because the attackers can easily steal your credentials in such networks.",
+  "output": "Please avoid using public Wi-Fi for accessing the company email, as attackers can easily steal your credentials in such networks.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 27,
+  "level": "tough",
+  "domain": "security",
+  "input": "On 12/03/2025 at around 02:40 UTC our SOC observed 14,200 failed ssh logins from 203.0.113.45 against the bastion host bastion-01, after which one account (svc_deploy) succeeded and the attacker ran wget to pull a payload from hxxp://evil-domain.example/x.sh; we have blocked the ip, rotated all keys and are now doing forensic on the host.",
+  "output": "On 12/03/2025 at approximately 02:40 UTC, our SOC observed 14,200 failed SSH logins from 203.0.113.45 against the bastion host basted-01. After this, one account (svc_deploy) successfully logged in, and the attacker ran wget to retrieve a payload from hxxp://evil-domain.example/x.sh. We have blocked the IP, rotated all keys, and are now conducting forensic analysis on the host.",
+  "comment": "Mostly good, but host 'bastion-01' became 'basted-01'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 28,
+  "level": "tough",
+  "domain": "security",
+  "input": "The vulnerability CVE-2024-3094 is rated 10.0 critical because it let a attacker with the right private key to execute arbitrary code before authentification, so every system running xz utils 5.6.0 or 5.6.1 must be downgrade immediatly.",
+  "output": "The vulnerability CVE-2024-3094 is rated 10.0 critical because it allowed an attacker with the correct private key to execute arbitrary code before authentication. Therefore, every system running xz utils 5.6.0 or 56.1 must be downgraded immediately.",
+  "comment": "**Wrong version:** 5.6.1 became '56.1'; 'must be downgrade' fixed",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 29,
+  "level": "tough",
+  "domain": "security",
+  "input": "we dont store credit card numbers on our servers, all the payment data go directly to stripe and we only keep the last 4 digits and token, so our PCI scope is reduced but we still need to do SAQ A every year",
+  "output": "We do not store credit card numbers on our servers. All payment data is sent directly to the stripe, and we only retain the last four digits and token. This reduces our PCI scope, but we still need to conduct SAQ A annually.",
+  "comment": "Good, but 'stripe' now reads 'the stripe' and stays lowercase",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 30,
+  "level": "tough",
+  "domain": "security",
+  "input": "Sir, the employee john.d@acme-corp.com downloaded around 8 GB of confidential files to his personal usb drive on 3rd may, one day before he submit his resignation, so hr and legal both needs to be informed and his access should be revoke today itself.",
+  "output": "Sir, the employee john.d@acme-corp.com downloaded approximately 8 GB of confidential files to his personal USB drive on May 3rd, one day before he submitted his resignation. Therefore, both the HR and legal teams need to be informed, and his access should be revoked today.",
+  "comment": "Very good, email and dates kept",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 31,
+  "level": "tough",
+  "domain": "legal",
+  "input": "Notwithstanding anything contained herein, the liability of the service provider under this agreement, whether in contract, tort or otherwise, shall in no event exceed the total fees paid by the client in the twelve months preceding the claim, which is 24,000 USD.",
+  "output": "Regardless of any provisions herein, the liability of the service provider under this agreement, whether in contract, tort, or otherwise, shall not exceed the total fees paid by the client in the twelve months preceding the claim, which is 24,000 USD.",
+  "comment": "Good, but legal term 'Notwithstanding' became 'Regardless of'; figures kept",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 32,
+  "level": "tough",
+  "domain": "legal",
+  "input": "This is to inform that your appeal in case no. CR-2291/2024 is dismissed by the high court on 14 february 2025 for want of prosecution, you can file a restoration application within 30 days with a valid reason for the delay.",
+  "output": "This is to inform you that your appeal for case number CR-2291/2024 has been dismissed by the high court on February 14, 2015, due to lack of prosecution. You may file a restoration application within 30 days with a valid reason for the delay.",
+  "comment": "**Wrong year:** 2025 became 2015; 'want of prosecution' became 'lack of prosecution'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 33,
+  "level": "tough",
+  "domain": "legal",
+  "input": "I, Rahul Mehta son of Suresh Mehta, resident of 12 MG Road Pune, do hereby solemnly affirm and declare that the above statements are true to the best of my knowledge and nothing material has been conceal from it.",
+  "output": "I, Rahul Mehta, son of Suresh Mehtha, resident of 12 MG Road Pune, do hereby solemnly affirm and declare that the above statements are true to the best of my knowledge, and nothing material has been concealed from them.",
+  "comment": "Name misspelled ('Mehtha'); 'from it' became 'from them'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 34,
+  "level": "tough",
+  "domain": "legal",
+  "input": "The licensee is granted a non-exclusive, non-transferable licence to use the software for internal business purposes only, and any reverse engineering, sublicensing or resale is strictly prohibited and will result in the termination of the licence and claim of damages.",
+  "output": "The licensee is granted a non-exclusive, non-transferable license to use the software solely for internal business purposes. Any reverse engineering, sublicensing, or resale of the software is strictly prohibited and will result in the termination of the license and the claim of damages.",
+  "comment": "Good, legal meaning kept",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 35,
+  "level": "tough",
+  "domain": "legal",
+  "input": "my landlord is refusing to return the security deposit of 2 months rent (45,000) even after 3 months of vacating the flat, he say there is damage but I have photos and the move out checklist signed by him, how to write a legal notice for this",
+  "output": "My landlord is refusing to return the security deposit of 2 months' rent (45,000) even after vacating the flat for 3 months. He claims there is damage, but I have photos and the move-out checklist signed by him. How should I write a legal notice for this situation?",
+  "comment": "Good, numbers kept",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 36,
+  "level": "tough",
+  "domain": "legal",
+  "input": "Pursuant to Section 12(b) of the Data Protection Act, the controller shall notify the supervisory authority of any personal data breach within 72 hours of becoming aware of it, unless the breach is unlikely to result in a risk to the rights and freedoms of individuals.",
+  "output": "According to Section 12(b) of the Data Protection Act, the controller must notify the supervisory authority of any personal data breach within 72 hours of becoming aware of it, unless the breach is unlikely to pose a risk to the rights and freedoms of individuals.",
+  "comment": "Good, but 'Pursuant to' / 'shall' became 'According to' / 'must'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 37,
+  "level": "tough",
+  "domain": "security",
+  "input": "If you suspect that your account has been compromised, immediately change your password, revoke all active sessions, check the recent login activity for unknown devices and report to security@acme.com or call the helpdesk on +1-800-555-0142, dont wait for the confirmation.",
+  "output": "If you suspect that your account has been compromised, please change your password immediately, revoke all active sessions, check the recent login activity for unknown devices, and report to security@acme.com or contact the helpdesk at +1-800-555-0142. Do not wait for confirmation.",
+  "comment": "Very good, email and phone kept exactly",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 38,
+  "level": "tough",
+  "domain": "legal",
+  "input": "We, the undersigned, mutually agree that the dispute arising out of this contract shall be referred to a sole arbitrator appointed by both parties, the seat of arbitration will be Mumbai, and the award shall be final and binding on the parties as per the Arbitration Act 1996.",
+  "output": "We, the undersigned, mutually agree that the dispute arising from this contract shall be referred to a sole arbitrator appointed by both parties. The arbitration will be held in Mumbai, and the award will be final and binding on the parties as per the Arbitration Act 1996.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 39,
+  "level": "tough",
+  "domain": "security",
+  "input": "the audit found that 23 out of 150 employee laptops dont have disk encryption and 9 of them have admin rights for the local user, this violate our ISO 27001 control A.8.1 and the deadline for the corrective action is 15 july, owner is IT head.",
+  "output": "The audit revealed that 23 out of 150 employee laptops lack disk encryption, and 9 of them have admin rights for the local user. This violates our ISO 27001 control A.8.1. The deadline for the corrective action is July 16, and the owner is an IT professional.",
+  "comment": "**Wrong date** (15 July became July 16) and 'IT head' became 'an IT professional'",
+  "checkpoint": "step-104000"
+ },
+ {
+  "id": 40,
+  "level": "tough",
+  "domain": "legal",
+  "input": "The witness stated that he saw the accused near the shop at about 9 PM on 4th January, but under cross examination he accepted that it was dark, he was 40 meters away and he did not wear his glasses, so his testimony cannot be relied upon.",
+  "output": "The witness stated that he observed the accused near the shop around 9 PM on January 4th. However, upon cross-examination, he acknowledged that it was dark, he was 40 meters away, and he did not wear glasses, so his testimony cannot be considered reliable.",
+  "comment": "Good",
+  "checkpoint": "step-104000"
+ }
+]

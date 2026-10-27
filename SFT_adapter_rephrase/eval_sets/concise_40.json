@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "difficulty": "easy",
+    "input": "I just wanted to let you know that the meeting is going to be held at 3pm today."
+  },
+  {
+    "id": 2,
+    "difficulty": "easy",
+    "input": "In my personal opinion, I really think that this book is very good."
+  },
+  {
+    "id": 3,
+    "difficulty": "easy",
+    "input": "She is a person who works at a hospital in the downtown area of the city."
+  },
+  {
+    "id": 4,
+    "difficulty": "easy",
+    "input": "The cat that we have at home is currently in the process of sleeping on the couch."
+  },
+  {
+    "id": 5,
+    "difficulty": "easy",
+    "input": "At this point in time, we are in need of more coffee for the office."
+  },
+  {
+    "id": 6,
+    "difficulty": "easy",
+    "input": "He was finally able to completely finish the project that he had been working on."
+  },
+  {
+    "id": 7,
+    "difficulty": "easy",
+    "input": "The weather outside today is really very nice and pleasant."
+  },
+  {
+    "id": 8,
+    "difficulty": "easy",
+    "input": "Would you mind very much if I asked you to please close the door?"
+  },
+  {
+    "id": 9,
+    "difficulty": "easy",
+    "input": "Yesterday I made a trip over to the store in order to buy some groceries."
+  },
+  {
+    "id": 10,
+    "difficulty": "easy",
+    "input": "This particular car that I am looking at is extremely fast in terms of speed."
+  },
+  {
+    "id": 11,
+    "difficulty": "easy",
+    "input": "The team that we support ended up winning the game by a very large margin last night."
+  },
+  {
+    "id": 12,
+    "difficulty": "easy",
+    "input": "I wanted to inform you that lunch is now ready and available for everyone to eat."
+  },
+  {
+    "id": 13,
+    "difficulty": "easy",
+    "input": "Unfortunately, my phone battery has completely died and I am unable to use it."
+  },
+  {
+    "id": 14,
+    "difficulty": "medium",
+    "input": "Due to the fact that the company released a brand new product last week, sales have remained at a steady and consistent level ever since that time."
+  },
+  {
+    "id": 15,
+    "difficulty": "medium",
+    "input": "Our team was unfortunately not able to meet the deadline, and the reason for this was the fact that two of our engineers were out of the office sick."
+  },
+  {
+    "id": 16,
+    "difficulty": "medium",
+    "input": "When we arrived at the restaurant it was extremely crowded with people, and as a result of that we had to wait for a period of about thirty minutes before we were given a table."
+  },
+  {
+    "id": 17,
+    "difficulty": "medium",
+    "input": "After having worked in the field of finance for a total of ten years, she made the decision that she wanted to switch to a completely different career."
+  },
+  {
+    "id": 18,
+    "difficulty": "medium",
+    "input": "I would like to take this opportunity to let everyone know that the new policy will have an effect on those employees who work remotely for more than three days in any given week."
+  },
+  {
+    "id": 19,
+    "difficulty": "medium",
+    "input": "I am of the opinion that it would probably be a good idea for us to take some time to rethink and reconsider our marketing strategy before the start of the next quarter begins."
+  },
+  {
+    "id": 20,
+    "difficulty": "medium",
+    "input": "The flight that we were supposed to take ended up being delayed for a long time because of the fact that there was bad weather over the mountains."
+  },
+  {
+    "id": 21,
+    "difficulty": "medium",
+    "input": "He went ahead and fixed the bug that had been reported, but unfortunately the very same error showed up once again when the code was running in production."
+  },
+  {
+    "id": 22,
+    "difficulty": "medium",
+    "input": "Because a fire drill took place during the exam, the students who were taking it were given a bit of extra time in order to finish."
+  },
+  {
+    "id": 23,
+    "difficulty": "medium",
+    "input": "Our vendor has decided to raise their prices on us, and for that reason we are now in the process of looking for a cheaper alternative that costs less."
+  },
+  {
+    "id": 24,
+    "difficulty": "medium",
+    "input": "It has been announced that the city is planning on building a brand new park that will be located close to the river sometime next year."
+  },
+  {
+    "id": 25,
+    "difficulty": "medium",
+    "input": "As a result of the merger that took place, two separate departments were required to combine together and become one single team."
+  },
+  {
+    "id": 26,
+    "difficulty": "medium",
+    "input": "The doctor gave her a recommendation to get plenty of rest and also told her that she should avoid lifting anything heavy for the duration of one month."
+  },
+  {
+    "id": 27,
+    "difficulty": "tough",
+    "input": "Revenue grew."
+  },
+  {
+    "id": 28,
+    "difficulty": "tough",
+    "input": "Fix it."
+  },
+  {
+    "id": 29,
+    "difficulty": "tough",
+    "input": "The algorithm, which was trained on a dataset of roughly ten million labeled images that were collected over a period of three years from five different research institutions, achieved a classification accuracy of 94.2% on the held-out test set, which means that it outperformed the previous state-of-the-art model by just under two percentage points."
+  },
+  {
+    "id": 30,
+    "difficulty": "tough",
+    "input": "Although the initial proposal was rejected by the board of directors due to the fact that there were budget constraints, a revised version of it that incorporated phased funding and a smaller pilot program was approved unanimously by the board three weeks later on."
+  },
+  {
+    "id": 31,
+    "difficulty": "tough",
+    "input": "Q3 EBITDA margin contracted 180bps YoY on elevated SG&A, partially offset by a 6% uptick in net revenue retention."
+  },
+  {
+    "id": 32,
+    "difficulty": "tough",
+    "input": "The patient presented to the clinic with acute abdominal pain, a mild fever, and an elevated white blood cell count, all of which are findings that are consistent with early-stage appendicitis."
+  },
+  {
+    "id": 33,
+    "difficulty": "tough",
+    "input": "git commit -m \"fix bug\" && git push origin main"
+  },
+  {
+    "id": 34,
+    "difficulty": "tough",
+    "input": "Steps: 1) preheat oven to 400F 2) season chicken 3) roast for 25 minutes 4) let rest 5 minutes."
+  },
+  {
+    "id": 35,
+    "difficulty": "tough",
+    "input": "The committee, which was made up of representatives from engineering, legal, and finance, got together on three separate occasions in order to deliberate at great length on the proposed restructuring before it ultimately arrived at a consensus that was neither unanimous nor particularly enthusiastic, though it was sufficient to allow the project to move forward."
+  },
+  {
+    "id": 36,
+    "difficulty": "tough",
+    "input": "no"
+  },
+  {
+    "id": 37,
+    "difficulty": "tough",
+    "input": "The experiment failed; however, the failure itself revealed an unexpected interaction between the two variables that the original hypothesis had not accounted for, which prompted the researchers to redesign the study entirely from the ground up."
+  },
+  {
+    "id": 38,
+    "difficulty": "tough",
+    "input": "Please feel free to contact support@example.com or call 1-800-555-0199 if the error still persists after you have restarted the device twice."
+  },
+  {
+    "id": 39,
+    "difficulty": "tough",
+    "input": "Despite the repeated warnings that were issued by regulators, the firm continued with its aggressive expansion into unregulated markets, a decision that would later prove to be costly when three jurisdictions simultaneously opened investigations into its lending practices."
+  },
+  {
+    "id": 40,
+    "difficulty": "tough",
+    "input": "It is what it is."
+  }
+]
