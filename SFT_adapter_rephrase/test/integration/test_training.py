@@ -120,6 +120,38 @@ def test_gradient_accumulation_matches_one_big_batch(tmp_path):
         assert torch.allclose(a[key], b[key], atol=1e-6, rtol=1e-5), key
 
 
+def test_token_budget_split_matches_the_row_split(tmp_path):
+    """Splitting a step by padded tokens must take the same optimizer steps as by rows."""
+    rows = _trainer(tmp_path / "a", training={"max_steps": 3},
+                    evaluation={"generation_examples": 0, "every_steps": 100})
+    tokens = _trainer(tmp_path / "b", training={"max_steps": 3, "micro_batch_tokens": 150},
+                      evaluation={"generation_examples": 0, "every_steps": 100})
+    for trainer in (rows, tokens):
+        for _ in range(3):
+            trainer._train_one_step()
+        trainer.writer.close()
+    assert tokens._window.micro_batches != rows._window.micro_batches
+    a, b = rows.adapter.state_dict(), tokens.adapter.state_dict()
+    for key in a:
+        assert torch.allclose(a[key], b[key], atol=1e-6, rtol=1e-5), key
+
+
+def test_selective_checkpointing_matches_full_checkpointing(tmp_path):
+    """Skipping checkpointing on small micro-batches must not change the optimizer steps."""
+    full = _trainer(tmp_path / "a", training={"max_steps": 3, "gradient_checkpointing": True},
+                    evaluation={"generation_examples": 0, "every_steps": 100})
+    selective = _trainer(tmp_path / "b", training={"max_steps": 3, "gradient_checkpointing": True,
+                                                   "checkpointing_min_tokens": 480},
+                         evaluation={"generation_examples": 0, "every_steps": 100})
+    for trainer in (full, selective):
+        for _ in range(3):
+            trainer._train_one_step()
+        trainer.writer.close()
+    a, b = full.adapter.state_dict(), selective.adapter.state_dict()
+    for key in a:
+        assert torch.allclose(a[key], b[key], atol=1e-6, rtol=1e-5), key
+
+
 def test_resumed_run_continues_bit_identically(tmp_path):
     """Interrupting and resuming must not change a single adapter weight."""
     common = dict(evaluation={"every_steps": 2, "generation_examples": 2}, checkpointing={"every_steps": 2, "keep_last": 3})

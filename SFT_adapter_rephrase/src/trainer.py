@@ -48,7 +48,9 @@ import torch.nn.functional as F
 from . import evaluation
 from .adapter_io import TENSORS_FILE, save_adapter
 from .base_model import BaseModelInfo
-from .batching import StepBatchPlan, StepBatchStream, collate, example_length, split_micro_batches
+from .batching import (
+    StepBatchPlan, StepBatchStream, collate, example_length, split_by_token_budget, split_micro_batches,
+)
 from .codec import TextCodec
 from .config import SFTConfig
 from .data import DatasetReport, SFTExample
@@ -142,6 +144,7 @@ class SFTTrainer:
             t.seed,
         )
         self.stream = StepBatchStream(self.batch_plan)
+        self._shapes = [(len(x.encoder_input_ids), len(x.target_ids)) for x in self.train_examples]
         self.total_steps = t.max_steps or math.ceil(t.epochs * self.batch_plan.steps_per_epoch)
 
         self.parameters = adapter.parameters()
@@ -219,11 +222,14 @@ class SFTTrainer:
     def train(self) -> dict:
         """Run to completion (or early stop / interrupt). Returns the summary."""
         cfg = self.config
+        t = cfg.training
+        split = (
+            f"{t.batch_size} x {t.gradient_accumulation_steps} accumulation" if t.micro_batch_tokens is None
+            else f"micro-batches of <= {t.micro_batch_tokens} padded tokens (target x {t.target_token_weight:g})"
+        )
         self.logger.info(
-            "training %d steps (%d per epoch, effective batch %d = %d x %d accumulation), "
-            "%d train / %d eval examples",
-            self.total_steps, self.batch_plan.steps_per_epoch, cfg.training.effective_batch_size,
-            cfg.training.batch_size, cfg.training.gradient_accumulation_steps,
+            "training %d steps (%d per epoch, effective batch %d, %s), %d train / %d eval examples",
+            self.total_steps, self.batch_plan.steps_per_epoch, t.effective_batch_size, split,
             len(self.train_examples), len(self.eval_examples),
         )
         status = "completed"
@@ -261,14 +267,20 @@ class SFTTrainer:
         t = self.config.training
         started = self.clock()
         indices = self.stream.next()
-        micro_batches = [
-            collate([self.train_examples[i] for i in micro], self.codec.frame)
-            for micro in split_micro_batches(indices, t.batch_size)
-        ]
+        if t.micro_batch_tokens is None:
+            split = split_micro_batches(indices, t.batch_size)
+        else:
+            split = split_by_token_budget(indices, self._shapes, t.micro_batch_tokens, t.target_token_weight)
+        micro_batches = [collate([self.train_examples[i] for i in micro], self.codec.frame) for micro in split]
         step_tokens = sum(b.target_tokens for b in micro_batches)
 
         nll_sum, correct = 0.0, 0
         for batch in micro_batches:
+            if t.gradient_checkpointing and t.checkpointing_min_tokens is not None:
+                if batch.padded_tokens > t.checkpointing_min_tokens:
+                    self.model.enable_gradient_checkpointing()
+                else:
+                    self.model.disable_gradient_checkpointing()
             batch = batch.to(self.plan.device)
             with self.autocast():
                 output = self.model(
@@ -322,6 +334,7 @@ class SFTTrainer:
             tokens=step_tokens,
             correct=correct,
             examples=len(indices),
+            micro_batches=len(micro_batches),
             real_tokens=sum(b.real_tokens for b in micro_batches),
             padded_tokens=sum(b.padded_tokens for b in micro_batches),
             grad_norm=total_norm,
@@ -350,6 +363,7 @@ class SFTTrainer:
             "perf/examples_per_second": w.examples / max(w.seconds, 1e-9),
             "perf/tokens_per_second": w.real_tokens / max(w.seconds, 1e-9),
             "perf/padding_efficiency": w.real_tokens / max(w.padded_tokens, 1),
+            "perf/micro_batches_per_step": w.micro_batches / w.steps,
             "perf/eta_hours": remaining / 3600,
         }
         metrics.update(memory_stats(self.plan.device))
@@ -578,6 +592,7 @@ class _Window:
         self.tokens = 0
         self.correct = 0
         self.examples = 0
+        self.micro_batches = 0
         self.real_tokens = 0
         self.padded_tokens = 0
         self.grad_norm = 0.0
@@ -586,12 +601,13 @@ class _Window:
         self.seconds = 0.0
         self.last_group_norms: dict[str, float] = {}
 
-    def add(self, *, nll_sum, tokens, correct, examples, real_tokens, padded_tokens, grad_norm, clipped, seconds, group_norms):
+    def add(self, *, nll_sum, tokens, correct, examples, micro_batches, real_tokens, padded_tokens, grad_norm, clipped, seconds, group_norms):
         self.steps += 1
         self.nll_sum += nll_sum
         self.tokens += tokens
         self.correct += correct
         self.examples += examples
+        self.micro_batches += micro_batches
         self.real_tokens += real_tokens
         self.padded_tokens += padded_tokens
         self.grad_norm += grad_norm
