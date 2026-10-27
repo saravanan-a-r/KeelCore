@@ -130,6 +130,17 @@ training:
   length_grouping_window: 64
   gradient_checkpointing: false
   seed: 1234
+  # GPU: cut each step batch by padded tokens -- rows x (longest source +
+  # target_token_weight x longest target) -- instead of `batch_size` rows.
+  # Same step batch, same gradient; short steps fill the GPU, long steps stay
+  # within memory. A target token costs ~3x a source token (its logits span
+  # the vocabulary), measured on checkpoint-90000.
+  micro_batch_tokens: null
+  target_token_weight: 1.0
+  # With gradient_checkpointing on: micro-batches of at most this many padded
+  # tokens (rows x (longest source + longest target)) skip it -- checkpointing
+  # only recomputes activations, so the gradient is the same, just faster.
+  checkpointing_min_tokens: null
 
 evaluation:
   every_steps: 250

@@ -157,6 +157,13 @@ class TrainingConfig:
     length_grouping_window: int
     gradient_checkpointing: bool
     seed: int
+    # Padded-token budget per micro-batch; null keeps `batch_size` rows each.
+    micro_batch_tokens: int | None = None
+    # A target token's memory cost relative to a source token's, in that budget.
+    target_token_weight: float = 1.0
+    # With gradient_checkpointing: micro-batches of at most this many padded
+    # tokens run without it (faster, same gradient); null checkpoints all.
+    checkpointing_min_tokens: int | None = None
 
     @property
     def effective_batch_size(self) -> int:
@@ -245,7 +252,8 @@ class SFTConfig:
             observed does not change the run;
           - `max_steps`, so a stopped run can be extended;
           - the micro-batch split (`batch_size`, `gradient_accumulation_steps`,
-            `gradient_checkpointing`): the data order is planned per
+            `micro_batch_tokens`, `target_token_weight`, `gradient_checkpointing`,
+            `checkpointing_min_tokens`): the data order is planned per
             optimizer step, so only the effective batch size matters -- which
             is what lets a CPU run be resumed on the GPU;
           - file locations (base checkpoint, train/eval data): the trainer
@@ -253,7 +261,8 @@ class SFTConfig:
             a run survives its base checkpoint or data being copied elsewhere.
         """
         training = asdict(self.training)
-        for key in ("max_steps", "batch_size", "gradient_accumulation_steps", "gradient_checkpointing"):
+        for key in ("max_steps", "batch_size", "gradient_accumulation_steps", "micro_batch_tokens",
+                "target_token_weight", "checkpointing_min_tokens", "gradient_checkpointing"):
             training.pop(key)
         training["effective_batch_size"] = self.training.effective_batch_size
         data = asdict(self.data)
@@ -493,6 +502,11 @@ def _validate(config: SFTConfig) -> None:
           "training.gradient_accumulation_steps must be >= 1")
     check(_is_int(t.length_grouping_window) and t.length_grouping_window >= 1,
           "training.length_grouping_window must be >= 1")
+    check(t.micro_batch_tokens is None or (_is_int(t.micro_batch_tokens) and t.micro_batch_tokens >= 1),
+          "training.micro_batch_tokens must be null or >= 1")
+    check(t.target_token_weight > 0, "training.target_token_weight must be > 0")
+    check(t.checkpointing_min_tokens is None or (_is_int(t.checkpointing_min_tokens) and t.checkpointing_min_tokens >= 0),
+          "training.checkpointing_min_tokens must be null or >= 0")
 
     check(e.every_steps >= 1, "evaluation.every_steps must be >= 1")
     check(1 <= e.loss_examples, "evaluation.loss_examples must be >= 1")
