@@ -22,6 +22,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Configuration, RuleSetRule } from 'webpack';
 import { ExtensionAssetsPlugin } from './tooling/extensionAssets';
+import { LicenseBannerPlugin } from './tooling/licenseBanner';
 import remToPx from './tooling/remToPx.cjs';
 
 const root = __dirname;
@@ -133,6 +134,7 @@ export default (_env: unknown, argv: { mode?: string }): Configuration[] => {
         ],
       }),
       new ExtensionAssetsPlugin({ version }),
+      new LicenseBannerPlugin(),
     ],
   };
 
@@ -145,6 +147,7 @@ export default (_env: unknown, argv: { mode?: string }): Configuration[] => {
     output: { path: dist, filename: '[name].js', iife: true, clean: false },
     module: { rules: [scripts, inlineStylesheet] },
     optimization: { splitChunks: false, runtimeChunk: false },
+    plugins: [new LicenseBannerPlugin()],
   };
 
   return [extension, foreground];
