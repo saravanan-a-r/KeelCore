@@ -26,6 +26,23 @@ describe('parseModelManifest', () => {
     ]);
   });
 
+  test('the exempt token list defaults to the plain ban and is read when present', () => {
+    const plain = parseModelManifest(valid).generation;
+    expect(plain.noRepeatExemptTokenIds).toEqual([]);
+    const generation = { ...(valid.generation as object), noRepeatExemptTokenIds: [3, 4] };
+    const manifest = parseModelManifest({ ...valid, generation });
+    expect(manifest.generation).toMatchObject({ noRepeatExemptTokenIds: [3, 4] });
+    expect(parseModelManifest(JSON.parse(JSON.stringify(manifest)))).toEqual(manifest);
+  });
+
+  test.each([
+    ['an exempt id outside the vocabulary', { noRepeatExemptTokenIds: [400] }, /noRepeatExemptTokenIds/],
+    ['a negative exempt id', { noRepeatExemptTokenIds: [-1] }, /noRepeatExemptTokenIds/],
+    ['exempt ids that are not a list', { noRepeatExemptTokenIds: 3 }, /noRepeatExemptTokenIds/],
+  ])('rejects %s', (_label, extra, message) => {
+    expect(() => parseModelManifest({ ...valid, generation: { ...(valid.generation as object), ...extra } })).toThrow(message);
+  });
+
   test('a manifest whose adapters cover every style needs no fallback', () => {
     expect(parseModelManifest(without('fallbackAdapter')).fallbackAdapter).toBeNull();
   });

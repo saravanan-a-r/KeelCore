@@ -60,7 +60,12 @@ export interface ModelManifest {
   };
   readonly tokens: { readonly decoderStartId: number; readonly eosId: number; readonly padId: number };
   readonly limits: { readonly maxInputTokens: number; readonly maxNewTokens: number };
-  readonly generation: { readonly repetitionPenalty: number; readonly noRepeatNgramSize: number };
+  readonly generation: {
+    readonly repetitionPenalty: number;
+    readonly noRepeatNgramSize: number;
+    /** Token IDs the n-gram ban never applies to (the digits). */
+    readonly noRepeatExemptTokenIds: readonly number[];
+  };
   readonly inputTransforms: readonly TextTransformName[];
   readonly reservedInputTokens: readonly string[];
   readonly prompt: readonly PromptSegment[];
@@ -175,6 +180,12 @@ export function parseModelManifest(raw: unknown): ModelManifest {
     throw new ManifestError('generation.repetitionPenalty must be a positive number');
   }
 
+  const exemptIds = generation.noRepeatExemptTokenIds ?? [];
+  const vocabSize = integer(architecture.vocabSize, 'architecture.vocabSize', 2);
+  if (!Array.isArray(exemptIds) || !exemptIds.every((id) => Number.isInteger(id) && id >= 0 && id < vocabSize)) {
+    throw new ManifestError('generation.noRepeatExemptTokenIds must be a list of token IDs inside the vocabulary');
+  }
+
   return {
     schemaVersion: SUPPORTED_SCHEMA_VERSION,
     ioContract: SUPPORTED_IO_CONTRACT,
@@ -204,6 +215,7 @@ export function parseModelManifest(raw: unknown): ModelManifest {
     generation: {
       repetitionPenalty,
       noRepeatNgramSize: integer(generation.noRepeatNgramSize ?? 0, 'generation.noRepeatNgramSize', 0),
+      noRepeatExemptTokenIds: exemptIds as number[],
     },
     inputTransforms: inputTransforms as TextTransformName[],
     reservedInputTokens: reserved as string[],

@@ -7,7 +7,7 @@
  * what lets a cancel message reach the worker mid-generation.
  */
 import { EchoError } from '../../shared/errors';
-import { argmax, processLogits, type GenerationSettings } from './logitsProcessors';
+import { argmax, ngramAllowance, processLogits, type GenerationSettings } from './logitsProcessors';
 
 export interface StepResult<Cache> {
   /** Scores over the vocabulary for the next token. */
@@ -53,12 +53,13 @@ export async function greedyGenerate<Memory, Cache>(
   let cache = runner.initialCache();
   const sequence = [options.decoderStartId];
   const generated: number[] = [];
+  const allowance = ngramAllowance(options);
   try {
     for (let step = 0; step < options.maxNewTokens; step++) {
       throwIfAborted(options.signal);
       const result = await runner.step(sequence[sequence.length - 1]!, memory, cache);
       cache = result.cache;
-      const next = argmax(processLogits(result.logits, sequence, options));
+      const next = argmax(processLogits(result.logits, sequence, options, allowance));
       sequence.push(next);
       if (next === options.eosId) return { ids: generated, finished: true };
       generated.push(next);

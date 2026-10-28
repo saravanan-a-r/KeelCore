@@ -10,6 +10,20 @@
 export interface GenerationSettings {
   readonly repetitionPenalty: number;
   readonly noRepeatNgramSize: number;
+  /**
+   * Token IDs the n-gram ban never applies to. The tokenizer writes every digit
+   * as its own token, so `50000` legitimately repeats "0 0 0". Absent = none.
+   */
+  readonly noRepeatExemptTokenIds?: readonly number[];
+}
+
+/** What the n-gram ban lets through: built once per request, read on every step. */
+export interface NgramAllowance {
+  readonly exempt: ReadonlySet<number>;
+}
+
+export function ngramAllowance(settings: GenerationSettings): NgramAllowance {
+  return { exempt: new Set(settings.noRepeatExemptTokenIds ?? []) };
 }
 
 export function applyRepetitionPenalty(scores: Float32Array, sequence: readonly number[], penalty: number): void {
@@ -20,7 +34,7 @@ export function applyRepetitionPenalty(scores: Float32Array, sequence: readonly 
   }
 }
 
-export function bannedNgramTokens(sequence: readonly number[], size: number): number[] {
+export function bannedNgramTokens(sequence: readonly number[], size: number, allowance?: NgramAllowance): number[] {
   if (size <= 0 || sequence.length + 1 < size) return [];
   const prefixStart = sequence.length + 1 - size;
   const banned: number[] = [];
@@ -32,14 +46,22 @@ export function bannedNgramTokens(sequence: readonly number[], size: number): nu
         break;
       }
     }
-    if (matches) banned.push(sequence[start + size - 1]!);
+    if (!matches) continue;
+    const token = sequence[start + size - 1]!;
+    if (allowance?.exempt.has(token)) continue;
+    banned.push(token);
   }
   return banned;
 }
 
-export function processLogits(scores: Float32Array, sequence: readonly number[], settings: GenerationSettings): Float32Array {
+export function processLogits(
+  scores: Float32Array,
+  sequence: readonly number[],
+  settings: GenerationSettings,
+  allowance?: NgramAllowance,
+): Float32Array {
   applyRepetitionPenalty(scores, sequence, settings.repetitionPenalty);
-  for (const token of bannedNgramTokens(sequence, settings.noRepeatNgramSize)) scores[token] = Number.NEGATIVE_INFINITY;
+  for (const token of bannedNgramTokens(sequence, settings.noRepeatNgramSize, allowance)) scores[token] = Number.NEGATIVE_INFINITY;
   return scores;
 }
 

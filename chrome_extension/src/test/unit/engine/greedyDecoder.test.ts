@@ -63,3 +63,15 @@ describe('greedyGenerate', () => {
     expect(fed).toHaveLength(0);
   });
 });
+
+describe('greedyGenerate with exempt tokens', () => {
+  const ban3 = { ...options, maxNewTokens: 12, noRepeatNgramSize: 3 };
+
+  test('a repeated digit is blocked by the plain ban and written when its token is exempt', async () => {
+    const script = [7, 7, 7, 7, 7, EOS];
+    const plain = await greedyGenerate(scriptedRunner(script).runner, [9], ban3);
+    expect(plain.ids.slice(0, 5)).not.toEqual([7, 7, 7, 7, 7]);
+    const exempt = await greedyGenerate(scriptedRunner(script).runner, [9], { ...ban3, noRepeatExemptTokenIds: [7] });
+    expect(exempt).toEqual({ ids: [7, 7, 7, 7, 7], finished: true });
+  });
+});
