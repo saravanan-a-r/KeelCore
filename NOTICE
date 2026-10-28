@@ -1,31 +1,31 @@
 EchoMeBetter
-Copyright (c) 2026 Saravanan A R
+Copyright (c) 2026 Saravanan A R. All rights reserved.
 https://github.com/saravanan-a-r/EchoMeBetter
 
-Licensed under the PolyForm Noncommercial License 1.0.0 (see LICENSE).
-Noncommercial use — research, education, personal projects — is permitted at
-no cost, provided attribution is given as required below. Commercial use
-requires a separate license from the copyright holder; contact information
-is in README.md.
+Licensed under the EchoMeBetter License, Version 1.0 (Personal and Research
+Use). See LICENSE. That file controls; this notice is a summary.
+
+Individuals may use EchoMeBetter, at no cost, for their own writing
+(including writing for their own job or studies) and for noncommercial
+research, only through the official EchoMeBetter browser extension.
+
+Commercial use, use by or for an organization, any use outside the official
+extension, and purchase of the model require a separate written agreement
+with the copyright holder. See COMMERCIAL_LICENSE.md.
 
 --------------------------------------------------------------------------
-REQUIRED ATTRIBUTION
+REQUIRED CITATION FOR RESEARCH
 --------------------------------------------------------------------------
 
-Any use, copy, publication, presentation, or derivative work built on this
-software — in whole or in part — must credit the original project. Use one
-of the forms below, unmodified.
+Section 4 of the license requires every publication or presentation of
+research that uses EchoMeBetter (papers, theses, reports, articles, posts,
+slides, and talks) to cite the project in a reasonably prominent place.
+Use one of these forms, or an equivalent one with the same information:
 
 Plain text:
 
-    EchoMeBetter (2026) by Saravanan A R
+    EchoMeBetter (2026) by Saravanan A R.
     https://github.com/saravanan-a-r/EchoMeBetter
-    Licensed under PolyForm Noncommercial 1.0.0
-
-Markdown / README credit line:
-
-    Built on [EchoMeBetter](https://github.com/saravanan-a-r/EchoMeBetter)
-    by Saravanan A R, licensed under PolyForm Noncommercial 1.0.0.
 
 Academic / BibTeX citation:
 
@@ -36,6 +36,4 @@ Academic / BibTeX citation:
       url    = {https://github.com/saravanan-a-r/EchoMeBetter}
     }
 
-This NOTICE file must be preserved, unmodified, in any redistribution of
-this software or a substantial portion of it, per the "Notices" clause of
-the license in LICENSE.
+Citing the project does not imply that its author endorses your work.

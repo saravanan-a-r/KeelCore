@@ -138,34 +138,41 @@ Supervised fine-tuning of the first adapters is in progress.
 
 ## License
 
-Licensed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)**.
+Licensed under the **[EchoMeBetter License, Version 1.0](LICENSE)** (Personal
+and Research Use). All rights reserved.
 
-In short: free to use, copy, and modify for **research, education, and any
-other noncommercial purpose**, with attribution. Commercial use — including
-use inside a commercial product or service — requires a separate license
-from the copyright holder.
+In short:
 
-This is a **source-available** license, not an OSI-approved open source
-license — the noncommercial restriction is the difference.
+- **Individuals** may use EchoMeBetter for their own writing, including
+  writing for their own job or studies, **only through the official
+  EchoMeBetter browser extension**.
+- **Noncommercial research** is allowed, through the extension, and every
+  publication or presentation must **cite this project** (see below).
+- The model and code may not be extracted, modified, shared, sold, hosted,
+  run outside the extension, or used to build or train other models.
+- **Commercial use**, use by or for an organization, and **purchase of the
+  model** need a separate written agreement. See
+  [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md).
+
+This summary is for convenience; the [LICENSE](LICENSE) file controls.
 
 ## Citation
 
-If you use this project, its code, or any model trained with it, please
-credit it using one of the forms in [NOTICE](NOTICE):
+Research that uses EchoMeBetter must cite it in every publication or
+presentation (Section 4 of the [license](LICENSE)). Use one of the forms in
+[NOTICE](NOTICE):
 
 ```
-EchoMeBetter (2026) by Saravanan A R
+EchoMeBetter (2026) by Saravanan A R.
 https://github.com/saravanan-a-r/EchoMeBetter
-Licensed under PolyForm Noncommercial 1.0.0
 ```
-
-Preserving [NOTICE](NOTICE) unmodified alongside any redistribution is a
-condition of the license, not a suggestion — see the license's own "Notices"
-clause.
 
 ## Contact
 
-For commercial licensing, collaboration, or anything else:
+For commercial licensing, purchase of the model (see
+[COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md)), collaboration, or anything
+else:
 
+- **Email:** sararavi.ar@gmail.com
 - **GitHub:** [@saravanan-a-r](https://github.com/saravanan-a-r)
 - **LinkedIn:** [saravanan-a-r](https://www.linkedin.com/in/saravanan-a-r/)

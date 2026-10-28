@@ -1,124 +1,329 @@
-PolyForm Noncommercial License 1.0.0
+EchoMeBetter License
+Version 1.0 (Personal and Research Use)
 
-<https://polyformproject.org/licenses/noncommercial/1.0.0>
+Copyright (c) 2026 Saravanan A R. All rights reserved.
+https://github.com/saravanan-a-r/EchoMeBetter
 
-Copyright (c) 2026 Saravanan A R
+-------------------------------------------------------------------------------
+SUMMARY (for convenience only; it is not part of the license, and the numbered
+sections below control if anything here seems different)
 
-Required Notice: Copyright (c) 2026 Saravanan A R (https://github.com/saravanan-a-r/EchoMeBetter)
-Required Notice: Attribution required. See the NOTICE file distributed with
-  this software for the exact credit line required in any use, copy,
-  publication, or derivative work.
+  * You may use EchoMeBetter, as one individual, for your own writing,
+    including writing you do for your own job or studies, through the
+    official EchoMeBetter browser extension only.
+  * You may use it for noncommercial research, and you must cite this project
+    in anything you publish about that research.
+  * You may not take the model or code out of the extension, change it, share
+    it, sell it, run it anywhere else, use it to build or train other models,
+    or use it for any commercial purpose, directly or indirectly.
+  * Commercial use and purchase of the model are available only under a
+    separate written agreement with the licensor.
+-------------------------------------------------------------------------------
 
-## Acceptance
+1. ACCEPTANCE
 
-In order to get any license under these terms, you must agree to them as both
-strict obligations and conditions to all your licenses.
+1.1 This license is a legal agreement between you and the Licensor. You accept
+    it by clicking a button or checking a box that says you agree to it, or by
+    installing, downloading, accessing, or using any part of the Materials,
+    whichever happens first. If you do not agree, do not install, download,
+    access, or use the Materials.
 
-## Copyright License
+1.2 You must be an individual (a natural person). You may accept this license
+    only for yourself, never on behalf of a company or any other organization.
 
-The licensor grants you a copyright license for the software to do everything
-you might do with the software that would otherwise infringe the licensor's
-copyright in it for any permitted purpose. However, you may only distribute
-the software according to [Distribution License](#distribution-license) and
-make changes or new works based on the software according to [Changes and New
-Works License](#changes-and-new-works-license).
+1.3 If you are under the age at which you can enter into a binding contract
+    where you live, you may use the Materials only if your parent or legal
+    guardian accepts this license on your behalf and is responsible for your
+    compliance with it.
 
-## Distribution License
+1.4 This license is granted only to individuals who obtain the Materials
+    from the Licensor through an Official Channel. If you obtained any part
+    of the Materials in any other way, you have no license to it.
 
-The licensor grants you an additional copyright license to distribute copies
-of the software. Your license to distribute covers distributing the software
-with changes and new works permitted by [Changes and New Works
-License](#changes-and-new-works-license).
+2. DEFINITIONS
 
-## Notices
+In this license:
 
-You must ensure that anyone who gets a copy of any part of the software from
-you also gets a copy of these terms or the URL for them above, as well as
-copies of any plain-text lines beginning with `Required Notice:` that the
-licensor provided with the software. For example:
+2.1 "Licensor" means Saravanan A R, and any person to whom Saravanan A R
+    assigns the rights in the Materials.
 
-> Required Notice: Copyright Yoyodyne, Inc. (http://example.com)
+2.2 "Materials" means everything the Licensor makes available under this
+    license, in any form, including: the EchoMeBetter browser extension; its
+    source code and compiled code; the Model; documentation; and all updates,
+    copies, and parts of any of them. Third-Party Components are not
+    Materials.
 
-## Changes and New Works License
+2.3 "Model" means the EchoMeBetter machine learning model and everything that
+    makes it work, including its weights and parameters, adapters, tokenizer,
+    and configuration and manifest files (such as model.json), in any format,
+    precision, or packaging.
 
-The licensor grants you an additional copyright license to make changes and
-new works based on the software for any permitted purpose.
+2.4 "Official Extension" means the EchoMeBetter browser extension in the form
+    published by the Licensor through an Official Channel, without any change
+    by anyone other than the Licensor.
 
-## Patent License
+2.5 "Official Channel" means the Chrome Web Store listing published by the
+    Licensor, the Licensor's own servers from which the Official Extension
+    downloads the Model, and any other channel the Licensor names in writing
+    as official.
 
-The licensor grants you a patent license for the software that covers patent
-claims the licensor can license, or becomes able to license, that you would
-infringe by using the software.
+2.6 "Personal Use" means use by you, as one individual, to write, edit, or
+    rewrite your own text, including text you write as part of your own job,
+    profession, or studies, where you personally choose the text, review the
+    result, and decide whether to use it.
 
-## Noncommercial Purposes
+2.7 "Research Use" means research, study, evaluation, or teaching that has no
+    commercial purpose, directly or indirectly, carried out by you as an
+    individual, including as a student or staff member of a nonprofit
+    academic or nonprofit research institution. Research carried out for, on
+    behalf of, or funded by a for-profit organization for its business
+    purposes is not Research Use.
 
-Any noncommercial purpose is a permitted purpose.
+2.8 "Commercial Use" means any use intended for, or directed toward, a
+    commercial advantage or money or other value for anyone, directly or
+    indirectly. Commercial Use includes:
+    (a) selling, licensing, renting, lending, or otherwise charging for or
+        providing the Materials, or access to them, to anyone;
+    (b) including the Materials, the Model, or any part of them in, or using
+        them to run, any product, service, application, website, API, or
+        automated system;
+    (c) rewriting or editing text for other people in exchange for payment or
+        any other value, where the Materials are used to do that work;
+    (d) use by, for, or on behalf of an organization as a tool provided to,
+        installed for, or required of its staff, members, or customers;
+    (e) research, development, testing, or evaluation for a for-profit
+        organization; and
+    (f) any use described in Section 5.1(g).
+    Personal Use is not Commercial Use only because the text you write is for
+    your job or for your own business. Paragraphs (a) to (f) apply even where
+    the use would otherwise be Personal Use.
 
-## Personal Uses
+2.9 "Output" means text that the Model produces for you.
 
-Personal use for research, experiment, and testing for the benefit of public
-knowledge, personal study, private entertainment, hobby projects, amateur
-pursuits, or religious observance, without any anticipated commercial
-application, is use for a permitted purpose.
+2.10 "Third-Party Components" means software owned by others that is included
+     with the Official Extension under its own license terms, as identified in
+     the license and notice files distributed with the Official Extension.
 
-## Noncommercial Organizations
+2.11 "You" and "your" mean the individual who accepts this license.
 
-Use by any charitable organization, educational institution, public research
-organization, public safety or health organization, environmental protection
-organization, or government institution is use for a permitted purpose
-regardless of the source of funding or obligations resulting from the
-funding.
+2.12 "Including" means "including without limitation". Headings are for
+     convenience only.
 
-## Fair Use
+3. LICENSE GRANT
 
-You may have "fair use" rights for the software under the law. These terms do
-not limit them.
+3.1 If you comply with this license, the Licensor grants you a personal,
+    limited, non-exclusive, non-transferable, non-sublicensable, revocable,
+    and royalty-free license to:
+    (a) install and run the Official Extension on devices that you own or
+        control;
+    (b) allow the Official Extension to download, store, and run the Model on
+        those devices; and
+    (c) use the Official Extension and the Model, solely through the Official
+        Extension, for Personal Use or Research Use.
 
-## No Other Rights
+3.2 Copies that the Official Extension or your web browser makes
+    automatically, in the normal course of doing what Section 3.1 allows, are
+    permitted, but only for that purpose.
 
-These terms do not allow you to sublicense or transfer any of your licenses
-to anyone else, or prevent the licensor from granting licenses to anyone
-else. These terms do not imply any other licenses.
+3.3 The Materials are licensed, not sold. The Licensor reserves every right
+    not expressly granted to you in this license. No other right or license
+    is granted, whether by implication, estoppel, or otherwise.
 
-## Patent Defense
+4. RESEARCH USE AND REQUIRED CITATION
 
-If you make any written claim that the software infringes or contributes to
-infringement of any patent, your patent license for the software granted
-under these terms ends immediately. If your company makes such a claim, your
-patent license ends immediately for work on behalf of your company.
+4.1 If you engage in Research Use, you may publish or present your findings,
+    evaluations, and examples of Output, as long as each publication or
+    presentation (including papers, theses, reports, articles, posts,
+    slides, and talks) cites this project in a reasonably prominent place,
+    using this citation or an equivalent one with the same information:
 
-## Violations
+      EchoMeBetter (2026) by Saravanan A R.
+      https://github.com/saravanan-a-r/EchoMeBetter
 
-The first time you are notified in writing that you have violated any of
-these terms, or done anything with the software not covered by your
-licenses, your licenses can nonetheless continue if you come into full
-compliance with these terms, and take practical steps to correct past
-violations, within 32 days of receiving notice. Otherwise, all your licenses
-end immediately.
+    BibTeX:
 
-## No Liability
+      @software{echomebetter2026,
+        author = {Saravanan A R},
+        title  = {EchoMeBetter: A Small, Controllable Text Rewriting Model},
+        year   = {2026},
+        url    = {https://github.com/saravanan-a-r/EchoMeBetter}
+      }
 
-***As far as the law allows, the software comes as is, without any warranty
-or condition, and the licensor will not be liable to you for any damages
-arising out of these terms or the use or nature of the software, under any
-kind of legal claim.***
+4.2 Research Use is allowed only through the Official Extension, like every
+    other use under this license. Research that needs access to the Model,
+    the source code, or the Materials in any other way requires the
+    Licensor's prior written permission.
 
-## Definitions
+4.3 Citing this project does not give you any right to use the name
+    "EchoMeBetter" or the Licensor's name or logos to suggest that the
+    Licensor endorses you or your work.
 
-The **licensor** is the individual or entity offering these terms, and the
-**software** is the software the licensor makes available under these terms.
+5. RESTRICTIONS
 
-**You** refers to the individual or entity agreeing to these terms.
+5.1 You must not, and must not help, allow, or encourage anyone else to:
+    (a) use the Model, or any part of it, other than through the Official
+        Extension;
+    (b) copy, extract, export, download, or retrieve the Model or any other
+        Materials from the Official Extension, from your browser's storage,
+        or from the Licensor's servers, other than as Sections 3.1(b) and 3.2
+        allow;
+    (c) modify, adapt, translate, or create derivative works of the
+        Materials, including by fine-tuning, quantizing, pruning, merging,
+        distilling, or converting the Model into another format;
+    (d) reverse engineer, decompile, or disassemble the Materials, or try to
+        work out the Model's weights, parameters, or training data, except to
+        the extent applicable law expressly allows this despite this
+        restriction;
+    (e) distribute, publish, share, sell, rent, lend, sublicense, transfer,
+        or otherwise make available any part of the Materials to anyone, or
+        provide access to the Model through any hosted service, network, or
+        API;
+    (f) bypass, disable, or interfere with any integrity check, download
+        control, or other technical measure in the Materials;
+    (g) use the Model, or any Output, to create, train, fine-tune, distill,
+        or improve any other machine learning model or AI system;
+    (h) use the Materials for any Commercial Use;
+    (i) use the Materials or any Output to break any law or to harm others,
+        including for fraud, phishing, scams, impersonation, harassment,
+        spam, or infringing anyone else's rights or privacy;
+    (j) remove, hide, or change any copyright, license, or other notice in
+        the Materials; or
+    (k) use any script, bot, or other automated means to send text to, or
+        collect Output from, the Official Extension or the Model.
 
-**Your company** is any legal entity, sole proprietorship, or other kind of
-organization that you work for, plus all organizations that have control
-over, are under the control of, or are under common control with that
-organization. **Control** means ownership of substantially all the assets of
-an entity, or the power to direct its management and policies by vote,
-contract, or otherwise. Control can be direct or indirect.
+5.2 Any use of the Materials that is not expressly allowed by this license,
+    or that continues after this license ends, is both a breach of this
+    license and an infringement of the Licensor's copyright and other rights.
 
-**Your licenses** are all the licenses granted to you for the software under
-these terms.
+6. OWNERSHIP AND OUTPUT
 
-**Use** means anything you do with the software requiring one of your
-licenses.
+6.1 The Licensor owns all right, title, and interest, including all
+    intellectual property rights, in and to the Materials.
+
+6.2 The Licensor claims no ownership of the text you give the Official
+    Extension or of the Output it produces for you. You are responsible for
+    that text, for the Output, and for how you use them. Your use of Output
+    is still subject to Sections 4 and 5.1(g).
+
+7. COMMERCIAL USE AND PURCHASE
+
+7.1 Commercial Use, use by or for any organization, any use outside the
+    Official Extension, and any purchase or acquisition of the Materials or
+    the Model are allowed only under a separate written agreement signed by
+    the Licensor.
+
+7.2 To ask about a commercial license or a purchase, contact the Licensor
+    by email at sararavi.ar@gmail.com
+    or through https://github.com/saravanan-a-r.
+
+8. FEEDBACK
+
+If you send the Licensor suggestions, ideas, or other feedback about the
+Materials, the Licensor may use them for any purpose without any obligation
+to you.
+
+9. UPDATES AND CHANGES
+
+9.1 The Licensor may update, change, suspend, or stop offering any part of
+    the Materials, including the Model and its downloads, at any time.
+
+9.2 The Licensor may publish a new version of this license. A new version
+    applies to you once you accept it (for example, by clicking to agree in
+    the Official Extension) or once you keep using the Materials after the
+    Official Extension has clearly notified you of it. Until then, the
+    version you accepted continues to apply to you.
+
+10. TERM AND TERMINATION
+
+10.1 This license lasts until it ends under this Section 10.
+
+10.2 This license ends automatically, without notice, if you breach any of
+     its terms. The Licensor may choose to reinstate it, but only in
+     writing.
+
+10.3 The Licensor may also end this license at any time by notifying you,
+     including through the Official Extension.
+
+10.4 When this license ends, you must immediately stop using the Materials,
+     uninstall the Official Extension, and delete every copy of the
+     Materials, including any Model files, in your possession or control.
+
+10.5 Sections 2, 4.1, 4.3, 5, 6, 8, 10.4, 10.5, and 11 to 15 continue to
+     apply after this license ends.
+
+11. NO WARRANTY
+
+TO THE MAXIMUM EXTENT ALLOWED BY APPLICABLE LAW, THE MATERIALS AND ALL OUTPUT
+ARE PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OR CONDITION OF ANY
+KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING ANY WARRANTY OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT,
+ACCURACY, OR UNINTERRUPTED OR ERROR-FREE OPERATION. OUTPUT IS GENERATED BY A
+MACHINE LEARNING MODEL AND MAY BE INACCURATE, INCOMPLETE, OR CHANGE YOUR
+MEANING. YOU MUST REVIEW ALL OUTPUT BEFORE YOU USE OR SEND IT.
+
+12. LIMITATION OF LIABILITY
+
+TO THE MAXIMUM EXTENT ALLOWED BY APPLICABLE LAW: (A) THE LICENSOR WILL NOT BE
+LIABLE TO YOU FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL,
+EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, OR
+GOODWILL, ARISING OUT OF OR RELATING TO THIS LICENSE, THE MATERIALS, OR ANY
+OUTPUT, UNDER ANY LEGAL THEORY, EVEN IF THE LICENSOR HAS BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES; AND (B) THE LICENSOR'S TOTAL LIABILITY FOR ALL
+CLAIMS ARISING OUT OF OR RELATING TO THIS LICENSE, THE MATERIALS, OR ANY
+OUTPUT WILL NOT EXCEED THE GREATER OF THE AMOUNT YOU PAID THE LICENSOR FOR THE
+MATERIALS (IF ANY) AND FIFTY US DOLLARS (US$50).
+
+13. ENFORCEMENT
+
+You agree that a breach of Section 5 could cause the Licensor serious harm
+that money alone could not fully make up for. In addition to any other
+remedy, the Licensor may seek an injunction or other court order to stop or
+prevent any such breach, in any court with jurisdiction, and, to the extent
+allowed by law, without having to prove actual damages or post a bond or
+other security.
+
+14. GOVERNING LAW AND DISPUTES
+
+14.1 If you live in India, this license is governed by the laws of India,
+     and the courts located in Chennai, Tamil Nadu, India have exclusive
+     jurisdiction over any dispute arising out of or relating to this
+     license or the Materials.
+
+14.2 If you live anywhere else, this license is governed by the laws of the
+     State of California, United States of America, and applicable United
+     States federal law, and the state and federal courts located in San
+     Francisco County, California have exclusive jurisdiction over any
+     dispute arising out of or relating to this license or the Materials.
+
+14.3 In either case, the governing law applies without regard to its
+     conflict of laws rules, and you and the Licensor consent to the
+     jurisdiction of those courts.
+
+14.4 Despite Sections 14.1 and 14.2, the Licensor may bring a claim to
+     enforce Sections 5, 6, or 13, including a claim for an injunction, in
+     the courts of the place where you live or where the breach happens.
+
+15. GENERAL
+
+15.1 Entire agreement. This license is the entire agreement between you and
+     the Licensor about the Materials. If you and the Licensor sign a
+     separate written agreement about the Materials, that agreement
+     controls where it conflicts with this license.
+
+15.2 Severability. If any part of this license is found unenforceable, it
+     will be enforced to the greatest extent allowed, and the rest of this
+     license stays in effect.
+
+15.3 No waiver. If the Licensor does not enforce any part of this license,
+     that is not a waiver of the right to enforce it later.
+
+15.4 Assignment. You may not assign or transfer this license or any of your
+     rights under it. The Licensor may assign or transfer this license and
+     any rights in the Materials, including to a buyer of the Model.
+
+15.5 Third-Party Components. Third-Party Components are licensed to you
+     under their own terms, not under this license.
+
+15.6 Rights that cannot be limited. Nothing in this license limits any right
+     you have under applicable law that cannot be limited or waived by
+     contract.
