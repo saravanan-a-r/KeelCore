@@ -5,6 +5,7 @@
 *.md
 *.MD
 !/README.md
+!/COMMERCIAL_LICENSE.md
 
 # ---------------------------------------------------------------------------
 # Corpora and generated data. These are rebuildable from the downloaders in
