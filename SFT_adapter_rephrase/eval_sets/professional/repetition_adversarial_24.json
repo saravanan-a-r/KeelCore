@@ -1,0 +1,122 @@
+[
+ {
+  "id": 0,
+  "level": "repetition",
+  "input": "very very very very very good good good good"
+ },
+ {
+  "id": 1,
+  "level": "repetition",
+  "input": "ha ha ha ha ha ha ha ha ha ha"
+ },
+ {
+  "id": 2,
+  "level": "repetition",
+  "input": "1 1 1 1 1 1 1 1 1 1 1 1"
+ },
+ {
+  "id": 3,
+  "level": "repetition",
+  "input": "no no no no no no no no no no no"
+ },
+ {
+  "id": 4,
+  "level": "repetition",
+  "input": "ok ok ok ok ok ok ok ok ok ok"
+ },
+ {
+  "id": 5,
+  "level": "repetition",
+  "input": "000000000000000000000000"
+ },
+ {
+  "id": 6,
+  "level": "repetition",
+  "input": "pls pls pls pls send send send send the the the the report report report"
+ },
+ {
+  "id": 7,
+  "level": "repetition",
+  "input": "ping ping ping ping ping ping ping ping ping ping ping ping"
+ },
+ {
+  "id": 8,
+  "level": "repetition",
+  "input": "the quick brown fox jumps over the lazy dog. the quick brown fox jumps over the lazy dog. the quick brown fox jumps over the lazy dog."
+ },
+ {
+  "id": 9,
+  "level": "repetition",
+  "input": "thanks thanks thanks thanks thanks thanks thanks thanks"
+ },
+ {
+  "id": 10,
+  "level": "repetition",
+  "input": "a b c a b c a b c a b c a b c a b c"
+ },
+ {
+  "id": 11,
+  "level": "repetition",
+  "input": "lol lol lol lol lol lol lol lol lol lol lol lol"
+ },
+ {
+  "id": 12,
+  "level": "repetition",
+  "input": "please please please please please please please please please"
+ },
+ {
+  "id": 13,
+  "level": "repetition",
+  "input": "yes yes yes no no no yes yes yes no no no yes yes yes"
+ },
+ {
+  "id": 14,
+  "level": "repetition",
+  "input": "error error error error error error error error"
+ },
+ {
+  "id": 15,
+  "level": "repetition",
+  "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+ },
+ {
+  "id": 16,
+  "level": "repetition",
+  "input": "-------------------------------------------"
+ },
+ {
+  "id": 17,
+  "level": "repetition",
+  "input": "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"
+ },
+ {
+  "id": 18,
+  "level": "repetition",
+  "input": "call 555 555 555 555 555 555"
+ },
+ {
+  "id": 19,
+  "level": "repetition",
+  "input": "ID: 1111111111 2222222222 3333333333 4444444444"
+ },
+ {
+  "id": 20,
+  "level": "repetition",
+  "input": "see see see see see see see see see see"
+ },
+ {
+  "id": 21,
+  "level": "repetition",
+  "input": "we we we we we need need need need need to to to to"
+ },
+ {
+  "id": 22,
+  "level": "repetition",
+  "input": "ok ok ok. ok ok ok. ok ok ok. ok ok ok. ok ok ok."
+ },
+ {
+  "id": 23,
+  "level": "repetition",
+  "input": "bye bye bye bye bye bye bye bye bye bye bye"
+ }
+]
