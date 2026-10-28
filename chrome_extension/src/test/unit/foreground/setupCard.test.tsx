@@ -47,6 +47,7 @@ function setup() {
   });
   const store = new OverlayStore();
   const openSettings = jest.fn();
+  const openLicense = jest.fn();
   const controller = new ForegroundController({
     doc: document,
     win: window,
@@ -54,10 +55,11 @@ function setup() {
     overlay: () => store,
     writeClipboard: async () => undefined,
     openSettings,
+    openLicense,
     requestRewrite: () => undefined,
     connectSetup,
   });
-  return { store, controller, openSettings, connectSetup, setupPorts, jobRequests, emitJob: (event: JobEvent) => deliverJob(event), textarea };
+  return { store, controller, openSettings, openLicense, connectSetup, setupPorts, jobRequests, emitJob: (event: JobEvent) => deliverJob(event), textarea };
 }
 
 const noModel = { kind: 'echo/notice', error: { code: 'MODEL_NOT_DOWNLOADED' }, style: 'concise' } as const;
@@ -71,9 +73,9 @@ describe('the in-place model download, from the controller', () => {
     const [card] = setupPorts;
     expect(card!.sent).toEqual([{ kind: 'setup/open', need: { kind: 'model', style: 'concise' } }]);
 
-    card!.emit({ kind: 'setup/offer', totalBytes: 866e6, styles: ['concise', 'professional'] });
-    expect(store.getSnapshot().setup!.view).toEqual({ phase: 'offer', totalBytes: 866e6, styles: ['concise', 'professional'] });
-    store.getSnapshot().setup!.download();
+    card!.emit({ kind: 'setup/offer', totalBytes: 866e6, styles: ['concise', 'professional'], askLicense: false });
+    expect(store.getSnapshot().setup!.view).toEqual({ phase: 'offer', totalBytes: 866e6, styles: ['concise', 'professional'], askLicense: false });
+    store.getSnapshot().setup!.download(false);
     expect(card!.sent.at(-1)).toEqual({ kind: 'setup/download' });
 
     card!.emit({ kind: 'setup/progress', verifying: false, receivedBytes: 100, totalBytes: 1000, bytesPerSecond: 10 });
@@ -137,7 +139,7 @@ describe('the in-place model download, from the controller', () => {
 
     document.body.innerHTML = '';
     const bare = new OverlayStore();
-    const without = new ForegroundController({ doc: document, win: window, connect: () => { throw new Error('no'); }, overlay: () => bare, writeClipboard: async () => undefined, openSettings: () => undefined, requestRewrite: () => undefined });
+    const without = new ForegroundController({ doc: document, win: window, connect: () => { throw new Error('no'); }, overlay: () => bare, writeClipboard: async () => undefined, openSettings: () => undefined, openLicense: () => undefined, requestRewrite: () => undefined });
     without.handleMessage(noModel);
     expect(bare.getSnapshot().setup).toBeNull();
     expect(bare.getSnapshot().toast?.message).toContain('Download the writing model first');
@@ -153,14 +155,14 @@ describe('the in-place model download, from the controller', () => {
     controller.handleMessage(noModel);
     setupPorts[1]!.drop();
     expect(store.getSnapshot().setup!.view).toMatchObject({ phase: 'failed', error: { code: 'DISCONNECTED' } });
-    store.getSnapshot().setup!.download();
+    store.getSnapshot().setup!.download(false);
     expect(setupPorts).toHaveLength(3);
   });
 });
 
 describe('the download card', () => {
   const state = (view: SetupState['view'], subject: SetupState['subject'] = { kind: 'model' }, style: SetupState['style'] = null) => {
-    const calls = { download: jest.fn(), rewrite: jest.fn(), openSettings: jest.fn(), close: jest.fn() };
+    const calls = { download: jest.fn(), rewrite: jest.fn(), openSettings: jest.fn(), openLicense: jest.fn(), close: jest.fn() };
     const store = new OverlayStore();
     render(<OverlayApp store={store} />);
     act(() => store.showSetup({ subject, style, anchor: { top: 100, left: 100, bottom: 130, right: 400 }, view, ...calls }));
@@ -168,17 +170,19 @@ describe('the download card', () => {
   };
 
   test('says why, with the size on the button', () => {
-    const { download, close } = state({ phase: 'offer', totalBytes: 866e6, styles: ['professional'] });
+    const { download, close } = state({ phase: 'offer', totalBytes: 866e6, styles: ['professional'], askLicense: false });
     expect(screen.getByRole('group', { name: 'Download the writing model' })).toBeInTheDocument();
     expect(screen.getByText(/needs its writing model first/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Download · 866 MB' }));
-    expect(download).toHaveBeenCalledTimes(1);
+    expect(download).toHaveBeenCalledWith(false);
+    // Agreed to before: the card does not ask again.
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
     expect(close).toHaveBeenCalledTimes(1);
   });
 
   test('names the styles that come with the writing model', () => {
-    state({ phase: 'offer', totalBytes: 939e6, styles: ['concise', 'professional'] });
+    state({ phase: 'offer', totalBytes: 939e6, styles: ['concise', 'professional'], askLicense: false });
     expect(screen.getByText(/This one-time download includes the Concise and Professional styles and stays on this device\./)).toBeInTheDocument();
   });
 
@@ -223,7 +227,7 @@ describe('the download card', () => {
   });
 
   test('a failure says what went wrong and can be retried', () => {
-    const { download } = state({ phase: 'failed', error: { code: 'DOWNLOAD_FAILED' } });
+    const { download } = state({ phase: 'failed', error: { code: 'DOWNLOAD_FAILED' }, askLicense: false });
     expect(screen.getByText("Download didn't finish")).toBeInTheDocument();
     expect(screen.getByText(/Check your connection, then try again/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
@@ -242,8 +246,67 @@ describe('the download card', () => {
   });
 
   test('every moment has its words', () => {
-    const base = { subject: { kind: 'model' } as const, style: null, anchor: null, download: () => undefined, rewrite: () => undefined, openSettings: () => undefined, close: () => undefined };
+    const base = { subject: { kind: 'model' } as const, style: null, anchor: null, download: () => undefined, rewrite: () => undefined, openSettings: () => undefined, openLicense: () => undefined, close: () => undefined };
     expect(setupCopy({ ...base, view: { phase: 'downloading', verifying: true, receivedBytes: 1, totalBytes: 1, bytesPerSecond: 0 } }).title).toBe('Verifying the download');
     expect(setupCopy({ ...base, view: { phase: 'downloading', verifying: false, receivedBytes: 0, totalBytes: 0, bytesPerSecond: 0 } }).body).toBe('Connecting…');
+  });
+});
+
+describe('the download card asks for the license agreement', () => {
+  const state = (view: SetupState['view']) => {
+    const calls = { download: jest.fn(), rewrite: jest.fn(), openSettings: jest.fn(), openLicense: jest.fn(), close: jest.fn() };
+    const store = new OverlayStore();
+    render(<OverlayApp store={store} />);
+    act(() => store.showSetup({ subject: { kind: 'model' }, style: null, anchor: { top: 100, left: 100, bottom: 130, right: 400 }, view, ...calls }));
+    return calls;
+  };
+
+  test('until it is ticked the download stays disabled; once ticked, the download carries the agreement', () => {
+    const { download } = state({ phase: 'offer', totalBytes: 866e6, styles: ['professional'], askLicense: true });
+    const box = screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ });
+    expect(box).not.toBeChecked();
+    const button = screen.getByRole('button', { name: 'Download · 866 MB' });
+    expect(button).toBeDisabled();
+    fireEvent.click(button);
+    expect(download).not.toHaveBeenCalled();
+    fireEvent.click(box);
+    expect(button).toBeEnabled();
+    fireEvent.click(button);
+    expect(download).toHaveBeenCalledWith(true);
+    // "Not now" never waits for the agreement.
+    expect(screen.getByRole('button', { name: 'Not now' })).toBeEnabled();
+  });
+
+  test('the license opens on its own, and opening it does not tick the box', () => {
+    const { openLicense } = state({ phase: 'offer', totalBytes: 866e6, styles: ['professional'], askLicense: true });
+    fireEvent.click(screen.getByRole('button', { name: 'EchoMeBetter License' }));
+    expect(openLicense).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+  });
+
+  test('trying a stopped download again asks for it too, when there is none on record', () => {
+    const { download } = state({ phase: 'failed', error: { code: 'DOWNLOAD_FAILED' }, askLicense: true });
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeDisabled();
+    fireEvent.click(screen.getByRole('checkbox'));
+    fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(download).toHaveBeenCalledWith(true);
+  });
+
+  test('a running download, or one that is done, has nothing to agree to', () => {
+    state({ phase: 'downloading', verifying: false, receivedBytes: 1, totalBytes: 10, bytesPerSecond: 0 });
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  });
+});
+
+describe('the controller sends the agreement with the download', () => {
+  test('ticked on the card: the download asks with the license version; the license opens through the service worker', () => {
+    const { store, controller, setupPorts, openLicense } = setup();
+    controller.handleMessage(noModel);
+    setupPorts[0]!.emit({ kind: 'setup/offer', totalBytes: 866e6, styles: ['professional'], askLicense: true });
+    expect(store.getSnapshot().setup!.view).toMatchObject({ phase: 'offer', askLicense: true });
+    store.getSnapshot().setup!.download(true);
+    expect(setupPorts[0]!.sent.at(-1)).toEqual({ kind: 'setup/download', acceptLicense: '1.0' });
+    store.getSnapshot().setup!.openLicense();
+    expect(openLicense).toHaveBeenCalledTimes(1);
   });
 });

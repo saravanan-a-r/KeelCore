@@ -10,7 +10,7 @@
  * same one the popup starts; closing a card never stops it.
  */
 import { toErrorPayload } from '../shared/errors';
-import type { EngineEvent, SetupEvent, SetupNeed, SetupRequest } from '../shared/messages';
+import type { EngineEvent, SetupEvent, SetupNeed, SetupRequest, UiReply } from '../shared/messages';
 import { isSetupRequest } from '../shared/messages';
 import { adapterForStyle, IDLE_DOWNLOAD, modelFrom, offeredCatalog, starterAdapter, type DownloadState, type InstalledModelRecord, type ModelCatalog } from '../shared/modelInstall';
 import type { StyleId } from '../shared/styles';
@@ -29,13 +29,20 @@ export interface SetupBrokerDeps {
   readonly readDownload: () => Promise<DownloadState>;
   /** The folder this build downloads from; a model from another folder counts as not installed. */
   readonly sourceUrl: string;
-  /** Start downloading these styles (and the base, if it is not installed). */
-  readonly startDownload: (adapters: readonly StyleId[]) => void;
+  /**
+   * Start downloading these styles (and the base, if it is not installed), if the license allows it;
+   * `acceptLicense` is the version the user has just agreed to on the card (see licenseGate.ts).
+   */
+  readonly startDownload: (adapters: readonly StyleId[], acceptLicense: string | undefined) => Promise<UiReply>;
+  /** Whether the user has agreed to the current license. */
+  readonly licenseAccepted: () => Promise<boolean>;
 }
 
 interface Plan {
   readonly adapters: StyleId[];
   readonly totalBytes: number;
+  /** The download brings the writing model too (it is not on this device). */
+  readonly base: boolean;
   /** The style that has to be installed for the card's job to be done. */
   readonly requires: StyleId;
 }
@@ -49,6 +56,8 @@ export class SetupBroker {
   private readonly sessions = new Set<Session>();
   private installed: InstalledModelRecord | null | undefined;
   private download: DownloadState = IDLE_DOWNLOAD;
+  /** Whether an agreement to the current license is on record; until it has been read, a style's card asks for it (never wrong, only sometimes asked twice). */
+  private licenseAccepted = false;
 
   constructor(private readonly deps: SetupBrokerDeps) {}
 
@@ -70,15 +79,26 @@ export class SetupBroker {
     for (const session of this.sessions) this.report(session);
   }
 
+  /** The user agreed to the license (or the agreement went) somewhere else: every open card shows it. */
+  onLicense(accepted: boolean): void {
+    if (accepted === this.licenseAccepted) return;
+    this.licenseAccepted = accepted;
+    for (const session of this.sessions) this.report(session);
+  }
+
   private async handle(session: Session, request: SetupRequest): Promise<void> {
     try {
       if (request.kind === 'setup/download') {
-        if (session.plan) this.deps.startDownload(session.plan.adapters);
+        if (!session.plan) return;
+        const reply = await this.deps.startDownload(session.plan.adapters, request.acceptLicense);
+        // Refused (no agreement on record): the card asks for it again.
+        this.licenseAccepted = reply.ok || (await this.deps.licenseAccepted());
+        if (!reply.ok) this.report(session);
         return;
       }
       await this.open(session, request.need);
     } catch (error) {
-      this.send(session, { kind: 'setup/failed', error: toErrorPayload(error, 'DOWNLOAD_FAILED') });
+      this.send(session, { kind: 'setup/failed', error: toErrorPayload(error, 'DOWNLOAD_FAILED'), askLicense: this.asksLicense(session.plan?.base ?? true) });
     }
   }
 
@@ -89,6 +109,7 @@ export class SetupBroker {
       if (this.installed === undefined) this.installed = modelFrom(installed, this.deps.sourceUrl);
       if (this.download === IDLE_DOWNLOAD) this.download = download;
     }
+    this.licenseAccepted = await this.deps.licenseAccepted();
     const installed = this.installed ?? null;
     // The server's catalog fits the installed base, or else the installed one stands in for it (an unreachable server is no reason to refuse a style that is already listed).
     let remote: ModelCatalog | null = null;
@@ -117,12 +138,17 @@ export class SetupBroker {
         bytesPerSecond: download.bytesPerSecond,
       });
     } else if (download.state === 'failed') {
-      this.send(session, { kind: 'setup/failed', error: download.error });
+      this.send(session, { kind: 'setup/failed', error: download.error, askLicense: this.asksLicense(download.target.base) });
     } else if (this.installed?.adapters.includes(plan.requires)) {
       this.send(session, { kind: 'setup/done' });
     } else {
-      this.send(session, { kind: 'setup/offer', totalBytes: plan.totalBytes, styles: plan.adapters });
+      this.send(session, { kind: 'setup/offer', totalBytes: plan.totalBytes, styles: plan.adapters, askLicense: this.asksLicense(plan.base) });
     }
+  }
+
+  /** A download that brings the writing model always asks for the agreement; a style asks only without one on record. */
+  private asksLicense(base: boolean): boolean {
+    return base || !this.licenseAccepted;
   }
 
   private send(session: Session, event: SetupEvent): void {
@@ -149,6 +175,7 @@ export function planFor(need: SetupNeed, catalog: ModelCatalog, installed: Insta
   return {
     adapters: adapters.map((candidate) => candidate.style),
     totalBytes: baseBytes + adapters.reduce((sum, candidate) => sum + candidate.sizeBytes, 0),
+    base: !installed,
     requires: adapter.style,
   };
 }

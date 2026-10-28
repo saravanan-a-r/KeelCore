@@ -9,6 +9,8 @@ import type { SetupState, SetupView } from './overlayStore';
 const SETUP_WIDTH = 420;
 /** The card's height, close enough to decide whether it fits below the text or above it. */
 const SETUP_HEIGHT = 240;
+/** The extra height of the license agreement, while the card shows it. */
+const CONSENT_HEIGHT = 32;
 /** How long the "ready" card stays when nobody closes it. */
 const DONE_MS = 30_000;
 
@@ -66,6 +68,13 @@ export function setupCopy(setup: SetupState): { title: string; body: string } {
 interface CardAction {
   readonly label: string;
   readonly run: () => void;
+  /** Kept disabled until the user has agreed to the license. */
+  readonly needsAgreement?: boolean;
+}
+
+/** The card asks for the license agreement before this download (or its retry) can start. */
+export function asksForLicense(view: SetupView): boolean {
+  return (view.phase === 'offer' || view.phase === 'failed') && view.askLicense;
 }
 
 /**
@@ -73,13 +82,14 @@ interface CardAction {
  * it is done, carrying on with the rewrite comes first; settings are for those
  * who want to change the processor (after a model download only).
  */
-function cardActions(setup: SetupState): CardAction[] {
+function cardActions(setup: SetupState, agreed: boolean): CardAction[] {
   const close = { label: 'Close', run: setup.close };
+  const download = () => setup.download(agreed);
   switch (setup.view.phase) {
     case 'offer':
-      return [{ label: `Download · ${formatBytes(setup.view.totalBytes)}`, run: setup.download }, { ...close, label: 'Not now' }];
+      return [{ label: `Download · ${formatBytes(setup.view.totalBytes)}`, run: download, needsAgreement: true }, { ...close, label: 'Not now' }];
     case 'failed':
-      return [{ label: 'Try again', run: setup.download }, close];
+      return [{ label: 'Try again', run: download, needsAgreement: true }, close];
     case 'done': {
       const model = setup.subject.kind === 'model';
       const actions: CardAction[] = [];
@@ -101,13 +111,16 @@ function cardActions(setup: SetupState): CardAction[] {
  */
 export function SetupCard({ setup }: { setup: SetupState }) {
   const titleId = useId();
+  const consentId = useId();
   const [hovered, setHovered] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const { view } = setup;
   const say = setupCopy(setup);
   const viewport = { width: window.innerWidth, height: window.innerHeight };
   const width = Math.min(SETUP_WIDTH, viewport.width - 2 * GAP);
   const downloading = view.phase === 'downloading';
   const percent = view.phase === 'downloading' ? downloadPercent(view) : 0;
+  const consent = asksForLicense(view);
 
   useEffect(() => {
     if (view.phase !== 'done' || hovered) return undefined;
@@ -115,12 +128,12 @@ export function SetupCard({ setup }: { setup: SetupState }) {
     return () => clearTimeout(timer);
   }, [view.phase, hovered, setup.close]);
 
-  const actions = cardActions(setup);
+  const actions = cardActions(setup, agreed);
   return (
     <div
       role="group"
       aria-labelledby={titleId}
-      style={{ ...offerPosition(setup.anchor, viewport, width, SETUP_HEIGHT), width, contain: 'layout paint' }}
+      style={{ ...offerPosition(setup.anchor, viewport, width, SETUP_HEIGHT + (consent ? CONSENT_HEIGHT : 0)), width, contain: 'layout paint' }}
       // Keep focus (and the caret) in the user's editor when a button on the card is pressed.
       onMouseDown={(event) => event.preventDefault()}
       onMouseEnter={() => setHovered(true)}
@@ -160,13 +173,46 @@ export function SetupCard({ setup }: { setup: SetupState }) {
           {downloading ? (
             <p className="_echo_$_m-0 _echo_$_mt-1.5 _echo_$_font-sans _echo_$_text-[13px] _echo_$_leading-5 _echo_$_text-fg-soft">You can close this card. The download continues in the background.</p>
           ) : null}
-          {actions.length > 0 ? (
-            <div className="_echo_$_mt-3.5 _echo_$_flex _echo_$_flex-wrap _echo_$_items-center _echo_$_gap-2">
-              {actions.map((action, index) => (
-                <button key={action.label} type="button" onClick={action.run} className={index === 0 ? BUTTON : SECONDARY_BUTTON}>
-                  {action.label}
+          {consent ? (
+            // A link inside a label does not tick the box: opening the license and agreeing to it stay two separate acts.
+            <label className="_echo_$_mt-3 _echo_$_flex _echo_$_cursor-pointer _echo_$_items-start _echo_$_gap-2 _echo_$_font-sans _echo_$_text-[13px] _echo_$_leading-5 _echo_$_text-fg-secondary">
+              <input
+                id={consentId}
+                type="checkbox"
+                checked={agreed}
+                onChange={(event) => setAgreed(event.target.checked)}
+                className="_echo_$_m-0 _echo_$_mt-0.5 _echo_$_h-4 _echo_$_w-4 _echo_$_shrink-0 _echo_$_cursor-pointer _echo_$_accent-accent focus-visible:_echo_$_outline focus-visible:_echo_$_outline-2 focus-visible:_echo_$_outline-offset-2 focus-visible:_echo_$_outline-focus"
+              />
+              <span>
+                I agree to the{' '}
+                <button
+                  type="button"
+                  onClick={setup.openLicense}
+                  className="_echo_$_cursor-pointer _echo_$_border-0 _echo_$_bg-transparent _echo_$_p-0 _echo_$_font-sans _echo_$_text-[13px] _echo_$_font-semibold _echo_$_leading-5 _echo_$_text-accent _echo_$_underline _echo_$_underline-offset-2 hover:_echo_$_text-fg focus-visible:_echo_$_outline focus-visible:_echo_$_outline-2 focus-visible:_echo_$_outline-focus"
+                >
+                  EchoMeBetter License
                 </button>
-              ))}
+              </span>
+            </label>
+          ) : null}
+          {actions.length > 0 ? (
+            <div className={`${consent ? '_echo_$_mt-3' : '_echo_$_mt-3.5'} _echo_$_flex _echo_$_flex-wrap _echo_$_items-center _echo_$_gap-2`}>
+              {actions.map((action, index) => {
+                const locked = consent && action.needsAgreement === true && !agreed;
+                return (
+                  <button
+                    key={action.label}
+                    type="button"
+                    onClick={action.run}
+                    disabled={locked}
+                    aria-describedby={locked ? consentId : undefined}
+                    title={locked ? 'Agree to the EchoMeBetter License first' : undefined}
+                    className={index === 0 ? BUTTON : SECONDARY_BUTTON}
+                  >
+                    {action.label}
+                  </button>
+                );
+              })}
             </div>
           ) : null}
         </div>

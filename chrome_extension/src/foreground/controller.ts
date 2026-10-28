@@ -25,6 +25,7 @@
  */
 import { describeError, EchoError, toErrorPayload, type ErrorPayload } from '../shared/errors';
 import { formatDuration } from '../shared/format';
+import { LICENSE_VERSION } from '../shared/license';
 import { isJobEvent, isSetupEvent, type AccessOfferReply, type AccessResult, type ForegroundMessage, type JobEvent, type JobRequest, type Point, type SetupEvent, type SetupNeed, type SetupRequest, type StartJobReply, type WokeFromRest } from '../shared/messages';
 import type { SettingsFocus } from '../shared/popupIntent';
 import { keepLoadedLabel } from '../shared/settings';
@@ -60,6 +61,8 @@ export interface ForegroundDeps {
   readonly writeClipboard: (text: string) => Promise<void>;
   /** Open the toolbar popup's settings at `focus`. */
   readonly openSettings: (focus: SettingsFocus) => void;
+  /** Open the EchoMeBetter License in a tab of its own. */
+  readonly openLicense: () => void;
   /** A style was picked from the style menu: ask for it, as its shortcut would. */
   readonly requestRewrite: (style: StyleId) => void;
   /** Where the in-place model download is reached; without it the missing model is reported in a toast. */
@@ -140,13 +143,13 @@ function setupNeed(error: ErrorPayload, style: StyleId | null): { need: SetupNee
 function setupView(event: SetupEvent): SetupView {
   switch (event.kind) {
     case 'setup/offer':
-      return { phase: 'offer', totalBytes: event.totalBytes, styles: event.styles };
+      return { phase: 'offer', totalBytes: event.totalBytes, styles: event.styles, askLicense: event.askLicense };
     case 'setup/progress':
       return { phase: 'downloading', verifying: event.verifying, receivedBytes: event.receivedBytes, totalBytes: event.totalBytes, bytesPerSecond: event.bytesPerSecond };
     case 'setup/done':
       return { phase: 'done' };
     case 'setup/failed':
-      return { phase: 'failed', error: event.error };
+      return { phase: 'failed', error: event.error, askLicense: event.askLicense };
   }
 }
 
@@ -568,9 +571,9 @@ export class ForegroundController {
       subject: found.subject,
       style,
       anchor,
-      download: () => {
+      download: (agreed) => {
         try {
-          port.postMessage({ kind: 'setup/download' });
+          port.postMessage(agreed ? { kind: 'setup/download', acceptLicense: LICENSE_VERSION } : { kind: 'setup/download' });
         } catch {
           // The service worker restarted since the card opened: start over from the top.
           this.offerSetup(error, anchor, style);
@@ -584,6 +587,7 @@ export class ForegroundController {
         this.deps.openSettings('performance');
         close();
       },
+      openLicense: () => this.deps.openLicense(),
       close,
     };
     store.showSetup({ ...state, view: { phase: 'checking' } });
@@ -593,7 +597,8 @@ export class ForegroundController {
     port.onDisconnect.addListener(() => {
       if (!current()) return;
       this.setupPort = null;
-      store.updateSetup({ phase: 'failed', error: { code: 'DISCONNECTED' } });
+      // Trying again opens a new card, which asks the service worker afresh.
+      store.updateSetup({ phase: 'failed', error: { code: 'DISCONNECTED' }, askLicense: false });
     });
     port.postMessage({ kind: 'setup/open', need: found.need });
     return true;

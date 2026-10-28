@@ -113,6 +113,15 @@ export function isOpenSettingsRequest(value: unknown): value is OpenSettingsRequ
   return message.kind === 'page/open-settings' && isSettingsFocus(message.focus);
 }
 
+/** Open the license in a tab of its own (a website's card cannot open the extension's pages itself). */
+export interface OpenLicenseRequest {
+  readonly kind: 'page/open-license';
+}
+
+export function isOpenLicenseRequest(value: unknown): value is OpenLicenseRequest {
+  return typeof value === 'object' && value !== null && (value as { kind?: unknown }).kind === 'page/open-license';
+}
+
 /**
  * A rewrite was just put in place. The service worker counts it and says
  * whether to offer the user the site access that hold and shortcuts need.
@@ -166,16 +175,26 @@ export type SetupNeed = { readonly kind: 'model'; readonly style?: StyleId } | {
 export type SetupRequest =
   /** The card opened: report what the download would be, or how it is going. */
   | { readonly kind: 'setup/open'; readonly need: SetupNeed }
-  /** Start the download (also the retry of one that failed). */
-  | { readonly kind: 'setup/download' };
+  /** Start the download (also the retry of one that failed); `acceptLicense` as for `ui/download-model`. */
+  | { readonly kind: 'setup/download'; readonly acceptLicense?: string };
 
 /** Where the download stands, for the card to show. */
 export type SetupEvent =
-  /** Nothing is downloading: this is what a download would fetch. */
-  | { readonly kind: 'setup/offer'; readonly totalBytes: number; /** The styles the download brings, the one asked for first. */ readonly styles: readonly StyleId[] }
+  /**
+   * Nothing is downloading: this is what a download would fetch, and whether the card must ask for the license
+   * agreement first (always for a download that brings the writing model; for a style, only without an agreement on record).
+   */
+  | {
+      readonly kind: 'setup/offer';
+      readonly totalBytes: number;
+      /** The styles the download brings, the one asked for first. */
+      readonly styles: readonly StyleId[];
+      readonly askLicense: boolean;
+    }
   | { readonly kind: 'setup/progress'; readonly verifying: boolean; readonly receivedBytes: number; readonly totalBytes: number; readonly bytesPerSecond: number }
   | { readonly kind: 'setup/done' }
-  | { readonly kind: 'setup/failed'; readonly error: ErrorPayload };
+  /** The download stopped; trying again asks for the license agreement as starting it does. */
+  | { readonly kind: 'setup/failed'; readonly error: ErrorPayload; readonly askLicense: boolean };
 
 function isSetupNeed(value: unknown): value is SetupNeed {
   if (typeof value !== 'object' || value === null) return false;
@@ -185,22 +204,32 @@ function isSetupNeed(value: unknown): value is SetupNeed {
 
 export function isSetupRequest(value: unknown): value is SetupRequest {
   if (typeof value !== 'object' || value === null) return false;
-  const message = value as { kind?: unknown; need?: unknown };
-  return message.kind === 'setup/download' || (message.kind === 'setup/open' && isSetupNeed(message.need));
+  const message = value as { kind?: unknown; need?: unknown; acceptLicense?: unknown };
+  if (message.kind === 'setup/download') return message.acceptLicense === undefined || typeof message.acceptLicense === 'string';
+  return message.kind === 'setup/open' && isSetupNeed(message.need);
 }
 
 export function isSetupEvent(value: unknown): value is SetupEvent {
   if (typeof value !== 'object' || value === null) return false;
-  const event = value as { kind?: unknown; styles?: unknown; totalBytes?: unknown; receivedBytes?: unknown; error?: unknown; verifying?: unknown; bytesPerSecond?: unknown };
+  const event = value as {
+    kind?: unknown;
+    styles?: unknown;
+    totalBytes?: unknown;
+    receivedBytes?: unknown;
+    error?: unknown;
+    verifying?: unknown;
+    bytesPerSecond?: unknown;
+    askLicense?: unknown;
+  };
   switch (event.kind) {
     case 'setup/offer':
-      return typeof event.totalBytes === 'number' && Array.isArray(event.styles) && event.styles.every(isStyleId);
+      return typeof event.totalBytes === 'number' && Array.isArray(event.styles) && event.styles.every(isStyleId) && typeof event.askLicense === 'boolean';
     case 'setup/progress':
       return typeof event.verifying === 'boolean' && typeof event.receivedBytes === 'number' && typeof event.totalBytes === 'number' && typeof event.bytesPerSecond === 'number';
     case 'setup/done':
       return true;
     case 'setup/failed':
-      return isErrorPayload(event.error);
+      return isErrorPayload(event.error) && typeof event.askLicense === 'boolean';
     default:
       return false;
   }
@@ -322,8 +351,12 @@ export type EngineEvent =
 
 export type UiRequest =
   | { readonly kind: 'ui/warm-up' }
-  /** Download these adapters, and the base first if it is not installed. */
-  | { readonly kind: 'ui/download-model'; readonly adapters: readonly StyleId[] }
+  /**
+   * Download these adapters, and the base first if it is not installed.
+   * `acceptLicense`: the license version the user has just agreed to (see shared/license.ts); without it
+   * the download starts only if an agreement to the current version is already on record.
+   */
+  | { readonly kind: 'ui/download-model'; readonly adapters: readonly StyleId[]; readonly acceptLicense?: string }
   | { readonly kind: 'ui/cancel-download' }
   | { readonly kind: 'ui/remove-adapter'; readonly adapter: StyleId }
   /** The base and every adapter. */
@@ -333,14 +366,14 @@ export type UiReply = { readonly ok: true } | { readonly ok: false; readonly err
 
 export function isUiRequest(value: unknown): value is UiRequest {
   if (typeof value !== 'object' || value === null) return false;
-  const request = value as { kind?: unknown; adapters?: unknown; adapter?: unknown };
+  const request = value as { kind?: unknown; adapters?: unknown; adapter?: unknown; acceptLicense?: unknown };
   switch (request.kind) {
     case 'ui/warm-up':
     case 'ui/cancel-download':
     case 'ui/remove-model':
       return true;
     case 'ui/download-model':
-      return Array.isArray(request.adapters) && request.adapters.every(isStyleId);
+      return Array.isArray(request.adapters) && request.adapters.every(isStyleId) && (request.acceptLicense === undefined || typeof request.acceptLicense === 'string');
     case 'ui/remove-adapter':
       return isStyleId(request.adapter);
     default:

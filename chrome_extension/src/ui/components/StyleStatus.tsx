@@ -1,3 +1,4 @@
+import { AGREE_FIRST } from './LicenseConsent';
 import { useId, type ReactNode } from 'react';
 import { formatBytes } from '../../shared/format';
 import type { StyleReadiness } from '../../shared/modelInstall';
@@ -53,6 +54,8 @@ export interface StyleStatusProps {
   readonly downloading: readonly StyleId[];
   /** A download is running, so no other can start. */
   readonly busy: boolean;
+  /** The download waits for the license agreement (asked for above the list). */
+  readonly locked?: boolean;
   readonly onDownload: (adapter: StyleId) => void;
 }
 
@@ -64,7 +67,7 @@ export interface StyleStatusProps {
  *   check           installed; the tooltip says what that means
  *   muted download  not yet possible: it waits for something else (the tooltip says what)
  */
-export function StyleStatus({ style, readiness, downloading, busy, onDownload }: StyleStatusProps) {
+export function StyleStatus({ style, readiness, downloading, busy, locked = false, onDownload }: StyleStatusProps) {
   const tip = useId();
   if (!readiness) return null;
   const name = style.label;
@@ -118,10 +121,10 @@ export function StyleStatus({ style, readiness, downloading, busy, onDownload }:
 
   const size = formatBytes(adapter.sizeBytes);
   return (
-    <Tip id={tip} title={`Download ${name}`} text={`One-time download · ${size}. Stored on this device.`}>
+    <Tip id={tip} title={`Download ${name}`} text={locked ? `${AGREE_FIRST} (above), then download · ${size}.` : `One-time download · ${size}. Stored on this device.`}>
       <button
         type="button"
-        disabled={busy}
+        disabled={busy || locked}
         onClick={() => onDownload(adapter.style)}
         aria-label={`Download the ${name} style (${size})`}
         aria-describedby={tip}

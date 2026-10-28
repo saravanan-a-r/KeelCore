@@ -15,17 +15,27 @@ export interface ModelCardProps {
   readonly model: ModelAvailability;
   readonly catalog: CatalogState;
   readonly onLoadModel: () => void;
-  readonly onDownload: (adapters: StyleId[]) => void;
+  /** `agreed`: the user has just ticked the license agreement. */
+  readonly onDownload: (adapters: StyleId[], agreed?: boolean) => void;
+  /** Whether the user has agreed to the current license; null until it has been read (the card waits for it). */
+  readonly licenseAccepted: boolean | null;
   readonly onCancelDownload: () => void;
   readonly onRetryCatalog: () => void;
   /** Shown on the setup card, e.g. right after the model was removed. */
   readonly notice?: string;
 }
 
-export function ModelCard({ status, model, catalog, onLoadModel, onDownload, onCancelDownload, onRetryCatalog, notice }: ModelCardProps) {
-  if (!model.known) return null;
+export function ModelCard({ status, model, catalog, onLoadModel, onDownload, licenseAccepted, onCancelDownload, onRetryCatalog, notice }: ModelCardProps) {
+  if (!model.known || licenseAccepted === null) return null;
   if (model.download.state !== 'idle') {
-    return <ModelDownloadCard download={model.download} onRetry={(target) => onDownload([...target.adapters])} onCancel={onCancelDownload} />;
+    return (
+      <ModelDownloadCard
+        download={model.download}
+        onRetry={(target, agreed) => onDownload([...target.adapters], agreed)}
+        onCancel={onCancelDownload}
+        licenseAccepted={licenseAccepted}
+      />
+    );
   }
   if (model.installed) return <StatusCard status={status} onLoad={onLoadModel} />;
   return <ModelSetupCard catalog={catalog} onDownload={onDownload} onRetryCatalog={onRetryCatalog} notice={notice} />;

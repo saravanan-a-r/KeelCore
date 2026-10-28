@@ -3,6 +3,7 @@ import type { EngineStatus } from '../../shared/status';
 import type { StyleId } from '../../shared/styles';
 import { Wordmark } from '../brand/Logo';
 import { PulseLogo } from '../brand/PulseLogo';
+import { LICENSE_HREF } from '../components/LicenseConsent';
 import { ModelCard } from '../components/ModelCard';
 import { ShortcutAccessCard } from '../components/ShortcutAccessCard';
 import { PopupStyles } from '../components/PopupStyles';
@@ -19,6 +20,7 @@ import {
   type CatalogState,
   type ModelAvailability,
 } from '../hooks/useModel';
+import { useLicenseAccepted } from '../hooks/useLicense';
 import { usePopupIntent } from '../hooks/usePopupIntent';
 import { useSettings } from '../hooks/useSettings';
 import { useTheme } from '../hooks/useTheme';
@@ -46,14 +48,17 @@ export interface PopupViewProps {
   readonly onTurnOffWebsiteFeatures: () => void;
   readonly onOpenSettings: () => void;
   readonly onLoadModel: () => void;
-  readonly onDownload: (adapters: StyleId[]) => void;
+  /** `agreed`: the user has just ticked the license agreement. */
+  readonly onDownload: (adapters: StyleId[], agreed?: boolean) => void;
+  /** Whether the user has agreed to the current license; null until it has been read. */
+  readonly licenseAccepted: boolean | null;
   readonly onCancelDownload: () => void;
   readonly onRetryCatalog: () => void;
   readonly onOpenGuide: () => void;
 }
 
 export function PopupView(props: PopupViewProps) {
-  const { status, model, catalog, modelRemoved, shortcuts, holdMenu, onOpenGuide } = props;
+  const { status, model, catalog, modelRemoved, shortcuts, holdMenu, onOpenGuide, licenseAccepted } = props;
   const setup = modelSetup(model.installed, catalog);
   return (
     <main className="_echo_$_w-[360px] _echo_$_bg-canvas _echo_$_text-fg">
@@ -99,6 +104,7 @@ export function PopupView(props: PopupViewProps) {
             catalog={catalog}
             onLoadModel={props.onLoadModel}
             onDownload={props.onDownload}
+            licenseAccepted={licenseAccepted}
             onCancelDownload={props.onCancelDownload}
             onRetryCatalog={props.onRetryCatalog}
             notice={modelRemoved ? REMOVED_NOTICE : undefined}
@@ -106,10 +112,11 @@ export function PopupView(props: PopupViewProps) {
         </div>
 
         {/* Until the writing model is here the setup card above is the one thing to do; the styles come after it. */}
-        {model.installed && setup.catalog ? (
+        {model.installed && setup.catalog && licenseAccepted !== null ? (
           <PopupStyles
             readiness={setup.readiness}
-            onDownload={(adapter) => props.onDownload([adapter])}
+            licenseAccepted={licenseAccepted}
+            onDownload={(adapter, agreed) => props.onDownload([adapter], agreed)}
             busy={model.download.state === 'downloading'}
             downloading={model.download.state === 'downloading' ? model.download.target.adapters : []}
           />
@@ -123,17 +130,26 @@ export function PopupView(props: PopupViewProps) {
           />
         ) : null}
 
-        <footer className="_echo_$_flex _echo_$_items-center _echo_$_justify-between _echo_$_text-xs _echo_$_text-fg-muted">
-          <span className="_echo_$_flex _echo_$_items-center _echo_$_gap-1.5">
+        {/* Centered under a hairline: the privacy line keeps the full width (it would not fit beside the links), the links sit beneath it. */}
+        <footer className="_echo_$_flex _echo_$_flex-col _echo_$_items-center _echo_$_gap-1.5 _echo_$_border-0 _echo_$_border-t _echo_$_border-solid _echo_$_border-line _echo_$_pt-3 _echo_$_text-xs _echo_$_text-fg-muted">
+          <span className="_echo_$_flex _echo_$_items-center _echo_$_gap-1.5 _echo_$_whitespace-nowrap">
             <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="_echo_$_shrink-0 _echo_$_text-better-500">
               <path d="M8 1.5 2.5 3.8v3.6c0 3.3 2.3 6.1 5.5 7.1 3.2-1 5.5-3.8 5.5-7.1V3.8L8 1.5Z" />
               <path d="m5.6 8 1.7 1.7 3.2-3.3" />
             </svg>
             On-device. Your text never leaves the browser.
           </span>
-          <button type="button" onClick={onOpenGuide} className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
-            Guide
-          </button>
+          <span className="_echo_$_flex _echo_$_items-center _echo_$_gap-2">
+            <button type="button" onClick={onOpenGuide} className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
+              Guide
+            </button>
+            <span aria-hidden="true" className="_echo_$_text-fg-subtle">
+              ·
+            </span>
+            <a href={LICENSE_HREF} target="_blank" rel="noopener" className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
+              License
+            </a>
+          </span>
         </footer>
       </div>
     </main>
@@ -151,6 +167,7 @@ export function PopupApp() {
   const gpuProblem = useGpuProblem();
   const [modelRemoved, setModelRemoved] = useState(false);
   const intent = usePopupIntent();
+  const licenseAccepted = useLicenseAccepted();
   // Null until the user moves between pages; until then the popup opens where it was asked to.
   const [chosenPage, setPage] = useState<'home' | 'settings' | null>(null);
   const page = chosenPage ?? (intent === undefined ? null : intent ? intent.page : 'home');
@@ -227,9 +244,10 @@ export function PopupApp() {
       onTurnOffWebsiteFeatures={() => setWebsiteFeatures({ shortcutsEnabled: false, holdMenuEnabled: false })}
       onOpenSettings={() => setPage('settings')}
       onLoadModel={requestWarmUp}
-      onDownload={(adapters) => {
+      licenseAccepted={licenseAccepted}
+      onDownload={(adapters, agreed) => {
         setModelRemoved(false);
-        requestDownload(adapters);
+        requestDownload(adapters, agreed);
       }}
       onCancelDownload={requestCancelDownload}
       onRetryCatalog={retryCatalog}

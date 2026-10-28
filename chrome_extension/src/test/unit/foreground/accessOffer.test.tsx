@@ -32,6 +32,7 @@ function written(reply: AccessOfferReply | Promise<AccessOfferReply>, result: Ac
     overlay: () => store,
     writeClipboard: async () => undefined,
     openSettings: () => undefined,
+    openLicense: () => undefined,
     requestRewrite: () => undefined,
     siteAccess: { afterReplace, request },
   });

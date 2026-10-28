@@ -3,7 +3,7 @@
  * injects this script on every menu click, and only the first injection in
  * a frame installs anything.
  */
-import { isForegroundMessage, JOB_PORT_NAME, SETUP_PORT_NAME, type AccessOfferReply, type AccessReply, type AccessRequest, type OpenSettingsRequest, type ReplacedNotice, type StyleMenuRequest } from '../shared/messages';
+import { isForegroundMessage, JOB_PORT_NAME, SETUP_PORT_NAME, type AccessOfferReply, type AccessReply, type AccessRequest, type OpenLicenseRequest, type OpenSettingsRequest, type ReplacedNotice, type StyleMenuRequest } from '../shared/messages';
 import { ForegroundController } from './controller';
 import { mountOverlay, type Overlay } from './ui/mountOverlay';
 
@@ -36,6 +36,10 @@ export function installForeground(win: Window = window): ForegroundController {
     writeClipboard: (text) => win.navigator.clipboard.writeText(text),
     openSettings: (focus) => {
       const request: OpenSettingsRequest = { kind: 'page/open-settings', focus };
+      chrome.runtime.sendMessage(request).catch(() => undefined);
+    },
+    openLicense: () => {
+      const request: OpenLicenseRequest = { kind: 'page/open-license' };
       chrome.runtime.sendMessage(request).catch(() => undefined);
     },
     requestRewrite: (style) => {

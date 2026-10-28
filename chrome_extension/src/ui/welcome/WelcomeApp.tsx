@@ -4,6 +4,7 @@ import type { EngineStatus } from '../../shared/status';
 import type { StyleId } from '../../shared/styles';
 import { Logo, Wordmark } from '../brand/Logo';
 import { PulseLogo } from '../brand/PulseLogo';
+import { LICENSE_HREF } from '../components/LicenseConsent';
 import { ModelCard } from '../components/ModelCard';
 import { PerformanceSettings, type PerformanceSettingsProps } from '../components/PerformanceSettings';
 import { ShortcutAccessCard } from '../components/ShortcutAccessCard';
@@ -20,6 +21,7 @@ import {
   type CatalogState,
   type ModelAvailability,
 } from '../hooks/useModel';
+import { useLicenseAccepted } from '../hooks/useLicense';
 import { useSettings } from '../hooks/useSettings';
 import { needsSiteAccess, PLATFORM, requestSiteAccess, websiteAvailability, useSiteAccess, type WebsiteAvailability } from '../hooks/useShortcuts';
 import { WaysToRewrite } from './WaysToRewrite';
@@ -66,7 +68,10 @@ export interface WelcomeViewProps {
   readonly model: ModelAvailability;
   readonly catalog: CatalogState;
   readonly onLoadModel: () => void;
-  readonly onDownload: (adapters: StyleId[]) => void;
+  /** `agreed`: the user has just ticked the license agreement. */
+  readonly onDownload: (adapters: StyleId[], agreed?: boolean) => void;
+  /** Whether the user has agreed to the current license; null until it has been read. */
+  readonly licenseAccepted: boolean | null;
   readonly onCancelDownload: () => void;
   readonly onRetryCatalog: () => void;
   readonly platform: KeyPlatform;
@@ -78,7 +83,7 @@ export interface WelcomeViewProps {
 }
 
 export function WelcomeView(props: WelcomeViewProps) {
-  const { model, platform, shortcuts, holdMenu, onAllowSiteAccess } = props;
+  const { model, platform, shortcuts, holdMenu, onAllowSiteAccess, licenseAccepted } = props;
   const setup = modelSetup(model.installed, props.catalog);
   // This page listens for shortcuts and holds itself, so they work here even before websites are allowed.
   const showKeys = shortcuts === 'on' || shortcuts === 'needs-access' ? platform : undefined;
@@ -139,14 +144,16 @@ export function WelcomeView(props: WelcomeViewProps) {
                 catalog={props.catalog}
                 onLoadModel={props.onLoadModel}
                 onDownload={props.onDownload}
+                licenseAccepted={licenseAccepted}
                 onCancelDownload={props.onCancelDownload}
                 onRetryCatalog={props.onRetryCatalog}
               />
               {/* The same styles list as the popup: it follows the setup, and each style not yet here is a download icon. */}
-              {model.installed && setup.catalog ? (
+              {model.installed && setup.catalog && licenseAccepted !== null ? (
                 <PopupStyles
                   readiness={setup.readiness}
-                  onDownload={(adapter) => props.onDownload([adapter])}
+                  licenseAccepted={licenseAccepted}
+                  onDownload={(adapter, agreed) => props.onDownload([adapter], agreed)}
                   busy={model.download.state === 'downloading'}
                   downloading={model.download.state === 'downloading' ? model.download.target.adapters : []}
                 />
@@ -217,7 +224,10 @@ export function WelcomeView(props: WelcomeViewProps) {
           <Logo size={18} />
         </span>
         <span>
-          <Wordmark /> · Everything runs on your device. Nothing you write leaves your browser.
+          <Wordmark /> · Everything runs on your device. Nothing you write leaves your browser. ·{' '}
+          <a href={LICENSE_HREF} target="_blank" rel="noopener" className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
+            License
+          </a>
         </span>
       </footer>
     </div>
@@ -232,8 +242,10 @@ export function WelcomeApp() {
   const siteAccess = useSiteAccess();
   const gpu = useGpu();
   const gpuProblem = useGpuProblem();
+  const licenseAccepted = useLicenseAccepted();
   return (
     <WelcomeView
+      licenseAccepted={licenseAccepted}
       performance={
         settingsLoaded
           ? {

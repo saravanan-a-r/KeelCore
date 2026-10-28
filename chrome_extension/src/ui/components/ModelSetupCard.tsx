@@ -6,14 +6,17 @@
  */
 import { formatBytes, formatList } from '../../shared/format';
 import { adapterForStyle, STARTER_STYLE, starterAdapter, stylesUsing, type ModelCatalog } from '../../shared/modelInstall';
+import { useId, useState } from 'react';
 import { STYLE_IDS, STYLES, styleLabel, type StyleId } from '../../shared/styles';
 import { EchoLoader } from '../brand/EchoLoader';
 import type { CatalogState } from '../hooks/useModel';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON } from './buttons';
+import { AGREE_FIRST, LicenseConsent } from './LicenseConsent';
 
 export interface ModelSetupCardProps {
   readonly catalog: CatalogState;
-  readonly onDownload: (adapters: StyleId[]) => void;
+  /** `agreed`: the user has just ticked the license agreement (this download brings the writing model, so it always asks). */
+  readonly onDownload: (adapters: StyleId[], agreed?: boolean) => void;
   readonly onRetryCatalog: () => void;
   /** A short confirmation shown above the card's text, e.g. right after the model was removed. */
   readonly notice?: string;
@@ -58,7 +61,10 @@ function Item({ label, sizeBytes, note }: { label: string; sizeBytes: number; no
   );
 }
 
-function Starter({ catalog, onDownload }: { catalog: ModelCatalog; onDownload: (adapters: StyleId[]) => void }) {
+function Starter({ catalog, onDownload }: { catalog: ModelCatalog; onDownload: ModelSetupCardProps['onDownload'] }) {
+  const consentId = useId();
+  // Every download of the writing model asks, even after a removal: an earlier agreement is not reused.
+  const [agreed, setAgreed] = useState(false);
   const starter = starterAdapter(catalog);
   const total = catalog.model.sizeBytes + (starter?.sizeBytes ?? 0);
   const later = laterStyles(catalog, starter?.style ?? null);
@@ -69,7 +75,14 @@ function Starter({ catalog, onDownload }: { catalog: ModelCatalog; onDownload: (
         <Item label="Writing model" sizeBytes={catalog.model.sizeBytes} note="Powers every style" />
         {starter ? <Item label={`${styleLabel(starter.style)} style`} sizeBytes={starter.sizeBytes} note={borrowedBy(catalog, starter.style) ?? hint} /> : null}
       </ul>
-      <button type="button" onClick={() => onDownload(starter ? [starter.style] : [])} className={`${PRIMARY_BUTTON} _echo_$_mt-3 _echo_$_w-full`}>
+      <LicenseConsent id={consentId} checked={agreed} onChange={setAgreed} className="_echo_$_mt-3" />
+      <button
+        type="button"
+        disabled={!agreed}
+        title={agreed ? undefined : AGREE_FIRST}
+        onClick={() => onDownload(starter ? [starter.style] : [], true)}
+        className={`${PRIMARY_BUTTON} _echo_$_mt-3 _echo_$_w-full`}
+      >
         Download · {formatBytes(total)}
       </button>
       {later.length > 0 ? (

@@ -39,7 +39,7 @@ const FIRST = { base: true, adapters: ['professional'] } as const;
 function renderPopup(
   status: EngineStatus,
   model: ModelAvailability = installed(),
-  options: { modelRemoved?: boolean; shortcuts?: WebsiteAvailability; holdMenu?: WebsiteAvailability; catalog?: CatalogState } = {},
+  options: { modelRemoved?: boolean; shortcuts?: WebsiteAvailability; holdMenu?: WebsiteAvailability; catalog?: CatalogState; licenseAccepted?: boolean | null } = {},
 ) {
   const handlers = {
     onAllowSiteAccess: jest.fn(),
@@ -57,6 +57,7 @@ function renderPopup(
       model={model}
       catalog={options.catalog ?? served()}
       modelRemoved={options.modelRemoved ?? false}
+      licenseAccepted={options.licenseAccepted === undefined ? true : options.licenseAccepted}
       shortcuts={options.shortcuts ?? 'off'}
       holdMenu={options.holdMenu ?? 'off'}
       {...handlers}
@@ -112,7 +113,7 @@ describe('popup with the model downloaded', () => {
     expect(within(row('Grammar')).getByRole('tooltip')).toHaveTextContent('Download GrammarOne-time download · 73 MB. Stored on this device.');
     expect(add).not.toHaveTextContent('Add');
     fireEvent.click(add);
-    expect(onDownload).toHaveBeenCalledWith(['grammar']);
+    expect(onDownload).toHaveBeenCalledWith(['grammar'], false);
     // Styles that run on Professional's download are ready with it.
     for (const label of ['Friendly', 'Concise', 'Elaborate']) {
       expect(within(row(label)).getByRole('img', { name: `${label} style installed` })).toBeInTheDocument();
@@ -128,7 +129,7 @@ describe('popup with the model downloaded', () => {
     const { onDownload } = renderPopup(ready, installed([]));
     expect(screen.getByText('Download a style to start rewriting.')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Download the Professional style (73 MB)' }));
-    expect(onDownload).toHaveBeenCalledWith(['professional']);
+    expect(onDownload).toHaveBeenCalledWith(['professional'], false);
     for (const label of ['Grammar', 'Friendly', 'Concise', 'Elaborate']) {
       expect(within(row(label)).getByText('Runs on Professional')).toBeInTheDocument();
       expect(within(row(label)).queryByRole('button')).not.toBeInTheDocument();
@@ -379,12 +380,14 @@ describe('popup without the model', () => {
     expect(within(included).getByText('Writing model')).toBeInTheDocument();
     expect(within(included).getByText('Professional style')).toBeInTheDocument();
     expect(screen.getByText('Also powers Grammar, Friendly, Concise and Elaborate')).toBeInTheDocument();
-    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    // Nothing to choose: the one box is the license agreement.
+    expect(screen.getAllByRole('checkbox')).toEqual([screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ })]);
     // The styles come after the setup: no list, and no download icons, until the model is here.
     expect(screen.queryByText('Styles')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Load now' })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Download · 863 MB' }));
-    expect(onDownload).toHaveBeenCalledWith(['professional']);
+    expect(onDownload).toHaveBeenCalledWith(['professional'], true);
   });
 
   test('styles with an adapter of their own are named as ones to add later, not downloaded now', () => {
@@ -392,8 +395,9 @@ describe('popup without the model', () => {
     const { onDownload } = renderPopup({ state: 'unloaded' }, missing(), { catalog: served(more) });
     expect(screen.getByText('Additional styles (Grammar and Concise) are optional and can be downloaded on demand after setup.')).toBeInTheDocument();
     expect(screen.getByText('Also powers Friendly and Elaborate')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Download · 863 MB' }));
-    expect(onDownload).toHaveBeenCalledWith(['professional']);
+    expect(onDownload).toHaveBeenCalledWith(['professional'], true);
   });
 
   test('while the starter download runs, the styles stay out of the way', () => {
@@ -448,8 +452,9 @@ describe('popup without the model', () => {
     );
     expect(screen.getByText('Download stopped')).toBeInTheDocument();
     expect(screen.getByText(/Free up 300 MB and try again/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
-    expect(onDownload).toHaveBeenCalledWith(['professional']);
+    expect(onDownload).toHaveBeenCalledWith(['professional'], true);
     fireEvent.click(screen.getByRole('button', { name: 'Dismiss' }));
     expect(onCancelDownload).toHaveBeenCalledTimes(1);
   });
@@ -474,6 +479,7 @@ describe('welcome page', () => {
     onDownload: jest.fn(),
     onCancelDownload: jest.fn(),
     onRetryCatalog: jest.fn(),
+    licenseAccepted: true,
     platform: 'other' as const,
     shortcuts: 'off' as WebsiteAvailability,
     holdMenu: 'off' as WebsiteAvailability,
@@ -483,8 +489,9 @@ describe('welcome page', () => {
   test('offers the download next to the practice box until the model is there', () => {
     render(<WelcomeView {...props} model={missing()} />);
     expect(screen.getByText(/Download the model, then select text below/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Download · 863 MB' }));
-    expect(props.onDownload).toHaveBeenCalledWith(['professional']);
+    expect(props.onDownload).toHaveBeenCalledWith(['professional'], true);
   });
 
   test('shows the model status once downloaded', () => {
@@ -497,7 +504,7 @@ describe('welcome page', () => {
     render(<WelcomeView {...props} model={installed([])} />);
     expect(screen.getByText(/Download a style, then select text below/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Download the Professional style (73 MB)' }));
-    expect(props.onDownload).toHaveBeenCalledWith(['professional']);
+    expect(props.onDownload).toHaveBeenCalledWith(['professional'], false);
   });
 
   test('the styles to download sit in the setup area, as in the popup, and only once the model is there', () => {
@@ -508,7 +515,7 @@ describe('welcome page', () => {
     expect(within(list).getByRole('img', { name: 'Professional style installed' })).toBeInTheDocument();
     expect(within(list).getByText('73 MB')).toBeInTheDocument();
     fireEvent.click(within(list).getByRole('button', { name: 'Download the Grammar style (73 MB)' }));
-    expect(props.onDownload).toHaveBeenCalledWith(['grammar']);
+    expect(props.onDownload).toHaveBeenCalledWith(['grammar'], false);
     cleanup();
     render(<WelcomeView {...props} model={missing()} />);
     expect(screen.queryByRole('region', { name: 'Styles' })).not.toBeInTheDocument();
@@ -575,4 +582,122 @@ test('rewrite durations', () => {
   expect(formatDuration(2345)).toBe('2.3 s');
   expect(formatDuration(60_000)).toBe('1 min');
   expect(formatDuration(95_000)).toBe('1 min 35 s');
+});
+
+describe('the license agreement before a download', () => {
+  test('first download: the box starts unticked, the download waits for it, then carries the agreement', () => {
+    const { onDownload } = renderPopup({ state: 'unloaded' }, missing(), { licenseAccepted: false });
+    const box = screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ });
+    expect(box).not.toBeChecked();
+    const button = screen.getByRole('button', { name: 'Download · 863 MB' });
+    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('title', 'Agree to the EchoMeBetter License first');
+    fireEvent.click(button);
+    expect(onDownload).not.toHaveBeenCalled();
+    fireEvent.click(box);
+    expect(button).toBeEnabled();
+    fireEvent.click(button);
+    expect(onDownload).toHaveBeenCalledWith(['professional'], true);
+  });
+
+  test('the license opens in a tab of its own, and following the link does not tick the box', () => {
+    renderPopup({ state: 'unloaded' }, missing(), { licenseAccepted: false });
+    const link = screen.getByRole('link', { name: 'EchoMeBetter License' });
+    expect(link).toHaveAttribute('href', '../../ui/license/license.html');
+    expect(link).toHaveAttribute('target', '_blank');
+    fireEvent.click(link);
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+  });
+
+  test('once agreed, nothing more is asked anywhere', () => {
+    const both = catalogWith(['professional', 'grammar']);
+    renderPopup(ready, installed(['professional'], { state: 'idle' }, both), { catalog: served(both) });
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Download the Grammar style (73 MB)' })).toBeEnabled();
+  });
+
+  test('downloading the model again (after removing it) asks again, even with an agreement on record', () => {
+    const { onDownload } = renderPopup({ state: 'unloaded' }, missing(), { licenseAccepted: true, modelRemoved: true });
+    const button = screen.getByRole('button', { name: 'Download · 863 MB' });
+    expect(screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ })).not.toBeChecked();
+    expect(button).toBeDisabled();
+    fireEvent.click(screen.getByRole('checkbox'));
+    fireEvent.click(button);
+    expect(onDownload).toHaveBeenCalledWith(['professional'], true);
+  });
+
+  test('trying a stopped download of the model again asks again; one of a style alone does not, with an agreement on record', () => {
+    renderPopup({ state: 'unloaded' }, missing({ state: 'failed', target: FIRST, error: { code: 'DOWNLOAD_FAILED' } }), { licenseAccepted: true });
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeDisabled();
+    cleanup();
+    const { onDownload } = renderPopup(ready, installed(['professional'], { state: 'failed', target: { base: false, adapters: ['grammar'] }, error: { code: 'DOWNLOAD_FAILED' } }), { licenseAccepted: true });
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onDownload).toHaveBeenCalledWith(['grammar'], false);
+  });
+
+  test('a style download asks for it too when there is none on record (installed before the license existed)', () => {
+    const both = catalogWith(['professional', 'grammar']);
+    const { onDownload } = renderPopup(ready, installed(['professional'], { state: 'idle' }, both), { catalog: served(both), licenseAccepted: false });
+    const list = screen.getByRole('region', { name: 'Styles' });
+    const add = within(list).getByRole('button', { name: 'Download the Grammar style (73 MB)' });
+    expect(add).toBeDisabled();
+    expect(within(row('Grammar')).getByRole('tooltip')).toHaveTextContent('Agree to the EchoMeBetter License first (above), then download · 73 MB.');
+    fireEvent.click(within(list).getByRole('checkbox', { name: /I agree/ }));
+    fireEvent.click(add);
+    expect(onDownload).toHaveBeenCalledWith(['grammar'], true);
+  });
+
+  test('a list with nothing to download asks for nothing', () => {
+    renderPopup(ready, installed(['professional']), { licenseAccepted: false });
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  });
+
+  test('trying a stopped download again asks for it when there is none on record', () => {
+    const { onDownload } = renderPopup({ state: 'unloaded' }, missing({ state: 'failed', target: FIRST, error: { code: 'DOWNLOAD_FAILED' } }), { licenseAccepted: false });
+    const retry = screen.getByRole('button', { name: 'Try again' });
+    expect(retry).toBeDisabled();
+    fireEvent.click(screen.getByRole('checkbox'));
+    fireEvent.click(retry);
+    expect(onDownload).toHaveBeenCalledWith(['professional'], true);
+    // Dismiss never waits for it.
+    expect(screen.getByRole('button', { name: 'Dismiss' })).toBeEnabled();
+  });
+
+  test('until the agreement has been read, no download is offered (it would flash the box for those who agreed)', () => {
+    renderPopup({ state: 'unloaded' }, missing(), { licenseAccepted: null });
+    expect(screen.queryByRole('button', { name: /^Download/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  });
+
+  test('the popup footer links to the license', () => {
+    renderPopup(ready);
+    expect(screen.getByRole('link', { name: 'License' })).toHaveAttribute('href', '../../ui/license/license.html');
+  });
+
+  test('the welcome page asks the same way, and links to the license in its footer', () => {
+    const onDownload = jest.fn();
+    render(
+      <WelcomeView
+        status={{ state: 'unloaded' }}
+        model={missing()}
+        catalog={served()}
+        onLoadModel={jest.fn()}
+        onDownload={onDownload}
+        licenseAccepted={false}
+        onCancelDownload={jest.fn()}
+        onRetryCatalog={jest.fn()}
+        platform="other"
+        shortcuts="off"
+        holdMenu="off"
+        onAllowSiteAccess={jest.fn()}
+      />,
+    );
+    const button = screen.getByRole('button', { name: 'Download · 863 MB' });
+    expect(button).toBeDisabled();
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ }));
+    fireEvent.click(button);
+    expect(onDownload).toHaveBeenCalledWith(['professional'], true);
+    expect(screen.getByRole('link', { name: 'License' })).toHaveAttribute('href', '../../ui/license/license.html');
+  });
 });

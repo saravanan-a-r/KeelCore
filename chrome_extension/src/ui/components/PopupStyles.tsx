@@ -4,11 +4,12 @@
  * shows what it takes (its size) beside a download icon, and one that is
  * shows a check. A style that runs on another's download says so instead.
  */
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { formatBytes } from '../../shared/format';
 import type { StyleReadiness } from '../../shared/modelInstall';
 import { STYLES, styleLabel, type StyleDescriptor, type StyleId } from '../../shared/styles';
 import { StyleGlyph } from '../brand/StyleGlyph';
+import { LicenseConsent } from './LicenseConsent';
 import { StyleStatus } from './StyleStatus';
 
 export interface PopupStylesProps {
@@ -18,7 +19,10 @@ export interface PopupStylesProps {
   readonly busy: boolean;
   /** The styles whose download is running now. */
   readonly downloading: readonly StyleId[];
-  readonly onDownload: (adapter: StyleId) => void;
+  /** `agreed`: the user has just ticked the license agreement. */
+  readonly onDownload: (adapter: StyleId, agreed: boolean) => void;
+  /** The user has agreed to the current license; until then the list asks for it before a style can be downloaded. */
+  readonly licenseAccepted: boolean;
 }
 
 /** What the row's end says about size or dependence, or null when there is nothing to add. */
@@ -27,8 +31,19 @@ function sizeNote(style: StyleDescriptor, readiness: StyleReadiness | undefined)
   return readiness.adapter.style === style.id ? formatBytes(readiness.adapter.sizeBytes) : `Runs on ${styleLabel(readiness.adapter.style)}`;
 }
 
-export function PopupStyles({ readiness, busy, downloading, onDownload }: PopupStylesProps) {
+/** Some style here can be downloaded right now from its own row. */
+function offersDownload(readiness: PopupStylesProps['readiness']): boolean {
+  return STYLES.some((style) => {
+    const state = readiness[style.id];
+    return state?.state === 'needs-download' && state.adapter.style === style.id;
+  });
+}
+
+export function PopupStyles({ readiness, busy, downloading, onDownload, licenseAccepted }: PopupStylesProps) {
   const titleId = useId();
+  const consentId = useId();
+  const [agreed, setAgreed] = useState(false);
+  const asks = !licenseAccepted && offersDownload(readiness);
   const installed = STYLES.filter((style) => readiness[style.id]?.state === 'ready').length;
   const known = STYLES.some((style) => readiness[style.id] !== undefined);
   return (
@@ -37,6 +52,7 @@ export function PopupStyles({ readiness, busy, downloading, onDownload }: PopupS
         Styles
       </h2>
       {known && installed === 0 ? <p className="_echo_$_mb-2 _echo_$_text-xs _echo_$_leading-5 _echo_$_text-fg-muted">Download a style to start rewriting.</p> : null}
+      {asks ? <LicenseConsent id={consentId} checked={agreed} onChange={setAgreed} className="_echo_$_mb-2" /> : null}
       {/* No overflow clipping: the status icons' tooltips open above their rows. */}
       <ul className="_echo_$_divide-y _echo_$_divide-line _echo_$_rounded-xl _echo_$_border _echo_$_border-line _echo_$_bg-surface">
         {STYLES.map((style) => {
@@ -52,7 +68,14 @@ export function PopupStyles({ readiness, busy, downloading, onDownload }: PopupS
               </span>
               <span className="_echo_$_ml-auto _echo_$_flex _echo_$_shrink-0 _echo_$_items-center _echo_$_gap-1.5">
                 {note ? <span className="_echo_$_text-xs _echo_$_tabular-nums _echo_$_text-fg-muted">{note}</span> : null}
-                <StyleStatus style={style} readiness={readiness[style.id]} downloading={downloading} busy={busy} onDownload={onDownload} />
+                <StyleStatus
+                  style={style}
+                  readiness={readiness[style.id]}
+                  downloading={downloading}
+                  busy={busy}
+                  locked={asks && !agreed}
+                  onDownload={(adapter) => onDownload(adapter, asks && agreed)}
+                />
               </span>
             </li>
           );

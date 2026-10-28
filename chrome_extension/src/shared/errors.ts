@@ -26,6 +26,7 @@ export type ErrorCode =
   | 'OUTPUT_TOO_LONG'
   | 'CANCELLED'
   | 'DOWNLOAD_FAILED'
+  | 'LICENSE_REQUIRED'
   | 'STORAGE_FULL'
   | 'DISCONNECTED'
   | 'INTERNAL';
@@ -106,6 +107,8 @@ export function describeError(error: ErrorPayload): string {
       return 'Rewrite cancelled.';
     case 'DOWNLOAD_FAILED':
       return "The model download didn't finish. Check your connection, then try again.";
+    case 'LICENSE_REQUIRED':
+      return 'Agree to the EchoMeBetter License to download the writing model and its styles.';
     case 'STORAGE_FULL':
       return typeof details.neededBytes === 'number'
         ? `There isn't enough free disk space for the model. Free up ${formatBytes(details.neededBytes)} and try again.`

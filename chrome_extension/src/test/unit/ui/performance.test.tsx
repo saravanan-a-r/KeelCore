@@ -140,6 +140,7 @@ describe('welcome page', () => {
     onDownload: jest.fn(),
     onCancelDownload: jest.fn(),
     onRetryCatalog: jest.fn(),
+    licenseAccepted: true,
     platform: 'other' as const,
     shortcuts: 'off' as const,
     holdMenu: 'off' as const,

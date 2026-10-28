@@ -5,7 +5,8 @@
  */
 import { computeToRun, GPU_PROBLEM_STORAGE_KEY, parseGpuProblem, readGpuProblem, sameCompute, writeGpuProblem, type ComputeSettings } from '../shared/compute';
 import { toErrorPayload, type ErrorPayload } from '../shared/errors';
-import { isAccessRequest, isOffscreenEventMessage, isOpenSettingsRequest, isReplacedNotice, isShortcutRequest, isStyleMenuRequest, isUiRequest, JOB_PORT_NAME, SETUP_PORT_NAME, type AccessOfferReply, type AccessReply, type AccessResult, type EngineEvent, type OffscreenCommand, type StyleMenuRequest, type UiReply, type UiRequest } from '../shared/messages';
+import { isAccessRequest, isOffscreenEventMessage, isOpenLicenseRequest, isOpenSettingsRequest, isReplacedNotice, isShortcutRequest, isStyleMenuRequest, isUiRequest, JOB_PORT_NAME, SETUP_PORT_NAME, type AccessOfferReply, type AccessReply, type AccessResult, type EngineEvent, type OffscreenCommand, type StyleMenuRequest, type UiReply, type UiRequest } from '../shared/messages';
+import { acceptsCurrentLicense, LICENSE_PAGE, LICENSE_STORAGE_KEY, parseLicenseAcceptance } from '../shared/license';
 import { adapterForStyle, modelFrom, newerStyleProblem, readDownloadState, readInstalledModel, styleProblem, writeDownloadState, writeInstalledModel } from '../shared/modelInstall';
 import { fetchCatalog } from '../shared/fetchCatalog';
 import { MODEL_SOURCE_URL } from '../shared/modelSource';
@@ -18,6 +19,7 @@ import { registerContextMenus } from './contextMenus';
 import { EngineRestarter, readEngineCompute, recordEngineCompute } from './engineRestart';
 import { endRest, IDLE_ALARM, lastActivity, recordActivity, recordRest, shouldUnload, wakingFromRest } from './idleUnloader';
 import { showInstallState } from './installBadge';
+import { downloadUnderLicense, licenseAccepted, type LicenseGateDeps } from './licenseGate';
 import { SetupBroker } from './setupBroker';
 import { JobRouter } from './jobRouter';
 import { OffscreenManager } from './offscreenManager';
@@ -85,14 +87,20 @@ function startModelDownload(adapters: readonly StyleId[]): void {
   });
 }
 
-function handleUiRequest(request: UiRequest): UiReply {
+const licenseGate: LicenseGateDeps = {
+  storage: chrome.storage.local,
+  now: () => Date.now(),
+  baseInstalled: async () => modelFrom(await readInstalledModel(), MODEL_SOURCE_URL) !== null,
+  startDownload: startModelDownload,
+};
+
+async function handleUiRequest(request: UiRequest): Promise<UiReply> {
   switch (request.kind) {
     case 'ui/warm-up':
       prepareEngine();
       return { ok: true };
     case 'ui/download-model':
-      startModelDownload(request.adapters);
-      return { ok: true };
+      return downloadUnderLicense(request.adapters, request.acceptLicense, licenseGate);
     case 'ui/cancel-download':
       void cancelDownload().catch(() => writeDownloadState({ state: 'idle' }));
       return { ok: true };
@@ -174,7 +182,8 @@ const setup = new SetupBroker({
   readInstalled: readInstalledModel,
   readDownload: readDownloadState,
   sourceUrl: MODEL_SOURCE_URL,
-  startDownload: startModelDownload,
+  startDownload: (adapters, acceptLicense) => downloadUnderLicense(adapters, acceptLicense, licenseGate),
+  licenseAccepted: () => licenseAccepted(chrome.storage.local),
 });
 
 const launcher: LauncherDeps = {
@@ -272,6 +281,9 @@ chrome.storage.onChanged.addListener((changes, area) => {
   const problem = changes[GPU_PROBLEM_STORAGE_KEY];
   // Cleared from the settings, to try the GPU again.
   if (problem && !parseGpuProblem(problem.newValue)) void restarter.request();
+  // Agreed to on another page: a website's card that is open stops asking.
+  const license = changes[LICENSE_STORAGE_KEY];
+  if (license) setup.onLicense(acceptsCurrentLicense(parseLicenseAcceptance(license.newValue)));
 });
 
 chrome.runtime.onConnect.addListener((port) => {
@@ -303,6 +315,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     void handleStyleMenu(message, sender);
     return undefined;
   }
+  if (isOpenLicenseRequest(message)) {
+    const tab = sender.tab;
+    chrome.tabs
+      .create({ url: chrome.runtime.getURL(LICENSE_PAGE), ...(tab?.id !== undefined ? { windowId: tab.windowId, index: tab.index + 1, openerTabId: tab.id } : {}) })
+      .catch((error: unknown) => console.error('EchoMeBetter: could not open the license', error));
+    return undefined;
+  }
   if (isOpenSettingsRequest(message)) {
     openSettingsFor(message.focus, sender.tab?.windowId).catch((error: unknown) => console.error('EchoMeBetter: could not open the settings', error));
     return undefined;
@@ -327,7 +346,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .then((result) => sendResponse({ result } satisfies AccessReply));
     return true;
   }
-  if (isUiRequest(message)) sendResponse(handleUiRequest(message));
+  if (isUiRequest(message)) {
+    handleUiRequest(message)
+      .catch((error: unknown): UiReply => ({ ok: false, error: toErrorPayload(error, 'INTERNAL') }))
+      .then(sendResponse);
+    return true;
+  }
   return undefined;
 });
 

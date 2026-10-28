@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { LICENSE_VERSION } from '../../shared/license';
 import type { UiReply, UiRequest } from '../../shared/messages';
 import {
   IDLE_DOWNLOAD,
@@ -85,9 +86,12 @@ function send(request: UiRequest): Promise<UiReply> {
   return chrome.runtime.sendMessage(request) as Promise<UiReply>;
 }
 
-/** Download `adapters`, and the base first if it is not installed yet. */
-export function requestDownload(adapters: readonly StyleId[]): void {
-  void send({ kind: 'ui/download-model', adapters });
+/**
+ * Download `adapters`, and the base first if it is not installed yet. `agreed`: the user has just ticked
+ * the license agreement on this page; without it the download starts only if an agreement is on record.
+ */
+export function requestDownload(adapters: readonly StyleId[], agreed = false): void {
+  void send(agreed ? { kind: 'ui/download-model', adapters, acceptLicense: LICENSE_VERSION } : { kind: 'ui/download-model', adapters });
 }
 
 /** Stop a running download, or put a failed one aside. */

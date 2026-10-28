@@ -71,10 +71,17 @@ export interface SiteAccessOffer extends AccessOffer {
 /** Where the in-place download stands, as the card shows it. */
 export type SetupView =
   | { readonly phase: 'checking' }
-  | { readonly phase: 'offer'; readonly totalBytes: number; /** The styles that come with it, the one asked for first. */ readonly styles: readonly StyleId[] }
+  | {
+      readonly phase: 'offer';
+      readonly totalBytes: number;
+      /** The styles that come with it, the one asked for first. */
+      readonly styles: readonly StyleId[];
+      /** The card asks for the license agreement before this download. */
+      readonly askLicense: boolean;
+    }
   | { readonly phase: 'downloading'; readonly verifying: boolean; readonly receivedBytes: number; readonly totalBytes: number; readonly bytesPerSecond: number }
   | { readonly phase: 'done' }
-  | { readonly phase: 'failed'; readonly error: ErrorPayload };
+  | { readonly phase: 'failed'; readonly error: ErrorPayload; readonly askLicense: boolean };
 
 /** A rewrite needs the writing model, or a style, that is not on this device yet: the card that downloads it in place. */
 export interface SetupState {
@@ -84,8 +91,10 @@ export interface SetupState {
   readonly style: StyleId | null;
   readonly anchor: AnchorRect | null;
   readonly view: SetupView;
-  /** Start the download (also the retry of one that failed). */
-  readonly download: () => void;
+  /** Start the download (also the retry of one that failed); `agreed`: the user has just ticked the license agreement. */
+  readonly download: (agreed: boolean) => void;
+  /** Open the license in a tab of its own. */
+  readonly openLicense: () => void;
   /** Rewrite the selected text in `style`, now that it can: closes the card and starts the rewrite. */
   readonly rewrite: () => void;
   /** Open the toolbar popup on the Performance settings. */

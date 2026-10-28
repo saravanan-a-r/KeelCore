@@ -38,7 +38,7 @@ function setup() {
   const openSettings = jest.fn();
   const requestRewrite = jest.fn();
   const clock = { time: 0 };
-  const controller = new ForegroundController({ doc: document, win: window, connect: () => port, overlay: () => store, writeClipboard, openSettings, requestRewrite, now: () => clock.time });
+  const controller = new ForegroundController({ doc: document, win: window, connect: () => port, overlay: () => store, writeClipboard, openSettings, openLicense: () => undefined, requestRewrite, now: () => clock.time });
   const emit = (event: JobEvent) => deliver(event);
   return { clock, textarea, sent, port, store, controller, emit, dropConnection: () => dropConnection(), writeClipboard, openSettings, requestRewrite };
 }

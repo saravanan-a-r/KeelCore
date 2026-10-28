@@ -3,18 +3,21 @@
  * the first styles, or of styles added later. Shown in place of the model
  * status until it is done or put aside.
  */
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { describeError } from '../../shared/errors';
 import { formatBytes, formatList, formatTimeLeft } from '../../shared/format';
 import type { DownloadState, DownloadTarget } from '../../shared/modelInstall';
 import { styleLabel } from '../../shared/styles';
 import { EchoLoader } from '../brand/EchoLoader';
 import { DANGER_BUTTON, PRIMARY_BUTTON, SECONDARY_BUTTON } from './buttons';
+import { AGREE_FIRST, LicenseConsent } from './LicenseConsent';
 
 export interface ModelDownloadCardProps {
   readonly download: Exclude<DownloadState, { state: 'idle' }>;
-  /** Start the same download again. */
-  readonly onRetry: (target: DownloadTarget) => void;
+  /** Start the same download again; `agreed`: the user has just ticked the license agreement. */
+  readonly onRetry: (target: DownloadTarget, agreed: boolean) => void;
+  /** An agreement to the current license is on record (trying again a download of styles alone needs no new one). */
+  readonly licenseAccepted: boolean;
   /** Stop a running download, or put a failed one aside. */
   readonly onCancel: () => void;
 }
@@ -49,8 +52,13 @@ export function presentDownload(download: ModelDownloadCardProps['download']): P
   return { label: `Downloading · ${percent}%`, detail: parts.join(' · '), percent };
 }
 
-export function ModelDownloadCard({ download, onRetry, onCancel }: ModelDownloadCardProps) {
+export function ModelDownloadCard({ download, onRetry, onCancel, licenseAccepted }: ModelDownloadCardProps) {
+  const consentId = useId();
   const [confirmingCancel, setConfirmingCancel] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  // Trying again a download that brings the writing model asks again, like starting it; styles alone, only without an agreement on record.
+  const asks = download.target.base || !licenseAccepted;
+  const locked = asks && !agreed;
   const running = download.state === 'downloading';
   // Once the download has ended there is nothing left to confirm.
   const confirming = confirmingCancel && running;
@@ -91,12 +99,19 @@ export function ModelDownloadCard({ download, onRetry, onCancel }: ModelDownload
 
       <p className="_echo_$_mt-2 _echo_$_text-xs _echo_$_leading-5 _echo_$_text-fg-muted">{view.detail}</p>
 
+      {download.state === 'failed' && asks ? <LicenseConsent id={consentId} checked={agreed} onChange={setAgreed} className="_echo_$_mt-3" /> : null}
       {download.state === 'failed' ? (
         <div className="_echo_$_mt-3 _echo_$_flex _echo_$_justify-end _echo_$_gap-2">
           <button type="button" onClick={onCancel} className={SECONDARY_BUTTON}>
             Dismiss
           </button>
-          <button type="button" onClick={() => onRetry(download.target)} className={PRIMARY_BUTTON}>
+          <button
+            type="button"
+            disabled={locked}
+            title={locked ? AGREE_FIRST : undefined}
+            onClick={() => onRetry(download.target, asks && agreed)}
+            className={PRIMARY_BUTTON}
+          >
             Try again
           </button>
         </div>
