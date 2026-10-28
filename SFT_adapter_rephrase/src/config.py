@@ -177,6 +177,9 @@ class DecodingConfig:
     length_penalty: float
     no_repeat_ngram_size: int
     max_new_tokens: int
+    # Token IDs the n-gram ban never applies to (greedy only), e.g. the digits;
+    # empty keeps the plain ban.
+    no_repeat_exempt_tokens: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -379,7 +382,7 @@ def resolve_path(value: str | Path) -> Path:
 
 
 _PATH_FIELDS = {"checkpoint", "tokenizer_dir", "train_data", "eval_data", "logs_dir", "runs_dir"}
-_TUPLE_FIELDS = {"allowed_cleanup", "trainable_tokens"}
+_TUPLE_FIELDS = {"allowed_cleanup", "trainable_tokens", "no_repeat_exempt_tokens"}
 
 
 def _section(cls, raw: Any, name: str):
@@ -524,6 +527,8 @@ def _validate(config: SFTConfig) -> None:
         "set it to 0 for beam search",
     )
     check(e.decoding.max_new_tokens >= 1, "evaluation.decoding.max_new_tokens must be >= 1")
+    check(all(_is_int(t) and t >= 0 for t in e.decoding.no_repeat_exempt_tokens),
+          "evaluation.decoding.no_repeat_exempt_tokens must be token IDs >= 0")
     check(e.early_stopping_patience is None or e.early_stopping_patience >= 1,
           "evaluation.early_stopping_patience must be null or >= 1")
     check(e.calibration_bins >= 2, "evaluation.calibration_bins must be >= 2")

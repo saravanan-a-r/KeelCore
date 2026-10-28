@@ -52,3 +52,43 @@ def test_rows_that_hit_the_budget_are_reported_as_unterminated():
     result = greedy_decode(model, ids, mask, max_new_tokens=1, no_repeat_ngram_size=0)
     for sequence, done in zip(result.sequences, result.terminated):
         assert done == (len(sequence) == 0)
+
+
+class _ScriptedModel:
+    """A model that wants the scripted token at each step (second choice: id 2), so a ban shows."""
+
+    def __init__(self, script, vocab=12):
+        self.script, self.vocab = script, vocab
+        self.config = type("C", (), {"decoder_start_token_id": 0, "eos_token_id": 1, "pad_token_id": 0, "max_decoder_length": 2048})()
+
+    def encode(self, ids, mask):
+        return None
+
+    def __call__(self, encoder_ids, next_input, encoder_attention_mask=None, encoder_hidden_states=None, cache=None, use_cache=True):
+        position = cache or 0
+        logits = torch.zeros(next_input.shape[0], 1, self.vocab)
+        logits[:, 0, 2] = 0.5
+        logits[:, 0, self.script[position] if position < len(self.script) else 1] = 1.0
+        return type("O", (), {"logits": logits, "cache": position + 1})()
+
+
+def _scripted(script, input_ids, **kwargs):
+    ids = torch.tensor([input_ids])
+    result = greedy_decode(_ScriptedModel(script), ids, torch.ones_like(ids), max_new_tokens=12, **kwargs)
+    return result.sequences[0]
+
+
+def test_an_exempt_token_may_repeat_while_other_repeats_stay_blocked():
+    script = [7, 7, 7, 7, 7, 1]
+    assert _scripted(script, [9], no_repeat_ngram_size=3)[:5] != [7] * 5
+    assert _scripted(script, [9], no_repeat_ngram_size=3, no_repeat_exempt_tokens=(7,)) == [7] * 5
+    # a token that is not exempt is still blocked
+    assert _scripted([6, 6, 6, 6, 6, 1], [9], no_repeat_ngram_size=3, no_repeat_exempt_tokens=(7,))[:5] != [6] * 5
+
+
+def test_defaults_are_the_plain_ban_on_a_real_looping_model():
+    model = build_tiny_model(seed=3)
+    ids, mask = _inputs(batch=6, seed=5)
+    plain = greedy_decode(model, ids, mask, max_new_tokens=60, no_repeat_ngram_size=3)
+    same = greedy_decode(model, ids, mask, max_new_tokens=60, no_repeat_ngram_size=3, no_repeat_exempt_tokens=())
+    assert plain.sequences == same.sequences

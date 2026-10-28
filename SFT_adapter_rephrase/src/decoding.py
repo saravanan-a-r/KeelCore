@@ -40,17 +40,30 @@ def greedy_decode(
     *,
     max_new_tokens: int,
     no_repeat_ngram_size: int = 0,
+    no_repeat_exempt_tokens: tuple[int, ...] = (),
 ) -> DecodeResult:
+    """
+    `no_repeat_exempt_tokens` narrows the n-gram ban: a token in the list is
+    never banned. The tokenizer writes every digit as its own token, so
+    `50000` is "5 0 0 0 0" and repeats the 3-gram "0 0 0" legitimately. The
+    extension's `logitsProcessors.ts` implements the same setting (default:
+    the plain ban). Allowing n-grams that occur in the input was measured and
+    rejected: it brings loops back and rewrites plain text.
+    """
     config = model.config
     budget = min(max_new_tokens, config.max_decoder_length - 1)
     batch = encoder_input_ids.shape[0]
     device = encoder_input_ids.device
     n = no_repeat_ngram_size
+    exempt = frozenset(no_repeat_exempt_tokens)
 
     encoder_hidden_states = model.encode(encoder_input_ids, encoder_attention_mask)
     next_input = torch.full((batch, 1), config.decoder_start_token_id, dtype=torch.long, device=device)
     cache = None
     generated: list[list[int]] = [[] for _ in range(batch)]
+    # The decoder input so far, start token included, as HuggingFace's (and the
+    # extension's) processors see it; n-grams are taken over this.
+    history: list[list[int]] = [[config.decoder_start_token_id] for _ in range(batch)]
     terminated = [False] * batch
     # Per row: (n-1)-gram prefix -> tokens that have followed it.
     seen: list[dict[tuple[int, ...], set[int]]] = [{} for _ in range(batch)]
@@ -69,12 +82,14 @@ def greedy_decode(
 
         if n > 0:
             for row in range(batch):
-                if terminated[row] or len(generated[row]) < n - 1:
+                if terminated[row] or len(history[row]) < n - 1:
                     continue
-                prefix = tuple(generated[row][len(generated[row]) - (n - 1):]) if n > 1 else ()
+                prefix = tuple(history[row][len(history[row]) - (n - 1):]) if n > 1 else ()
                 banned = seen[row].get(prefix)
                 if banned:
-                    logits[row, list(banned)] = float("-inf")
+                    banned = [token for token in banned if token not in exempt]
+                    if banned:
+                        logits[row, banned] = float("-inf")
 
         tokens = torch.argmax(logits, dim=-1)
         next_tokens = tokens.tolist()
@@ -87,8 +102,9 @@ def greedy_decode(
                 terminated[row] = True
                 continue
             generated[row].append(token)
-            if n > 0 and len(generated[row]) >= n:
-                gram = generated[row][-n:]
+            history[row].append(token)
+            if n > 0 and len(history[row]) >= n:
+                gram = history[row][-n:]
                 seen[row].setdefault(tuple(gram[:-1]), set()).add(gram[-1])
 
         if all(terminated):
@@ -145,4 +161,5 @@ def decode_batch(model, encoder_input_ids, encoder_attention_mask, decoding) -> 
         encoder_attention_mask,
         max_new_tokens=decoding.max_new_tokens,
         no_repeat_ngram_size=decoding.no_repeat_ngram_size,
+        no_repeat_exempt_tokens=decoding.no_repeat_exempt_tokens,
     )
