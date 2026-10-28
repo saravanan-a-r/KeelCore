@@ -1,18 +1,20 @@
 import type { Compiler } from 'webpack';
+import { LICENSE_DATE, LICENSE_NAME, LICENSE_VERSION } from '../src/shared/license';
 
 /**
  * The notice written at the top of every JavaScript file the build emits.
  * It carries the essentials of the EchoMeBetter License (LICENSE at the
  * project root); that file controls if anything here seems different. When
- * the license changes, change the version and date here as well.
+ * the license changes, its version and date change in src/shared/license.ts.
  */
 export const LICENSE_BANNER = `EchoMeBetter
 Copyright (c) 2026 Saravanan A R. All rights reserved.
 https://github.com/saravanan-a-r/EchoMeBetter
 
-Licensed under the EchoMeBetter License, Version 1.0 (Personal and Research
-Use), dated October 28, 2026. This is not open source software. The full
-terms are in the LICENSE file at the address above, and that file controls.
+Licensed under the ${LICENSE_NAME}, Version ${LICENSE_VERSION} (Personal and Research
+Use), dated ${LICENSE_DATE}. This is not open source software. The full
+terms are in the LICENSE file at the address above, also included in this
+extension as LICENSE.txt, and that file controls.
 
 Allowed: use by one individual, free of charge, only through the official
 EchoMeBetter browser extension, for their own writing (including writing for

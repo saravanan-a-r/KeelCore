@@ -33,6 +33,7 @@ const PAGES = {
   popup: { entry: './src/ui/popup/main.tsx', html: 'ui/popup/popup.html' },
   welcome: { entry: './src/ui/welcome/main.tsx', html: 'ui/welcome/welcome.html' },
   offscreen: { entry: './src/offscreen/offscreen.ts', html: 'offscreen/offscreen.html' },
+  license: { entry: './src/ui/license/main.tsx', html: 'ui/license/license.html' },
 } as const;
 
 const scripts: RuleSetRule = { test: /\.tsx?$/, exclude: /node_modules/, use: 'babel-loader' };
@@ -122,6 +123,9 @@ export default (_env: unknown, argv: { mode?: string }): Configuration[] => {
       new CopyWebpackPlugin({
         patterns: [
           { from: 'public', to: '.' },
+          // The license the user agrees to, shipped with the extension (shown by ui/license), and its notice.
+          { from: '../LICENSE', to: 'LICENSE.txt' },
+          { from: '../NOTICE', to: 'NOTICE.txt' },
           // The processor build, and the WebGPU build (asyncify) loaded only when the model runs on the GPU.
           ...['ort-wasm-simd-threaded', 'ort-wasm-simd-threaded.asyncify'].flatMap((name) =>
             ['mjs', 'wasm'].map((extension) => ({
