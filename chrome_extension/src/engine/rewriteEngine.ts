@@ -238,10 +238,15 @@ export class RewriteEngine {
     return segments;
   }
 
-  /** Professional-only: rewrite each chunk in order, streaming the joined text so far through `onPartial`. */
+  /** Rewrite each chunk in order, streaming the joined text so far through `onPartial`. */
   private async rewriteChunked(request: RewriteRequest, options: RewriteOptions, budget: number): Promise<RewriteResult> {
     const { manifest, adapterId, adapter, text } = request;
     const segments = this.planSegments(manifest, text, budget);
+    // Build every chunk's prompt before the first model call, so text the prompt builder refuses (reserved
+    // markup) fails at once, as it does for a short text, instead of after the earlier chunks were rewritten.
+    for (const segment of segments) {
+      if (segment.kind === 'chunk') this.promptIds(manifest, adapterId, segment.text);
+    }
     let completed = '';
     let inputTokens = 0;
     let outputTokens = 0;
