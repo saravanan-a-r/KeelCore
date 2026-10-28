@@ -212,7 +212,7 @@ def _rephrase(args, config) -> int:
         tokenizer_dir=config.base_model.tokenizer_dir,
         device=str(plan.device),
     )
-    for source, output in zip(args.text, rephraser.rephrase(args.text, decoding=config.evaluation.decoding)):
+    for source, output in zip(args.text, rephraser.rephrase(args.text, decoding=rephraser.default_decoding(config.evaluation.decoding))):
         print(f"IN : {source}\nOUT: {output}\n")
     return 0
 

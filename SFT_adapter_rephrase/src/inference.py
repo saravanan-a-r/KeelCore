@@ -12,6 +12,7 @@ adapter refuses to attach to any other weights (fingerprint check).
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 from typing import Sequence
 
@@ -37,6 +38,16 @@ class RephraseAdapter:
         self.model = model.eval()
         self.codec = codec
         self.device = device
+        # The tokenizer writes every digit as its own token ("50000" is 5 0 0 0 0), so the
+        # n-gram ban would forbid repeating "0 0 0" and force a digit to change. The chrome
+        # extension exempts the same ten tokens (models/echomebetter-int8/model.json).
+        self.digit_token_ids = tuple(sorted({codec.encode(str(digit))[-1] for digit in range(10)}))
+
+    def default_decoding(self, decoding: DecodingConfig = DEFAULT_DECODING) -> DecodingConfig:
+        """`decoding` with the digit tokens exempt from the n-gram ban, unless it already lists exempt tokens."""
+        if decoding.no_repeat_exempt_tokens:
+            return decoding
+        return replace(decoding, no_repeat_exempt_tokens=self.digit_token_ids)
 
     @classmethod
     def load(
@@ -59,8 +70,10 @@ class RephraseAdapter:
 
     @torch.no_grad()
     def rephrase(
-        self, texts: Sequence[str], *, decoding: DecodingConfig = DEFAULT_DECODING, batch_size: int = 16
+        self, texts: Sequence[str], *, decoding: DecodingConfig | None = None, batch_size: int = 16
     ) -> list[str]:
+        """Rewrite each text. `decoding=None` is the default setting with the digits exempt from the n-gram ban."""
+        decoding = self.default_decoding() if decoding is None else decoding
         outputs: list[str] = []
         for start in range(0, len(texts), batch_size):
             chunk = texts[start:start + batch_size]
