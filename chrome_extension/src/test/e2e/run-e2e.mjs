@@ -106,7 +106,10 @@ try {
   check(true, `popup offers the download on a fresh profile ("${await downloadButton.textContent()}")`);
   const included = popup.getByRole('list', { name: 'Included in this download' });
   check((await included.getByText('Professional style').count()) === 1, 'the one setup download brings the Professional style with the writing model');
-  check((await popup.getByRole('checkbox').count()) === 0, 'there is nothing to choose before the first download');
+  // The only box before the first download is the license agreement: there is nothing else to choose.
+  const agreement = popup.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ });
+  check((await popup.getByRole('checkbox').count()) === 1 && (await agreement.count()) === 1, 'before the first download there is only the license agreement to tick');
+  check(!(await agreement.isChecked()) && (await downloadButton.isDisabled()), 'the agreement starts unticked, and the download waits for it');
   check((await popup.getByText('Styles', { exact: true }).count()) === 0, 'the style list waits until the model is downloaded');
   check((await badge()) === '!', 'toolbar icon is flagged until the model is downloaded');
 
@@ -158,6 +161,7 @@ try {
 
   console.log('download:');
   let downloadStarted = Date.now();
+  await agreement.check();
   await downloadButton.click();
   const modelStatus = popup.getByRole('region', { name: 'Writing model status' });
   await modelStatus.waitFor({ timeout: 600_000 });
