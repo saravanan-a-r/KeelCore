@@ -38,7 +38,8 @@
   },
   "generation": {
     "repetitionPenalty": 1.0,
-    "noRepeatNgramSize": 3
+    "noRepeatNgramSize": 3,
+    "noRepeatExemptTokenIds": [1539, 1540, 1543, 1555, 1560, 1564, 1567, 1569, 1572, 1580]
   },
   "inputTransforms": [
     "escape-spiece-markers"
