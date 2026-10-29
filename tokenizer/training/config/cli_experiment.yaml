@@ -1,0 +1,87 @@
+# Blend config for the CLI-helper vocabulary sweep (run_cli_vocab_experiment.py).
+#
+# Every setting outside `blend` is identical to config/default.yaml -- this
+# file only exists because the *corpus mix* changed (pretrain_corpus/'s
+# sources replace the older 5-source training_corpus/ download), not because
+# any fidelity-critical trainer setting needed to change.
+#
+# Composition, and why it looks like this
+# ----------------------------------------
+# The two command-line references (cli_tldr, cli_cheat_sheets) are small
+# enough, in eligible-LINE terms (corpus_reader.py counts one eligible line
+# per newline-separated segment of a record -- the unit SentencePiece trains
+# on, not the record itself), to reliably force full inclusion at every
+# tested input_sentence_size: their true capacities, measured against the
+# real corpus, are 71,835 and 4,130 lines. cli_tldr's share is 0.13, not
+# 0.10, because at the smallest tested size (250,000) 0.10 fell 5,773 lines
+# short (measured: 66,062/71,835) -- its capacity is close enough to that
+# budget that the smaller share just wasn't quite sufficient headroom; 0.13
+# clears it with margin. run_cli_vocab_experiment.py's FORCED_SOURCES
+# verifies this against the real corpus before launching the sweep rather
+# than assuming these numbers hold.
+#
+# The remaining 0.77 goes to the five large sources in the same relative
+# proportions as pretrain_corpus/download.py's DEFAULT_BLEND, so the
+# vocabulary is fitted to the mix the model is actually trained on.
+
+corpus:
+  input_sentence_size: 1000000 # always overridden per variant by --input-sentence-size
+  max_sentence_length: 8192
+  max_drop_fraction: 0.01
+
+sampling:
+  seed: 42
+
+blend:
+  mode: weighted
+  shares:
+    fineweb_edu: 0.481
+    c4: 0.126
+    cosmopedia: 0.112
+    gutenberg_pg19: 0.019
+    permissive_code: 0.032
+    cli_tldr: 0.13
+    cli_cheat_sheets: 0.10
+
+trainer:
+  model_type: unigram
+  vocab_size: 33728
+
+  # -- fidelity-critical (NF1), do not change casually --
+  byte_fallback: true
+  character_coverage: 1.0
+  normalization_rule_name: identity
+  remove_extra_whitespaces: false
+  allow_whitespace_only_pieces: true
+  add_dummy_prefix: false
+  split_digits: true
+
+  # -- scale / memory --
+  train_extremely_large_corpus: true
+  # Always overridden per variant by run_cli_vocab_experiment.py, sized to
+  # (cpu cores) / (parallel variants) so N concurrent trainings share the
+  # machine instead of each grabbing every core.
+  num_threads: 0
+
+  # -- ids --
+  pad_id: 0
+  eos_id: 1
+  unk_id: 2
+  bos_id: -1
+
+output:
+  dir: output
+  model_prefix: spm
+
+validation:
+  run_after_training: true
+  eval_sentence_size: 0 # always overridden per variant by --eval-corpus
+  eval_sample_save: 20000
+  length_reservoir_size: 200000
+  rare_token_max_count: 10
+  fertility_target_min: 1.25
+  fertility_target_max: 1.40
+  fertility_code_warn_above: 2.5
+  byte_fallback_rate_warn_above: 0.005
+  chars_per_token_warn_below: 3.0
+  vocab_utilization_warn_below: 0.90

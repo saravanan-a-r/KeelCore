@@ -1,0 +1,11 @@
+# Required
+datasets>=2.14        # streaming HuggingFace sources (src/sources.py)
+
+# Optional (src/clean.py degrades gracefully if absent; recommended for
+# cleaner text -- fixes double-encoded UTF-8 like "â€™" -> "'")
+ftfy>=6.1
+
+# System dependency (not pip-installable): the `git` binary is required for
+# the two command-line reference sources, which are cloned from GitHub.
+#   Debian/Ubuntu: apt-get install -y git
+#   macOS:         brew install git

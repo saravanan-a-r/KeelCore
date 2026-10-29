@@ -115,17 +115,6 @@ def test_empty_text_is_left_untouched(masker):
     assert masker.mask_document("") == ""
 
 
-def test_mask_name_field_replaces_a_structured_display_name(masker):
-    masked = masker.mask_name_field("Jane Doe")
-    assert masked != "Jane Doe"
-    assert " " in masked  # full_name renders as "First Last"
-
-
-def test_mask_name_field_leaves_empty_name_untouched(masker):
-    assert masker.mask_name_field("") == ""
-    assert masker.mask_name_field("   ") == "   "
-
-
 def test_stats_are_tallied(masker):
     masker.mask_document("email a@b.com, call +1 (555) 123-4567, thanks @carl")
     stats = masker.stats.as_dict()

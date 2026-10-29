@@ -1,0 +1,600 @@
+# =============================================================================
+# Training configuration — the single place to change how a run behaves.
+#
+# Every hyperparameter lives here. `training/` reads this file; no learning
+# rate, schedule or batch size is written in Python. To change a run, edit
+# this file — do not edit code.
+#
+# THE SPLIT FROM model_config.yml
+# -------------------------------
+# By lifetime, not by taste. `model_config.yml` holds what is welded into
+# every checkpoint's weight shapes and cannot change after pretraining begins.
+# This file holds what a later run — a fine-tune, a rehearsal, a resumption —
+# may legitimately choose differently.
+#
+# HUGGINGFACE NAMING
+# ------------------
+# Every field that exists in `transformers.TrainingArguments` uses that
+# field's exact name and meaning, so anyone continuing a released checkpoint
+# under HuggingFace's `Trainer` reads the vocabulary they already know:
+#
+#   output_dir  seed  data_seed  max_steps  num_train_epochs
+#   learning_rate  lr_scheduler_type  warmup_steps  warmup_ratio
+#   weight_decay  adam_beta1  adam_beta2  adam_epsilon  max_grad_norm
+#   per_device_train_batch_size  gradient_accumulation_steps
+#   gradient_checkpointing  bf16  fp16  label_smoothing_factor
+#   torch_compile  torch_compile_backend  torch_compile_mode
+#   logging_steps  eval_steps  save_steps  save_total_limit
+#   metric_for_best_model  greater_is_better  load_best_model_at_end
+#   resume_from_checkpoint
+#
+# `lr_scheduler_type` values are `transformers.SchedulerType` values and the
+# curve is computed with `transformers.optimization`'s arithmetic, so a
+# HuggingFace-side continuation follows the same schedule rather than a
+# similar one. The three `lr_decay_*` fields below have no TrainingArguments
+# name of their own because HuggingFace passes them through
+# `lr_scheduler_kwargs`; the export puts them back there.
+# `TrainingConfig.to_huggingface_training_arguments()` emits a dict
+# `TrainingArguments(**d)` accepts.
+#
+# Fields with no TrainingArguments counterpart are marked "NOT a
+# TrainingArguments field" below, with the reason.
+#
+# The values are architecture.md §13's reference configuration.
+# =============================================================================
+
+# Which stage the pipeline runs unless it is told otherwise.
+#   pretrain  -> the UL2 mixture-of-denoisers run (§7)
+#   sft       -> supervised fine-tuning on rephrase pairs (§8.1)
+#   rehearsal -> the short Base-sized full-pipeline proof (§7.8)
+active_stage: pretrain
+
+
+# -----------------------------------------------------------------------------
+# Shared by every stage.
+# -----------------------------------------------------------------------------
+defaults:
+
+  # --- reproducibility --------------------------------------------------------
+  # Two seeds, not one. `seed` drives initialization and dropout; `data_seed`
+  # drives corpus order and UL2 corruption sampling. Separating them means a
+  # rerun can change one without disturbing the other — the only way to tell
+  # "this result depended on the initialization" from "this result depended on
+  # which examples came first".
+  seed: 42
+  data_seed: 1234
+
+  output_dir: runs/pretrain
+
+  # --- length -----------------------------------------------------------------
+  # `max_steps` counts OPTIMIZER steps, not micro-batches. That is
+  # HuggingFace's meaning and it is what makes a schedule comparable between
+  # runs that used different accumulation to reach the same effective batch.
+  #
+  # 200,000 steps x ~1M tokens/step is the §7.5 target of 50-100B tokens for
+  # Large. Overridden per stage below.
+  max_steps: 200000
+
+  # Carried for TrainingArguments compatibility and UNUSED here: pretraining
+  # is defined by a token budget over a streamed corpus (§7.5), which has no
+  # epochs. Left at 1.0 so an exported TrainingArguments is well-formed.
+  num_train_epochs: 1.0
+
+  # --- optimizer (§13) --------------------------------------------------------
+  # AdamW rather than Adafactor: §13 says "AdamW if memory allows", and at
+  # 751M parameters on a 40GB card it does. AdamW is the better-understood
+  # optimizer and its moments are worth the memory when the alternative is
+  # debugging Adafactor's factored second moment mid-run.
+  learning_rate: 0.0003        # 3e-4, mid-range of §13's 2e-4 - 5e-4
+  weight_decay: 0.1
+  adam_beta1: 0.9
+  adam_beta2: 0.95             # NOT PyTorch's 0.999 — see §13 and optimizer.py
+  adam_epsilon: 0.00000001     # 1e-8
+  max_grad_norm: 1.0
+
+  # NOT TrainingArguments fields. Per-group lr multipliers on the scheduled
+  # rate; both groups are also exempt from weight decay (optimizer.py).
+  #
+  # WHY. AdamW steps every element by ~lr whatever the tensor's size, and T5's
+  # parametrization assumes steps relative to size (Adafactor). The query
+  # projections start 8x smaller than every other matrix, so they grew
+  # fastest; the position-bias tables must grow to several units, so they
+  # grew slowest. The first 90k run was stopped at step 5,111 with a
+  # position-blind encoder: q up 4.2x, bias tables ~1, bias moving attention
+  # by KL ~0.03 against ~2 in a healthy T5 (checkpoint_analysis F1).
+  #
+  # MEASURED on the real Large model and corpus, paired (same init, same data
+  # windows, only the optimizer differing), in screening runs at 1/4 of this
+  # stage's tokens_per_step with a 10-step warmup and constant lr. Held-out
+  # loss at step 500 / 1,000:
+  #   plain AdamW                    6.05 / -     bias KL flat at 0.0004
+  #   bias x30                       5.98 / -
+  #   bias x100                      5.89 / -     bias KL 0.66 @600
+  #   bias x100, query x0.1 (this)   5.64 / 5.12  bias KL 0.32 @1000, q held at init
+  #   Adafactor, T5 recipe           6.81 / -     bias frozen (warmup_init ramps ~10k steps)
+  #
+  # Changing either value changes the optimizer groups, so a checkpoint
+  # written under one setting cannot resume under another.
+  position_bias_lr_multiplier: 100.0
+  query_lr_multiplier: 0.1
+
+  # --- learning-rate schedule (§13) -------------------------------------------
+  # inverse_sqrt is §13's reference choice and stays the default here: it never
+  # needs to know how long the run is, so a 50-100B token run can be extended
+  # without the schedule being wrong in hindsight, whereas a cosine schedule
+  # whose horizon is later moved decays to its floor at the OLD horizon and
+  # stays there. The `pretrain` stage below overrides it with
+  # warmup_stable_decay; see that block for what is traded for what.
+  lr_scheduler_type: inverse_sqrt
+  warmup_steps: 0              # 0 means "use warmup_ratio" (HF's precedence)
+  warmup_ratio: 0.01           # §13: warmup ~1-2% of steps
+
+  # --- batching ---------------------------------------------------------------
+  # Effective batch = per_device_train_batch_size x gradient_accumulation_steps
+  # sequences per step: 16 x 32 = 512.
+  #
+  # The token count is NOT 16 x 32 x 2048. That figure assumes every row is
+  # padded to the 2048 maximum; length bucketing means almost none are. Measured
+  # over the real pretrain corpus, one step carries ~538,000 encoder slots
+  # (96.3% real tokens, the rest padding) and ~260,000 loss-bearing label
+  # tokens. Raising the batch to 32 was measured as ~9% faster per step but
+  # runs out of memory on the corpus's widest-decoder batches, so 16 stands:
+  # see the `pretrain` stage for the measurements behind that.
+  per_device_train_batch_size: 16
+
+  # SUPERSEDED IN THE `pretrain` STAGE. This counts micro-batches per
+  # optimizer step, which is the right unit only while every micro-batch
+  # holds the same number of rows. The pretrain stage sets `tokens_per_step`
+  # (see there), which closes the window on loss-bearing tokens instead and
+  # makes this value inert for that stage — tuning it there changes nothing.
+  # It still governs every stage that does not set `tokens_per_step`.
+  gradient_accumulation_steps: 32
+
+  # --- memory and precision ---------------------------------------------------
+  # §13: on. Recomputes the forward pass during backward instead of holding
+  # its activations, trading ~25% more compute for far less memory.
+  #
+  # Turning it off was measured on this GPU (A100 40GB vGPU) with the pretrain
+  # stage's capacity-based micro-batching, and it is not worth it. Without
+  # checkpointing the pretrain budgets (e40960/d20480) run out of memory, and so
+  # do e20480/d10240, e12288/d6144 and e8192/d4096. Only budgets small enough
+  # to need ~130-210 micro-batches per step fit, and the fixed dispatch cost of
+  # each one eats the compute saved:
+  #
+  #   checkpointing ON,  e40960/d20480   0.14300 s/1k tokens  31.5 GiB reserved
+  #   checkpointing OFF, e6144/d3072     0.14174 s/1k tokens  37.1 GiB reserved
+  #   checkpointing OFF, e5120/d2560     0.15287              35.4 GiB
+  #   checkpointing OFF, e6144/d2048     0.17150              35.1 GiB
+  #   checkpointing OFF, e4096/d2048     0.17052              32.6 GiB
+  #
+  # The one faster point is 0.9% ahead (~0.35 days over 90k steps), from a
+  # single short run, and it leaves under 3 GiB of headroom. That is not safe
+  # here: this vGPU has OOM'd with 9.2 GiB reserved but unusable to
+  # fragmentation, and it cannot use expandable_segments. Its neighbours are
+  # 8-21% slower. Revisit only on a GPU with more memory or working
+  # expandable_segments.
+  gradient_checkpointing: true
+  bf16: true                   # §13: bf16 mixed precision
+  fp16: false                  # rejected by the loader; see config.py for why
+
+  # --- compilation (item 3: SDPA + torch.compile) ------------------------------
+  # Off by default here — a per-stage choice, not a global one. `torch.compile`
+  # pays for its own startup recompilation cost on a long, fixed-shape run and
+  # is a poor trade on the short, small, sometimes-different-hardware rehearsal
+  # (§7.8); see the `pretrain` stage below for where it is actually turned on.
+  torch_compile: false
+  torch_compile_backend: null  # null -> torch.compile's own default ("inductor")
+  torch_compile_mode: null     # null -> torch.compile's own default mode
+
+  # --- loss -------------------------------------------------------------------
+  # Must equal `label_smoothing` in model_config.yml — the model computes the
+  # loss, so its value is the one that applies. The trainer refuses to start
+  # if the two disagree rather than silently preferring one.
+  label_smoothing_factor: 0.0  # §13: no label smoothing during pretraining
+
+  # --- cadence ----------------------------------------------------------------
+  # 1 = print a progress line every step. Cheap: the log call itself is a
+  # string-format plus a file write, milliseconds against a ~37s/step run —
+  # per_mode_loss_steps (below) is the one cadence here with real compute
+  # cost, and it is set explicitly to 100, not derived from this value, so
+  # this change does not add extra forward passes.
+  logging_steps: 1
+  eval_steps: 1000
+  save_steps: 1000
+
+  # NOT TrainingArguments fields. The two-tier held-out evaluation
+  # (`EvalTier` in training/src/loop.py), used when pretrain.py is given
+  # --quick-eval-corpus / --master-eval-corpus.
+  #
+  # Why two. Eval loss on a small sample has a standard error that shrinks
+  # only as 1/sqrt(n), so one thin validation set cannot do both jobs: read
+  # often enough to show a trend, it is too noisy to rank two adjacent
+  # checkpoints; sized to rank them reliably, it is too expensive to read
+  # every thousand steps. So there are two sets and two cadences —
+  # quick_eval.jsonl (10K records) as the frequent trend signal, and
+  # master_eval.jsonl (50K) read rarely and given SOLE authority over which
+  # checkpoint is kept as best.
+  #
+  # master_eval_steps must be a multiple of save_steps, or the step it names
+  # as best is a step no checkpoint was written at; the trainer refuses such a
+  # pairing rather than discovering it at the end of the run.
+  #
+  # Only the cadences are configured here. How many records each set holds is
+  # a property of the files themselves (built by the eval-extraction script) —
+  # writing the counts here too would let the two disagree silently.
+  quick_eval_steps: 1000
+  master_eval_steps: 20000
+
+  # --- checkpoint retention (§13: keep best-by-eval, not last) ----------------
+  # The most recent 20, plus the best-by-eval one, which is kept on top of
+  # the limit. A Large checkpoint is ~9 GB (weights 3 GB, AdamW moments 6 GB),
+  # so this holds ~190 GB at most.
+  save_total_limit: 20
+  metric_for_best_model: loss  # the key in whatever `evaluate` returns
+  greater_is_better: false     # it is a loss
+  load_best_model_at_end: true
+
+  # Resume from the latest checkpoint in output_dir if one exists. A 50-100B
+  # token run WILL be interrupted (§7.9), so this defaults on.
+  resume_from_checkpoint: true
+
+  # --- ours; no TrainingArguments counterpart ---------------------------------
+
+  # NOT a TrainingArguments field. Which model_config.yml profile to build.
+  # `null` means "whatever model_config.yml's active_profile says", so the two
+  # files do not have to be edited together for an ordinary run.
+  model_profile: null
+
+  # NOT a TrainingArguments field. Overrides model_config.yml's dropout_rate
+  # for this stage — §13 wants 0.0 for pretraining and 0.1 for SFT, and that
+  # is a per-run choice, not an architectural one. `null` leaves the model's
+  # own value alone.
+  dropout_rate: null
+
+  # NOT a TrainingArguments field — HuggingFace hides it inside
+  # lr_scheduler_kwargs. Anchors the inverse_sqrt decay; `null` means "use
+  # warmup_steps", which is HuggingFace's own default.
+  lr_timescale: null
+
+  # NOT TrainingArguments fields. Cosine shape controls, used only when
+  # lr_scheduler_type is `cosine`. `warmup_stable_decay` reads both too, with
+  # the same meaning, for its decay phase.
+  min_lr_ratio: 0.0
+  num_cycles: 0.5
+
+  # NOT TrainingArguments fields by name — HuggingFace hides all three inside
+  # lr_scheduler_kwargs, and to_huggingface_training_arguments() puts them
+  # back there. They configure the `warmup_stable_decay` cooldown and are
+  # rejected outright on any other schedule, because a schedule with no decay
+  # phase would ignore them and the run's recorded configuration would then
+  # describe an annealing phase that never happened.
+  #
+  # lr_decay_steps wins over lr_decay_ratio when both are set, matching the
+  # warmup_steps / warmup_ratio precedence above. Both zero = no decay phase.
+  lr_decay_steps: 0
+  lr_decay_ratio: 0.0
+  lr_decay_type: cosine        # transformers' get_wsd_schedule default
+
+  # NOT a TrainingArguments field. The data half of the cooldown: for the
+  # decay phase only, draw documents from these sources in these proportions
+  # instead of reading the corpus as it lies on disk. Keys are corpus source
+  # names (the directory names under the corpus root). `null` leaves the
+  # mixture alone, making a WSD run a pure learning-rate change. See the
+  # `pretrain` stage for the mixture this project actually uses and how its
+  # numbers were arrived at.
+  cooldown_blend: null
+
+  # NOT TrainingArguments fields. The synthetic rewrite task (item 4), which
+  # runs inside the same decay phase: this share of the cooldown's
+  # micro-batches is drawn from `rewrite/` — a corrupted document on the
+  # encoder side, framed as the product frames it, the original on the
+  # decoder side — instead of from the UL2 denoisers. A share of *batches*
+  # (examples), not of tokens, in the same sense UL2's mode_weights are
+  # sampling probabilities. `rewrite_blend` names the sources the task
+  # corrupts, with relative weights, as `cooldown_blend` does. 0.0 turns the
+  # task off; a blend with a zero share is refused. See the `pretrain` stage.
+  rewrite_share: 0.0
+  rewrite_blend: null
+
+  # NOT a TrainingArguments field. Caps how much of the frozen validation set
+  # each evaluation consumes. `null` means all of it — correct for a small
+  # held-out slice, and worth capping during a rehearsal.
+  eval_max_batches: null
+
+  # NOT a TrainingArguments field. Protects the best-by-eval checkpoint from
+  # save_total_limit. Without it a limit of 5 quietly deletes the best model
+  # in the run once it is old enough (§13).
+  keep_best_checkpoint: true
+
+  # NOT TrainingArguments fields. Report [R]/[X]/[S] losses separately, which
+  # §7.6 requires: "An aggregate can look healthy while one objective silently
+  # fails to learn."
+  #
+  # WHY THIS HAS A CADENCE OF ITS OWN. The overall loss is free — the training
+  # pass already computed it. The split is not: the training pass discards its
+  # logits, so the split needs a second forward pass over the whole
+  # accumulation window, measured at ~22% of a step. Run every step, that is
+  # 13 of the pretrain run's ~61 days spent on a diagnostic nobody reads at
+  # step resolution.
+  #
+  # 100 steps costs 0.22% (~3 hours over the full run) and still gives 2,000
+  # points — a mode that stops learning shows up within ~45 minutes. One
+  # sample is a whole optimizer step, so it carries ~200 examples of each
+  # mode; the number is not noisy for being sampled.
+  #
+  # Must be a multiple of logging_steps, so the split always lands on a log
+  # line and describes the step it is printed beside. `null` means "every
+  # logging step", which is the cadence this was always documented to have.
+  log_per_mode_loss: true
+  per_mode_loss_steps: 100
+
+
+# -----------------------------------------------------------------------------
+# Stages. A stage may override only the keys listed in `_STAGE_FIELDS`
+# (training/src/config.py); anything else is a typo and is rejected, because a
+# silently-ignored key means a run that is not the one intended.
+# -----------------------------------------------------------------------------
+stages:
+
+  # architecture.md §7 — UL2 mixture-of-denoisers pretraining on Large.
+  pretrain:
+    # The run's horizon, and the only number that has to change to retarget
+    # it. Everything schedule-shaped below is expressed as a *ratio* of this
+    # (`warmup_ratio`, `lr_decay_ratio`), so warmup, the decay phase, the
+    # cooldown data mixture and the synthetic rewrite task all move with it:
+    # at any step count the decay phase is the last 10% and warmup the first
+    # 1%. Verified at 30k/90k/150k/200k.
+    #
+    # The eval and save cadences below are deliberately NOT ratios — a
+    # checkpoint every 1,000 steps means the same thing whatever the horizon,
+    # and making it proportional would make crash exposure vary with run
+    # length. The one consequence is that `master_eval_steps` must stay at or
+    # below `max_steps` or the selecting tier never runs; `pretrain.py`
+    # refuses that combination rather than letting it pass silently.
+    max_steps: 90000
+    # A divisor of max_steps, so the tier that selects the best checkpoint
+    # also scores the final one. At 20,000 it last ran at step 80,000 and
+    # never saw the model after the decay phase (81,000-90,000), the phase
+    # that exists to make the final model the best one. Measured cost: the
+    # master set is 5.0x the quick set, whose evals took 75 s each, so ~6.3
+    # min per master eval and ~56 min for all nine.
+    master_eval_steps: 10000
+    learning_rate: 0.0003
+    # Item 2. Warmup (1%) -> flat peak (89%) -> linear decay to zero over the
+    # final 10%, on the upweighted mixture below.
+    #
+    # WHAT IS TRADED. inverse_sqrt's virtue is that it never needs to know how
+    # long the run is; this gives that up. The horizon is now load-bearing —
+    # moving max_steps after the fact means the decay happened at the wrong
+    # place — in exchange for the late-training loss drop a decay phase
+    # reliably recovers (MiniCPM, OLMo 2, DeepSeek's WSD, Llama 3's
+    # "annealing"). 200,000 steps is a settled number here, so the horizon is
+    # not the thing at risk.
+    #
+    # The stable phase is CONSTANT, not inverse_sqrt. That is what
+    # warmup_stable_decay means in transformers, and matching it is the point
+    # of using HuggingFace's name: a continuation under `Trainer` with the
+    # same lr_scheduler_type follows the same curve, not a similar one.
+    #
+    # Decay shape is linear rather than transformers' cosine default: cosine
+    # spends most of the phase near the peak and then drops steeply, while
+    # linear starts coming down immediately, which is what the annealing
+    # results above actually used.
+    lr_scheduler_type: warmup_stable_decay
+    warmup_ratio: 0.01
+    lr_decay_ratio: 0.1        # 20,000 steps: 180,000 -> 200,000
+    lr_decay_type: linear
+    dropout_rate: 0.0
+    label_smoothing_factor: 0.0
+    output_dir: runs/pretrain
+
+    # Capacity-based micro-batching. `per_device_train_batch_size` above puts a
+    # fixed 16 rows in every micro-batch, but rows differ in length by more than
+    # a hundredfold, so the *work* in one varies just as much. A 16-row [S]
+    # micro-batch is 296 tokens wide and takes 0.39s, of which 0.31s is kernel
+    # dispatch with the GPU idle -- measured, along with the fact that raising
+    # the rows to 48 at that width costs 1.6% more time for six times the work.
+    #
+    # These budgets bound rows x padded width instead, so narrow batches hold
+    # many rows and wide ones few. Encoder and decoder are bounded separately
+    # because a decoder position costs ~3.6x an encoder one in memory: it
+    # carries cross-attention and a 33,728-wide logit row.
+    #
+    # The values are the measured optimum, not a round number. Larger budgets
+    # were tried and are worse in both directions: e49152/d24576 is no faster
+    # and reserves 35.8 GiB against this one's 31.5, e65536/d24576 is *slower*
+    # (wider batches pay quadratic attention), and e65536/d32768 and
+    # e98304/d24576 both run out of memory -- the second with only 25.5 GiB
+    # allocated against 9.2 GiB of reserved-but-unusable fragmentation, which
+    # this vGPU cannot fix with expandable_segments.
+    #
+    # Measured over 4 alternating 60-step runs on the real corpus: 3.1% faster
+    # per loss-bearing token (0.14744 -> 0.14300 s/1k), reproducing to four
+    # decimal places across independent launches, at 31,548 MiB reserved
+    # against the fixed-row 32,162 -- so slightly *less* memory pressure, not
+    # more.
+    max_batch_encoder_tokens: 40960
+    max_batch_decoder_tokens: 20480
+
+    # Closes the accumulation window on loss-bearing tokens rather than on a
+    # count of micro-batches. With variable-size micro-batches a fixed count
+    # would let the effective batch size drift with whatever lengths the corpus
+    # served -- and effective batch size is the hyperparameter the learning rate
+    # is tuned against, not an implementation detail. Set to what the fixed-row
+    # configuration above actually delivers, so this changes how tokens are
+    # grouped and not how many a step holds: measured 261,825 tokens/step
+    # against the fixed-row 264,143, a 0.9% difference.
+    tokens_per_step: 255000
+
+    # A backstop, not a tuning knob. The budgets above bound memory on their
+    # own, but they bound rows x width -- so a pool of minimum-length
+    # documents (8 tokens, padded to 16) would admit 2,560 rows, an aspect
+    # ratio nothing on this GPU has ever been timed at. Measured over 15,000
+    # real batches the largest was 109 rows ([S], the narrow mode; [R] and [X]
+    # peak at 32 and 28), so this leaves more than twice the observed
+    # headroom and never binds in practice. It exists so the untested regime
+    # stays unreachable during a multi-week unattended run.
+    max_batch_rows: 256
+
+    # FIXED FOR THE LIFE OF A RUN. The three budgets above decide how the
+    # batcher cuts its pool, and a checkpoint carries the batches that cut
+    # already produced. Changing any of them and resuming is therefore
+    # refused, not absorbed: reshaping buffered batches to a new capacity
+    # would mean dropping or duplicating examples the corpus has already been
+    # read for. Choose them before the run starts; changing them later means
+    # starting a new run.
+
+    # The data half of item 2: for the decay steps only (the last 10% of the
+    # run, 9,000 steps at max_steps 90,000), draw from these sources in these
+    # proportions instead of reading the corpus as it lies on disk. Doing the
+    # decay on an upweighted high-value mix is what moves downstream eval; the
+    # LR decay alone mostly moves loss.
+    #
+    # BUCKETS. architecture_improvements.md item 2 proposes 40% high-quality
+    # prose / 25% CLI / 15% code / 20% the synthetic rewrite task of item 4.
+    # The rewrite task takes its 20% one level up, as `rewrite_share` below —
+    # a share of the cooldown's micro-batches — so this blend only has to
+    # describe the *other* 80%.
+    #
+    # WEIGHTS ARE PER DOCUMENT. BlendedCorpus picks the source of each next
+    # document by weight, so a source's share of *tokens* is its weight times
+    # its mean document length (pretrain_corpus/output/token_count_report.json),
+    # not its weight. The weights below are set so that cosmopedia,
+    # permissive_code and the two command-line references draw the same
+    # tokens they drew in the 90,000-step run, and fineweb_edu — the only
+    # source with unread volume left inside the token budget — takes the rest.
+    # The command-line references are too small to fill a CLI bucket on their
+    # own: each stays at a few passes over itself, because showing the model
+    # the same few hundred thousand tokens dozens of times is memorization,
+    # not vocabulary.
+    #
+    # Worked against that run's measured cooldown stream (4.882B raw tokens):
+    #
+    #   source             tokens   tokens/doc  weight    token share  drawn    passes
+    #   fineweb_edu        45.84B     503.0     49.40%      49.89%    ~2.44B    0.05
+    #   permissive_code     3.37B     613.2     24.43%      30.08%    ~1.47B    0.44
+    #   cosmopedia          7.54B     382.2     26.06%      20.00%    ~0.98B    0.13
+    #   cli_tldr            1.02M     150.0      0.104%      0.031%   ~1.5M     1.5
+    #   cli_cheat_sheets    0.068M    226.6      0.0065%     0.003%   ~0.15M    2.1
+    #
+    # Weights are relative and renormalized over the sources present; they are
+    # written to sum to 1.0 only so this table can be read as percentages.
+    cooldown_blend:
+      fineweb_edu: 0.4940
+      cosmopedia: 0.2606
+      permissive_code: 0.2443
+      cli_tldr: 0.00104
+      cli_cheat_sheets: 0.000065
+
+    # Item 4: the synthetic rewrite task, for the same decay steps.
+    # One in five cooldown micro-batches is a batch of
+    #   <style:grammar> <text_to_rewrite> corrupted </text_to_rewrite> -> original
+    # pairs built from ordinary corpus text (rewrite/src/corruption.py), the
+    # shape Stage 2 SFT starts from cold otherwise.
+    #
+    # WHICH SOURCES. Every prose source, and nothing else:
+    #
+    #   - The command-line references are out. Their text is commands, flags
+    #     and paths; there is no grammar in `tar -xzf` to break and restore,
+    #     and a "corrected" flag is a different command.
+    #   - permissive_code is out for the same reason, one step further: a
+    #     lowercased identifier is not a typo, it is different code, and a
+    #     target that restores it would teach the model to edit code — the
+    #     opposite of what the product guarantees. Code *inside* prose is
+    #     handled per line by the task itself, which copies code lines and
+    #     inline spans through verbatim.
+    #
+    # Each source's share of rewrite tokens follows its share of the
+    # pretraining token budget. BlendedCorpus draws per document, so each
+    # weight is that budget divided by the source's mean document length
+    # (pretrain_corpus/output/token_count_report.json), i.e. budget x
+    # documents / tokens:
+    #
+    #   source          budget    documents   tokens    weight   share of rewrite tokens
+    #   fineweb_edu     39.854B    91.12M     45.84B    79.23        66.8%
+    #   c4              10.619B    47.84M     17.65B    28.78        17.8%
+    #   cosmopedia       7.544B    19.74M      7.54B    19.74        12.6%
+    #   gutenberg_pg19   1.665B     3.69M      2.63B     2.34         2.8%
+    rewrite_share: 0.20
+    rewrite_blend:
+      fineweb_edu: 79.23
+      c4: 28.78
+      cosmopedia: 19.74
+      gutenberg_pg19: 2.34
+    # Item 3's fused SDPA attention is in model/src/attention.py and is always
+    # on. `torch.compile` is deliberately NOT, and the reason is measured
+    # rather than assumed.
+    #
+    # The case for "reduce-overhead" rested on this being "a fixed shape"
+    # run. It is not. Streaming the real 220M-document corpus through the
+    # real pipeline produces 3,136 distinct (encoder width, decoder width)
+    # pairs, because length bucketing sizes every batch to its own contents
+    # and [S]-mode never packs. cudagraphs re-record per shape, so that
+    # premise inverts the conclusion.
+    #
+    # Measured on this GPU (A100 40GB vGPU), every compiled configuration
+    # runs out of memory before it can complete a step — inductor and
+    # reduce-overhead, at batch 16 and at batch 8, with and without
+    # gradient checkpointing, and with both max_split_size_mb and
+    # garbage_collection_threshold allocator tuning. The OOM reports several
+    # GiB "reserved but unallocated", i.e. fragmentation; the usual remedy,
+    # PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True, needs CUDA virtual
+    # memory APIs that this vGPU does not expose. Leaving this true does not
+    # make the run slower, it stops the run from starting.
+    torch_compile: false
+
+  # architecture.md §8.1 — supervised fine-tuning on rephrase pairs.
+  # Cosine here, not inverse_sqrt: an SFT run has a known, short horizon, and
+  # decaying to zero at the end of it is what §13 specifies. Dropout and label
+  # smoothing both come on, because SFT trains on far less data and overfits.
+  sft:
+    max_steps: 20000
+    learning_rate: 0.00005     # §13: lower than pretraining
+    lr_scheduler_type: cosine
+    warmup_ratio: 0.02
+    dropout_rate: 0.1
+    label_smoothing_factor: 0.1
+    per_device_train_batch_size: 8
+    gradient_accumulation_steps: 8
+    output_dir: runs/sft
+
+  # architecture.md §7.8 — the full-pipeline rehearsal on Base (223M), run
+  # before committing weeks of compute to Large. Short by design: the purpose
+  # is to prove the pipeline produces a working rephraser at all, NOT to tune
+  # hyperparameters. Treat its numbers as a ranking signal, never a guarantee.
+  rehearsal:
+    model_profile: base
+    max_steps: 2000
+    # Scaled to a 2,000-step run: at the defaults' 20,000 the master tier
+    # would never fire, and a rehearsal that never exercises the tier holding
+    # best-checkpoint authority has not rehearsed the pipeline. Still a
+    # multiple of save_steps (1000), as the trainer requires.
+    quick_eval_steps: 100
+    master_eval_steps: 1000
+    # Scaled for the same reason the two cadences above are. At the defaults'
+    # 100 a 2,000-step rehearsal would sample the per-mode split 20 times,
+    # which is too coarse to show that all three denoisers are learning —
+    # which is one of the things the rehearsal exists to show. `null` means
+    # "every log line"; the ~22% it costs is minutes on a run this short.
+    per_mode_loss_steps: null
+    learning_rate: 0.0003
+    # Same schedule as `pretrain`, and for the reason §7.8 exists at all: a
+    # code path the rehearsal never runs is a code path the real run debugs.
+    # 200 of 2,000 steps is the same 10% shape, scaled.
+    #
+    # No `cooldown_blend` and no `rewrite_blend`, deliberately. The schedule
+    # is a property of the run; the mixtures are a property of the corpus,
+    # and a rehearsal is often pointed at a small slice with no per-source
+    # directory structure to blend over. The mixture switch is exercised by
+    # test/integration/test_cooldown.py instead, and the rewrite task by
+    # test/integration/test_rewrite_task.py, where a corpus of the right
+    # shape can be built to order.
+    lr_scheduler_type: warmup_stable_decay
+    warmup_steps: 100
+    lr_decay_ratio: 0.1
+    lr_decay_type: linear
+    dropout_rate: 0.0
+    label_smoothing_factor: 0.0
+    per_device_train_batch_size: 8
+    gradient_accumulation_steps: 4
+    output_dir: runs/rehearsal

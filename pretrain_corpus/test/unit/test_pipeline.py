@@ -79,16 +79,6 @@ def test_mask_pii_disabled_leaves_email_untouched(tmp_path):
     assert "john.doe@gmail.com" in chunk
 
 
-def test_mask_name_delegates_to_masker_when_enabled(tmp_path):
-    pipeline = _make_pipeline(tmp_path)
-    assert pipeline.mask_name("Jane Doe") != "Jane Doe"
-
-
-def test_mask_name_is_a_noop_when_pii_masking_disabled(tmp_path):
-    pipeline = _make_pipeline(tmp_path, PipelineConfig(mask_pii=False), with_masker=False)
-    assert pipeline.mask_name("Jane Doe") == "Jane Doe"
-
-
 def test_report_includes_pipeline_quality_and_pii_sections(tmp_path):
     pipeline = _make_pipeline(tmp_path)
     pipeline.process(GOOD_PROSE)

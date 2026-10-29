@@ -96,8 +96,8 @@ def test_the_rewrite_blend_holds_prose_sources_only():
     assert {"fineweb_edu", "c4", "cosmopedia"} <= set(blend)
 
 
-def test_the_rewrite_blend_follows_the_corpus_proportions():
-    """Weighted by natural representation, so the largest source leads."""
+def test_the_rewrite_blend_follows_the_token_budget():
+    """Weighted by each source's share of the token budget, so the largest leads."""
     blend = load_training_config(stage="pretrain").rewrite_blend
     assert blend["fineweb_edu"] > blend["c4"] > blend["cosmopedia"]
 
