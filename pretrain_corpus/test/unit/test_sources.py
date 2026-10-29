@@ -64,7 +64,7 @@ def test_cli_tldr_source_disables_quality_and_pii_masking():
     spec = SOURCES["cli_tldr"]
     assert spec.pipeline.quality is False
     assert spec.pipeline.mask_pii is False
-    assert spec.license == "MIT"
+    assert spec.license == "CC BY 4.0"
 
 
 def test_cli_cheat_sheets_is_registered_without_prose_filters():

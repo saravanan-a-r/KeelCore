@@ -152,7 +152,9 @@ SOURCES: dict[str, SourceSpec] = {
             "(Linux/macOS); the CLI-helper downstream task's input/output "
             "shape directly, earmarked for the <cli_reserved_*> vocabulary"
         ),
-        license="MIT",
+        # The pages are CC BY 4.0 (attribution required, see NOTICE); only the
+        # repository's own scripts are MIT, and none of those are read.
+        license="CC BY 4.0",
         # Short structured records (one command, a few example lines), not
         # prose -- the English-fluency quality heuristics would reject a
         # `tar -xzf archive.tar.gz` line for the same reasons they correctly
