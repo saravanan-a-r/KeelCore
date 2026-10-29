@@ -36,7 +36,7 @@ elif [ -x "$TB_BIN" ]; then
     setsid nohup nice -n 19 "$TB_BIN" --logdir "$TB_DIR" \
         --host 127.0.0.1 --port "$TB_PORT" \
         --samples_per_plugin scalars=100000,text=1000 --reload_interval 30 \
-        --window_title "EchoMeBetter pretrain" \
+        --window_title "KeelCore pretrain" \
         >> pretrain_corpus/logs/tensorboard.log 2>&1 < /dev/null &
 else
     echo "dashboard: $TB_BIN not found (see the one-time setup above); training continues, event files are still written"

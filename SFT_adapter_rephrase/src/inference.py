@@ -40,7 +40,7 @@ class RephraseAdapter:
         self.device = device
         # The tokenizer writes every digit as its own token ("50000" is 5 0 0 0 0), so the
         # n-gram ban would forbid repeating "0 0 0" and force a digit to change. The chrome
-        # extension exempts the same ten tokens (models/echomebetter-int8/model.json).
+        # extension exempts the same ten tokens (models/keelcore-int8/model.json).
         self.digit_token_ids = tuple(sorted({codec.encode(str(digit))[-1] for digit in range(10)}))
 
     def default_decoding(self, decoding: DecodingConfig = DEFAULT_DECODING) -> DecodingConfig:

@@ -29,7 +29,7 @@ DESC = ("Technical report: a 752-million-parameter T5-style encoder–decoder pr
         "with full training dynamics, evaluation during training, engineering checks and a comparison with open models of similar size.")
 
 # ---- 1. neutral wording (no product name anywhere) -------------------------------------------
-src = re.sub(r"EchoMeBetter(?:-752M)?", "the 752M model", src)
+src = re.sub(r"(?:KeelCore|EchoMeBetter)(?:-752M)?", "the 752M model", src)
 # sentence starts (after a tag, a full stop or an opening quote) take a capital
 src = re.sub(r'(^|>|\. |"|: )the 752M model', lambda m: m.group(1) + "The 752M model", src)
 src = src.replace("<footer>The 752M model technical report.", "<footer>Technical report.")

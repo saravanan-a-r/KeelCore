@@ -22,4 +22,4 @@ exec nice -n 19 taskset -c 22-27 "${TENSORBOARD}" \
   --port "${PORT}" \
   --samples_per_plugin scalars=100000,text=1000,histograms=200 \
   --reload_interval 30 \
-  --window_title "EchoMeBetter SFT rephrase adapter"
+  --window_title "KeelCore SFT rephrase adapter"

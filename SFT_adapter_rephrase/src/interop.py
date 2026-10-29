@@ -56,9 +56,9 @@ def _load(name: str, source: Path) -> ModuleType:
     return module
 
 
-rephrase_model = _load("echomebetter_model", MODEL_SRC)
-corpus_pkg = _load("echomebetter_corpus", CORPUS_SRC)
-rewrite_pkg = _load("echomebetter_rewrite", REWRITE_SRC)
+rephrase_model = _load("keelcore_model", MODEL_SRC)
+corpus_pkg = _load("keelcore_corpus", CORPUS_SRC)
+rewrite_pkg = _load("keelcore_rewrite", REWRITE_SRC)
 
 tokenizer_interop = corpus_pkg.tokenizer_interop
 RewriteTokens = rewrite_pkg.RewriteTokens

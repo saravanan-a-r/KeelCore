@@ -5,7 +5,7 @@
 #   bash SFT_adapter_rephrase/train_adapter.sh
 #   bash SFT_adapter_rephrase/train_adapter.sh --style concise --rank 32
 #   bash SFT_adapter_rephrase/train_adapter.sh --style friendly --input /path/to/friendly \
-#        --base-model /home/admin1/projects/EchoMeBetter/runs/pretrain/checkpoint-90000
+#        --base-model <repo>/runs/pretrain/checkpoint-90000
 #
 # Options:
 #   --rank 8|16|32|64     LoRA rank (default 16). alpha stays as in adapter_config.yml
@@ -17,7 +17,7 @@
 #                         Every *.jsonl under train/ is trained on, every *.jsonl under evals/
 #                         scores the checkpoints; both are read recursively.
 #   --base-model DIR      the pretrained checkpoint (default
-#                         /home/admin1/projects/EchoMeBetter/runs/pretrain/checkpoint-90000)
+#                         <repo>/runs/pretrain/checkpoint-90000)
 #
 # Output: SFT_adapter_rephrase/runs/adapters/<style>/
 #   checkpoints/step-NNNNNN/   every 2000 steps, all kept (adapter + optimizer state = resumable)
@@ -213,7 +213,7 @@ if ss -ltn | grep -q ":${TB_PORT} "; then
 else
   nice -n 19 "${TENSORBOARD}" --logdir "${RUNS_ROOT}" --host 127.0.0.1 --port "${TB_PORT}" \
     --samples_per_plugin scalars=100000,text=1000,histograms=200 --reload_interval 30 \
-    --window_title "EchoMeBetter SFT adapters" > /dev/null 2>&1 &
+    --window_title "KeelCore SFT adapters" > /dev/null 2>&1 &
   PIDS+=($!)
   echo "TensorBoard: http://127.0.0.1:${TB_PORT}"
 fi

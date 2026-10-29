@@ -90,12 +90,12 @@ def _load(name: str, source: Path) -> ModuleType:
     return module
 
 
-corpus_pkg = _load("echomebetter_corpus", CORPUS_SRC)
-ul2 = _load("echomebetter_ul2", UL2_SRC)
-training_pkg = _load("echomebetter_training", TRAINING_SRC)
-rephrase_model = _load("echomebetter_model", MODEL_SRC)
-rewrite = _load("echomebetter_rewrite", REWRITE_SRC)
-ownership = _load("echomebetter_ownership", OWNERSHIP_SRC)
+corpus_pkg = _load("keelcore_corpus", CORPUS_SRC)
+ul2 = _load("keelcore_ul2", UL2_SRC)
+training_pkg = _load("keelcore_training", TRAINING_SRC)
+rephrase_model = _load("keelcore_model", MODEL_SRC)
+rewrite = _load("keelcore_rewrite", REWRITE_SRC)
+ownership = _load("keelcore_ownership", OWNERSHIP_SRC)
 
 
 # Both sequence dimensions are padded up to a multiple of this, which keeps
@@ -1203,7 +1203,7 @@ def build_monitor(args: argparse.Namespace, trainer: Any, pipeline: Pipeline) ->
     tab tracks recent output between quick-eval cycles without paying for the
     position probes that often.
     """
-    monitoring = _load("echomebetter_monitoring", MONITORING_SRC)
+    monitoring = _load("keelcore_monitoring", MONITORING_SRC)
     config = pipeline.training_config
     specials = pipeline.specials
 

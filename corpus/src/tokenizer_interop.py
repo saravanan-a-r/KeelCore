@@ -30,7 +30,7 @@ DEFAULT_TOKENIZER_DIR = PROJECT_ROOT / "tokenizer" / "training" / "output"
 
 
 def _load_marker_escape() -> ModuleType:
-    name = "echomebetter_marker_escape"
+    name = "keelcore_marker_escape"
     if name in sys.modules:
         return sys.modules[name]
     spec = importlib.util.spec_from_file_location(name, MARKER_ESCAPE_FILE)
