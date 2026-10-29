@@ -195,6 +195,21 @@ styles:
     # longer (50k references: median 1.07, p99 1.56), hence 1.6.
     data: {min_length_ratio: 0.5, max_length_ratio: 1.6}
     evaluation: {acceptance: {max_length_ratio: 1.6}}
+  # The acceptance bars below are measured the same way, in characters, on the
+  # style's eval references (reference/input length), and sit just above
+  # their p99.5 so a correct rewrite is never marked unacceptable for length.
+  elaborate:
+    # 20,000 references: median 1.39, p99 2.57, p99.5 2.88. Expanding text is
+    # the style, so the shared 3.0 bar is the right one; it is stated here so
+    # the choice is explicit.
+    evaluation: {acceptance: {max_length_ratio: 3.0}}
+  friendly:
+    # 20,000 references: median 1.03, p99 1.50, p99.5 1.63.
+    evaluation: {acceptance: {max_length_ratio: 1.7}}
+  grammar:
+    # 184,247 references: median 1.01, p99 1.12, p99.5 1.14. A grammar fix
+    # barely changes length; 3.0 would accept a rewrite that bloats the text.
+    evaluation: {acceptance: {max_length_ratio: 1.2}}
 
 checkpointing:
   every_steps: 500

@@ -56,7 +56,10 @@ def test_real_profiles_share_one_effective_batch_size():
     [
         ("concise", True, (0.2, 1.15), 1.0),
         ("professional", True, (0.5, 1.6), 1.6),
-        ("friendly", False, (0.2, 3.0), 3.0),  # no styles.friendly: the shared, style-neutral values
+        ("elaborate", True, (0.2, 3.0), 3.0),
+        ("friendly", True, (0.2, 3.0), 1.7),
+        ("grammar", True, (0.2, 3.0), 1.2),
+        ("formal", False, (0.2, 3.0), 3.0),  # no styles.formal yet: the shared, style-neutral values
     ],
 )
 def test_real_config_style_selects_token_and_profile(style, profile, data_bounds, acceptance):
