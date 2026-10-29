@@ -1,6 +1,8 @@
-# EchoMeBetter
+# KeelCore
 
-A small, controllable **text rewriting model**, trained from scratch.
+A small, controllable **text rewriting model**, trained from scratch. KeelCore
+is the model behind the **EchoMeBetter** browser extension, which runs it
+privately on your device.
 
 Given a piece of text and a requested style, it produces a single rewrite that
 means the same thing — while preserving URLs, code, numbers, names and Markdown
@@ -138,12 +140,13 @@ Supervised fine-tuning of the first adapters is in progress.
 
 ## License
 
-Licensed under the **[EchoMeBetter License, Version 1.0](LICENSE)** (Personal
-and Research Use). All rights reserved.
+Licensed under the **[KeelCore License, Version 1.0](LICENSE)** (Personal
+and Research Use). All rights reserved. The license covers the KeelCore model
+and the EchoMeBetter browser extension.
 
 In short:
 
-- **Individuals** may use EchoMeBetter for their own writing, including
+- **Individuals** may use KeelCore for their own writing, including
   writing for their own job or studies, **only through the official
   EchoMeBetter browser extension**.
 - **Noncommercial research** is allowed, through the extension, and every
@@ -158,13 +161,13 @@ This summary is for convenience; the [LICENSE](LICENSE) file controls.
 
 ## Citation
 
-Research that uses EchoMeBetter must cite it in every publication or
+Research that uses KeelCore must cite it in every publication or
 presentation (Section 4 of the [license](LICENSE)). Use one of the forms in
 [NOTICE](NOTICE):
 
 ```
-EchoMeBetter (2026) by Saravanan A R.
-https://github.com/saravanan-a-r/EchoMeBetter
+KeelCore (2026) by Saravanan A R.
+https://github.com/saravanan-a-r/KeelCore
 ```
 
 ## Contact

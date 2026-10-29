@@ -3,13 +3,13 @@ message: >-
   If you use this software, please cite it using the metadata below,
   or one of the credit forms in NOTICE.
 type: software
-title: "EchoMeBetter: A Small, Controllable Text Rewriting Model"
+title: "KeelCore: A Small, Controllable Text Rewriting Model"
 authors:
   - given-names: "Saravanan"
     family-names: "A R"
-repository-code: "https://github.com/saravanan-a-r/EchoMeBetter"
-url: "https://github.com/saravanan-a-r/EchoMeBetter"
-license: LicenseRef-EchoMeBetter-1.0
+repository-code: "https://github.com/saravanan-a-r/KeelCore"
+url: "https://github.com/saravanan-a-r/KeelCore"
+license: LicenseRef-KeelCore-1.0
 keywords:
   - text-rewriting
   - encoder-decoder

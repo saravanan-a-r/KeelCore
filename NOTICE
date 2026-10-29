@@ -1,40 +1,82 @@
-EchoMeBetter
+KeelCore
 Copyright (c) 2026 Saravanan A R. All rights reserved.
-https://github.com/saravanan-a-r/EchoMeBetter
+https://github.com/saravanan-a-r/KeelCore
 
-Licensed under the EchoMeBetter License, Version 1.0 (Personal and Research
-Use), dated October 28, 2026. See LICENSE. That file controls; this notice
-is a summary.
+KeelCore is the writing model that the EchoMeBetter browser extension runs
+on. Both are covered by the KeelCore License, Version 1.0 (Personal and
+Research Use), dated October 28, 2026. See LICENSE. That file controls; this
+notice is a summary.
 
-Individuals may use EchoMeBetter, at no cost, for their own writing
-(including writing for their own job or studies) and for noncommercial
-research, only through the official EchoMeBetter browser extension.
+Individuals may use KeelCore, at no cost, for their own writing (including
+writing for their own job or studies) and for noncommercial research, only
+through the official EchoMeBetter browser extension.
 
 Commercial use, use by or for an organization, any use outside the official
 extension, and purchase of the model require a separate written agreement
 with the copyright holder. See COMMERCIAL_LICENSE.md.
+
+"KeelCore" and "EchoMeBetter" are names used by the copyright holder for
+this project; the license gives no right to use them (Section 6.3).
 
 --------------------------------------------------------------------------
 REQUIRED CITATION FOR RESEARCH
 --------------------------------------------------------------------------
 
 Section 4 of the license requires every publication or presentation of
-research that uses EchoMeBetter (papers, theses, reports, articles, posts,
+research that uses KeelCore (papers, theses, reports, articles, posts,
 slides, and talks) to cite the project in a reasonably prominent place.
 Use one of these forms, or an equivalent one with the same information:
 
 Plain text:
 
-    EchoMeBetter (2026) by Saravanan A R.
-    https://github.com/saravanan-a-r/EchoMeBetter
+    KeelCore (2026) by Saravanan A R.
+    https://github.com/saravanan-a-r/KeelCore
 
 Academic / BibTeX citation:
 
-    @software{echomebetter2026,
+    @software{keelcore2026,
       author = {Saravanan A R},
-      title  = {EchoMeBetter: A Small, Controllable Text Rewriting Model},
+      title  = {KeelCore: A Small, Controllable Text Rewriting Model},
       year   = {2026},
-      url    = {https://github.com/saravanan-a-r/EchoMeBetter}
+      url    = {https://github.com/saravanan-a-r/KeelCore}
     }
 
 Citing the project does not imply that its author endorses your work.
+
+--------------------------------------------------------------------------
+TRAINING DATA ATTRIBUTION
+--------------------------------------------------------------------------
+
+The KeelCore model is pretrained on the following datasets, each used under
+its own license. These attributions are given as those licenses ask; they do
+not grant any right in the model (Section 15.5 of the license).
+
+  * FineWeb-Edu, by Hugging Face.
+    https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu
+    Open Data Commons Attribution License (ODC-By) v1.0, also subject to
+    the Common Crawl Terms of Use.
+
+  * C4 (Colossal Clean Crawled Corpus), English, as released by the Allen
+    Institute for AI. https://huggingface.co/datasets/allenai/c4
+    Open Data Commons Attribution License (ODC-By) v1.0, also subject to
+    the Common Crawl Terms of Use.
+
+  * Cosmopedia, by Hugging Face.
+    https://huggingface.co/datasets/HuggingFaceTB/cosmopedia
+    Apache License 2.0.
+
+  * PG-19, by DeepMind, books from Project Gutenberg published before 1919.
+    https://github.com/google-deepmind/pg19
+    Apache License 2.0.
+
+  * GitHub Code Clean, by CodeParrot, permissively licensed subsets only
+    (MIT, Apache-2.0 and BSD-3-Clause source files).
+    https://huggingface.co/datasets/codeparrot/github-code-clean
+
+  * tldr-pages, by the tldr-pages contributors.
+    https://github.com/tldr-pages/tldr
+    Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+  * cheat/cheatsheets, by the cheat contributors.
+    https://github.com/cheat/cheatsheets
+    CC0 1.0 Universal.

@@ -1,15 +1,18 @@
-EchoMeBetter License
+KeelCore License
 Version 1.0 (Personal and Research Use)
 Version Date: October 28, 2026
 
 Copyright (c) 2026 Saravanan A R. All rights reserved.
-https://github.com/saravanan-a-r/EchoMeBetter
+https://github.com/saravanan-a-r/KeelCore
+
+This license covers the KeelCore model, the EchoMeBetter browser extension
+that runs it, and the source code and documentation of both.
 
 -------------------------------------------------------------------------------
 SUMMARY (for convenience only; it is not part of the license, and the numbered
 sections below control if anything here seems different)
 
-  * You may use EchoMeBetter, as one individual, for your own writing,
+  * You may use KeelCore, as one individual, for your own writing,
     including writing you do for your own job or studies, through the
     official EchoMeBetter browser extension only.
   * You may use it for noncommercial research, and you must cite this project
@@ -49,15 +52,15 @@ In this license:
     assigns the rights in the Materials.
 
 2.2 "Materials" means everything the Licensor makes available under this
-    license, in any form, including: the EchoMeBetter browser extension; its
-    source code and compiled code; the Model; documentation; and all updates,
-    copies, and parts of any of them. Third-Party Components are not
-    Materials.
+    license, in any form, including: the Model; the EchoMeBetter browser
+    extension; the source code and compiled code of both; documentation; and
+    all updates, copies, and parts of any of them. Third-Party Components are
+    not Materials.
 
-2.3 "Model" means the EchoMeBetter machine learning model and everything that
-    makes it work, including its weights and parameters, adapters, tokenizer,
-    and configuration and manifest files (such as model.json), in any format,
-    precision, or packaging.
+2.3 "Model" means the machine learning model named KeelCore and everything
+    that makes it work, including its weights and parameters, adapters,
+    tokenizer, and configuration and manifest files (such as model.json), in
+    any format, precision, or packaging.
 
 2.4 "Official Extension" means the EchoMeBetter browser extension in the form
     published by the Licensor through an Official Channel, without any change
@@ -110,6 +113,9 @@ In this license:
 2.12 "Including" means "including without limitation". Headings are for
      convenience only.
 
+2.13 "Marks" means the names "KeelCore" and "EchoMeBetter", the Licensor's
+     logos, and any other name or logo the Licensor uses for the Materials.
+
 3. LICENSE GRANT
 
 3.1 If you comply with this license, the Licensor grants you a personal,
@@ -130,6 +136,14 @@ In this license:
     not expressly granted to you in this license. No other right or license
     is granted, whether by implication, estoppel, or otherwise.
 
+3.4 The Licensor may make source code of the Materials publicly viewable,
+    for example in a public repository on GitHub. You may view it there, and
+    the hosting platform may let its users copy or fork it within that
+    platform to the extent its own terms of service require. That is the
+    only permission it gives: it is not a license to use, build, run,
+    modify, or distribute that source code, on or off the platform, and
+    Sections 5 and 7 apply to it in full.
+
 4. RESEARCH USE AND REQUIRED CITATION
 
 4.1 If you engage in Research Use, you may publish or present your findings,
@@ -138,16 +152,16 @@ In this license:
     slides, and talks) cites this project in a reasonably prominent place,
     using this citation or an equivalent one with the same information:
 
-      EchoMeBetter (2026) by Saravanan A R.
-      https://github.com/saravanan-a-r/EchoMeBetter
+      KeelCore (2026) by Saravanan A R.
+      https://github.com/saravanan-a-r/KeelCore
 
     BibTeX:
 
-      @software{echomebetter2026,
+      @software{keelcore2026,
         author = {Saravanan A R},
-        title  = {EchoMeBetter: A Small, Controllable Text Rewriting Model},
+        title  = {KeelCore: A Small, Controllable Text Rewriting Model},
         year   = {2026},
-        url    = {https://github.com/saravanan-a-r/EchoMeBetter}
+        url    = {https://github.com/saravanan-a-r/KeelCore}
       }
 
 4.2 Research Use is allowed only through the Official Extension, like every
@@ -155,9 +169,8 @@ In this license:
     the source code, or the Materials in any other way requires the
     Licensor's prior written permission.
 
-4.3 Citing this project does not give you any right to use the name
-    "EchoMeBetter" or the Licensor's name or logos to suggest that the
-    Licensor endorses you or your work.
+4.3 Citing this project does not give you any right to use the Marks or the
+    Licensor's name to suggest that the Licensor endorses you or your work.
 
 5. RESTRICTIONS
 
@@ -205,6 +218,12 @@ In this license:
     Extension or of the Output it produces for you. You are responsible for
     that text, for the Output, and for how you use them. Your use of Output
     is still subject to Sections 4 and 5.1(g).
+
+6.3 The Marks belong to the Licensor, whether or not they are registered.
+    This license gives you no right to use them, except to refer accurately
+    to the Materials or to cite this project as Section 4 requires. You must
+    not use the Marks, or anything confusingly similar to them, in the name
+    of any product, service, model, website, domain, or account.
 
 7. COMMERCIAL USE AND PURCHASE
 
@@ -260,7 +279,9 @@ KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING ANY WARRANTY OF
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT,
 ACCURACY, OR UNINTERRUPTED OR ERROR-FREE OPERATION. OUTPUT IS GENERATED BY A
 MACHINE LEARNING MODEL AND MAY BE INACCURATE, INCOMPLETE, OR CHANGE YOUR
-MEANING. YOU MUST REVIEW ALL OUTPUT BEFORE YOU USE OR SEND IT.
+MEANING. YOU MUST REVIEW ALL OUTPUT BEFORE YOU USE OR SEND IT, AND YOU MUST
+NOT RELY ON OUTPUT AS THE ONLY BASIS FOR ANY LEGAL, MEDICAL, FINANCIAL, OR
+OTHER DECISION WITH SIGNIFICANT CONSEQUENCES.
 
 12. LIMITATION OF LIABILITY
 
@@ -319,12 +340,21 @@ other security.
      that is not a waiver of the right to enforce it later.
 
 15.4 Assignment. You may not assign or transfer this license or any of your
-     rights under it. The Licensor may assign or transfer this license and
-     any rights in the Materials, including to a buyer of the Model.
+     rights under it. The Licensor may assign or transfer this license, any
+     rights in the Materials, and the Marks, without your consent, including
+     to a buyer of the Model, the Official Extension, or the business they
+     belong to. After such a transfer, "Licensor" means the new owner.
 
-15.5 Third-Party Components. Third-Party Components are licensed to you
-     under their own terms, not under this license.
+15.5 Third-Party Components and data. Third-Party Components are licensed
+     to you under their own terms, not under this license. Attributions for
+     the third-party data the Model was trained on are listed in the NOTICE
+     file; they do not give you any right in the Model.
 
 15.6 Rights that cannot be limited. Nothing in this license limits any right
      you have under applicable law that cannot be limited or waived by
      contract.
+
+15.7 Export and sanctions. You must comply with all export control and
+     sanctions laws that apply to your use of the Materials, and you must
+     not use them, or make them available, where or to anyone to whom those
+     laws prohibit it.
