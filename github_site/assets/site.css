@@ -1,0 +1,43 @@
+/* Site chrome around the report: top bar, reading progress, contents rail behaviour, print. */
+:root{--bar-h:52px}
+.topbar{position:sticky;top:0;z-index:50;height:var(--bar-h);display:flex;align-items:center;gap:14px;
+  padding:0 max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--paper) 88%,transparent);
+  -webkit-backdrop-filter:saturate(1.4) blur(10px);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--rule)}
+.topbar .name{font:600 .72rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.topbar .name em{font-style:normal;color:var(--muted);margin-left:8px;font-weight:500}
+.topbar .sp{flex:1}
+.topbar .now{font:500 .78rem var(--sans);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34vw}
+.btn{appearance:none;border:1px solid var(--rule);background:var(--panel);color:var(--ink-2);font:600 .72rem var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  height:32px;padding:0 11px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8}
+#menuBtn{display:none}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:var(--accent)}
+.toc{top:calc(var(--bar-h) + 24px);max-height:calc(100vh - var(--bar-h) - 48px);overflow:auto}
+.toc a{border-left:2px solid transparent;margin-left:-16px;padding-left:14px}
+.toc a.on{color:var(--accent);border-left-color:var(--accent);font-weight:600}
+h2,h3[id]{scroll-margin-top:calc(var(--bar-h) + 20px)}
+.shell{padding-block:36px 96px}
+.top{position:fixed;right:18px;bottom:18px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.top.show{opacity:1;pointer-events:auto}
+footer .meta{margin-top:6px}
+@media (max-width:900px){
+  #menuBtn{display:inline-flex}
+  .topbar .now{display:none}
+  .toc{display:block;position:fixed;inset:var(--bar-h) 0 0 0;z-index:45;max-height:none;background:var(--paper);padding:18px max(20px,env(safe-area-inset-left,0px));
+    border-left:0;font-size:1rem;height:calc(100vh - var(--bar-h));overflow:auto;align-self:auto;transform:translateY(-8px);opacity:0;visibility:hidden;transition:opacity .15s,transform .15s}
+  body.menu .toc{opacity:1;visibility:visible;transform:none}
+  .toc a{margin-left:0;padding:9px 0 9px 12px}
+  body.menu{overflow:hidden}
+}
+@media (prefers-reduced-motion:reduce){.toc,.top{transition:none}}
+@media print{
+  .topbar,.toc,.top{display:none!important}
+  .shell{display:block;padding:0}
+  .fig,.tablewrap,.check{break-inside:avoid}
+  body{background:#fff;color:#000}
+}
+/* eight tiles in two rows: the first tile of each row sits flush left */
+@media (min-width:641px){.kpi:nth-child(4n+1){padding-left:0;border-left:0}.kpi:nth-child(n+5){border-top:1px solid var(--rule-2)}}
+
+h4{font:600 .8rem/1.3 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:28px 0 0}
