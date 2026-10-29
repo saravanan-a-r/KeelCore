@@ -8,7 +8,7 @@ describe('decoders', () => {
     expect(decode(['<0xC3>', 'x'])).toEqual(['�', 'x']);
   });
 
-  test('Sequence of Replace, ByteFallback, Fuse (EchoMeBetter decoder)', () => {
+  test('Sequence of Replace, ByteFallback, Fuse (KeelCore decoder)', () => {
     const decode = buildDecoder({
       type: 'Sequence',
       decoders: [{ type: 'Replace', pattern: { Regex: '▁' }, content: ' ' }, { type: 'ByteFallback' }, { type: 'Fuse' }],

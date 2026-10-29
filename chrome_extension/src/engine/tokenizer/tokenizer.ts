@@ -1,5 +1,5 @@
 /**
- * EchoMeBetter's tokenizer, built from its `tokenizer.json`.
+ * KeelCore's tokenizer, built from its `tokenizer.json`.
  *
  * The format is the one tokenizer/training/export_hf.py writes from the
  * SentencePiece model: no normaliser; a Metaspace pre-tokenizer that turns

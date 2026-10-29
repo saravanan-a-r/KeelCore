@@ -9,7 +9,7 @@ import { GPU_PROBLEM_NOTE, PerformanceSettings, type PerformanceSettingsProps } 
 import { SettingsView } from '../../../ui/popup/SettingsView';
 import { WelcomeView } from '../../../ui/welcome/WelcomeApp';
 
-const summary: ModelSummary = { id: 'echomebetter-int8', displayName: 'EchoMeBetter', precision: 'int8', sizeBytes: 790_000_000 };
+const summary: ModelSummary = { id: 'keelcore-int8', displayName: 'KeelCore', precision: 'int8', sizeBytes: 790_000_000 };
 const ready: EngineStatus = { state: 'ready', model: summary, runningOn: { processor: 'gpu', threads: 4 } };
 
 function performance(overrides: Partial<PerformanceSettingsProps> = {}): PerformanceSettingsProps {

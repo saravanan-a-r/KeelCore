@@ -5,7 +5,7 @@ import { IDLE_DOWNLOAD, type DownloadState, type InstalledModelRecord } from '..
 import type { StyleId } from '../../../shared/styles';
 import { installedRecord, TINY_CATALOG } from '../../helpers/fixtures';
 
-const SOURCE = 'http://localhost:47615/echomebetter/';
+const SOURCE = 'http://localhost:47615/keelcore/';
 const BASE = TINY_CATALOG.model.sizeBytes;
 const PROFESSIONAL = TINY_CATALOG.adapters.find((adapter) => adapter.style === 'professional')!.sizeBytes;
 

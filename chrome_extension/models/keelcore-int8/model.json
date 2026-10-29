@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "ioContract": "t5-cross-kv/1",
-  "id": "echomebetter-int8",
-  "displayName": "EchoMeBetter",
+  "id": "keelcore-int8",
+  "displayName": "KeelCore",
   "precision": "int8",
   "files": {
     "encoder": {

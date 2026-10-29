@@ -149,8 +149,8 @@ describe('model source', () => {
   });
 
   test.each([
-    ['https://cdn.example.com/models/echomebetter-v1/', 'https://cdn.example.com/models/echomebetter-v1/'],
-    ['http://localhost:47615/echomebetter/', 'http://localhost:47615/echomebetter/'],
+    ['https://cdn.example.com/models/keelcore-v1/', 'https://cdn.example.com/models/keelcore-v1/'],
+    ['http://localhost:47615/keelcore/', 'http://localhost:47615/keelcore/'],
     ['http://127.0.0.1:8080/m/', 'http://127.0.0.1:8080/m/'],
   ])('accepts %s', (raw, expected) => {
     expect(parseModelSourceUrl(raw)).toBe(expected);
@@ -160,7 +160,7 @@ describe('model source', () => {
     ['plain http from another host', 'http://cdn.example.com/m/', /https/],
     ['a file rather than a folder', 'https://cdn.example.com/m/model.json', /end with "\/"/],
     ['a query string', 'https://cdn.example.com/m/?token=1', /query/],
-    ['not a URL', 'models/echomebetter/', /not a valid URL/],
+    ['not a URL', 'models/keelcore/', /not a valid URL/],
     ['not a string', 42, /non-empty string/],
   ])('rejects %s', (_label, raw, message) => {
     expect(() => parseModelSourceUrl(raw)).toThrow(message);

@@ -1,7 +1,7 @@
 /**
  * Token strings → text. Each decoder maps a list of token strings to a new
  * list (HuggingFace's `decode_chain`); the final list is concatenated.
- * EchoMeBetter's chain is Replace("▁" → " "), ByteFallback, Fuse.
+ * KeelCore's chain is Replace("▁" → " "), ByteFallback, Fuse.
  */
 import { compilePattern, UnsupportedTokenizerError, type DecoderJson } from './types';
 

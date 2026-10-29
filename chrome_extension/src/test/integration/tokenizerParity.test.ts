@@ -1,6 +1,6 @@
 /**
  * The TypeScript tokenizer against HuggingFace `tokenizers` (Python), ID for
- * ID, on a synthetic tokenizer built the way EchoMeBetter's is (identity
+ * ID, on a synthetic tokenizer built the way KeelCore's is (identity
  * normalisation, byte fallback, the markers as user-defined pieces).
  * Expected values were produced by the Python library, so any drift in a
  * port of its algorithms shows up here as a concrete probe.

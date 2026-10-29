@@ -1,5 +1,5 @@
 /**
- * The part of HuggingFace's tokenizer.json schema that EchoMeBetter's
+ * The part of HuggingFace's tokenizer.json schema that KeelCore's
  * tokenizer uses (see tokenizer.ts for the format as a whole).
  *
  * Anything outside it is rejected when the tokenizer is built rather than

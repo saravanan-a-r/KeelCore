@@ -6,7 +6,7 @@
 import type { TextTransformName } from '../manifest';
 
 /**
- * EchoMeBetter's SentencePiece decoder turns every "▁" into a space, so a
+ * KeelCore's SentencePiece decoder turns every "▁" into a space, so a
  * literal "▁" in the user's text would not survive a round trip. The text is
  * escaped into Private Use Area code points first, exactly as the training
  * pipeline does (tokenizer/training/marker_escape.py): one left-to-right

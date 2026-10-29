@@ -5,7 +5,7 @@ import type { StyleId } from '../../../shared/styles';
 
 const catalog = (adapters: StyleId[], base = 'base-1'): ModelCatalog => ({
   base,
-  model: { id: 'm', displayName: 'EchoMeBetter', precision: 'int8', sizeBytes: 790e6 },
+  model: { id: 'm', displayName: 'KeelCore', precision: 'int8', sizeBytes: 790e6 },
   adapters: adapters.map((style) => ({ style, sizeBytes: 73e6 })),
   fallbackAdapter: 'professional',
 });

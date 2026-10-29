@@ -2,7 +2,7 @@
  * The whole rewrite path -- prompt assembly, onnxruntime-web with a LoRA
  * adapter active, the KV-cached greedy loop, logits processors, decoding --
  * against native onnxruntime on the same files: a tiny random T5 in
- * EchoMeBetter's package format (LoRA-ready base graphs, a professional and a
+ * KeelCore's package format (LoRA-ready base graphs, a professional and a
  * grammar adapter, the other styles falling back to professional), with
  * repetition penalty and no-repeat n-gram switched on. Without an adapter the
  * fixture's graphs were proven equal to HuggingFace `generate`.
@@ -51,7 +51,7 @@ async function generate(testModel: TestModel, testCase: GenerationCase, withAdap
   }
 }
 
-describe('tiny EchoMeBetter fixture: onnxruntime-web == native onnxruntime', () => {
+describe('tiny KeelCore fixture: onnxruntime-web == native onnxruntime', () => {
   test.each(parity.generation.map((c) => [`${c.style}: ${c.input}`, c] as const))('%s', async (_label, testCase) => {
     expect(model.engine.promptIds(model.manifest, adapterOf(model, testCase), testCase.input)).toEqual(testCase.ids);
     expect((await generate(model, testCase, true)).ids).toEqual(withoutEos(model, testCase.outputIds));
