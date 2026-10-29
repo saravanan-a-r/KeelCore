@@ -140,6 +140,13 @@ export function PopupView(props: PopupViewProps) {
             On-device. Your text never leaves the browser.
           </span>
           <span className="_echo_$_flex _echo_$_items-center _echo_$_gap-2">
+            {/* The model's own name, said once and quietly: EchoMeBetter is the product, KeelCore the model it runs. */}
+            <span>
+              Powered by <span className="_echo_$_font-semibold _echo_$_text-fg-secondary">KeelCore</span>
+            </span>
+            <span aria-hidden="true" className="_echo_$_text-fg-subtle">
+              ·
+            </span>
             <button type="button" onClick={onOpenGuide} className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
               Guide
             </button>

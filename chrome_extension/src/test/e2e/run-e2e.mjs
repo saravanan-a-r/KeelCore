@@ -107,7 +107,7 @@ try {
   const included = popup.getByRole('list', { name: 'Included in this download' });
   check((await included.getByText('Professional style').count()) === 1, 'the one setup download brings the Professional style with the writing model');
   // The only box before the first download is the license agreement: there is nothing else to choose.
-  const agreement = popup.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ });
+  const agreement = popup.getByRole('checkbox', { name: /I agree to the KeelCore License/ });
   check((await popup.getByRole('checkbox').count()) === 1 && (await agreement.count()) === 1, 'before the first download there is only the license agreement to tick');
   check(!(await agreement.isChecked()) && (await downloadButton.isDisabled()), 'the agreement starts unticked, and the download waits for it');
   check((await popup.getByText('Styles', { exact: true }).count()) === 0, 'the style list waits until the model is downloaded');
@@ -155,7 +155,7 @@ try {
   await startJob('e2e-0', 'professional');
   const needsModel = welcome.locator('echomebetter-overlay').getByRole('group', { name: 'Download the writing model' });
   await needsModel.waitFor({ timeout: 30_000 });
-  check(/needs its writing model first/.test(await needsModel.textContent()), 'a rewrite explains that the model must be downloaded first');
+  check(/needs its writing model, KeelCore, first/.test(await needsModel.textContent()), 'a rewrite explains that the model must be downloaded first');
   check((await needsModel.getByRole('button', { name: /^Download · / }).count()) === 1, 'and offers the download right there, with its size');
   check((await welcome.evaluate(() => document.querySelector('#playground').value)) === ORIGINAL, 'the text was left untouched');
 

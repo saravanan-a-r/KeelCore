@@ -1,5 +1,5 @@
 /**
- * The agreement to the EchoMeBetter License, asked for right above a
+ * The agreement to the KeelCore License, asked for right above a
  * download button until the user has given it once (for the current
  * version). The box starts unticked and the download stays disabled until it
  * is ticked; the link opens the full license in a tab of its own.

@@ -24,7 +24,7 @@ export interface ModelSetupCardProps {
 
 /** "Rewrites run entirely on your device. Download the writing model and the Professional style once. ..." */
 export function setupDetail(starter: StyleId | null): string {
-  const what = starter ? `the writing model and the ${styleLabel(starter)} style` : 'the writing model';
+  const what = starter ? `the KeelCore writing model and the ${styleLabel(starter)} style` : 'the KeelCore writing model';
   return `Rewrites run entirely on your device. Download ${what} once. They're stored privately and used on every website.`;
 }
 

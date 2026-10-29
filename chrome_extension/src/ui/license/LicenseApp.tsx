@@ -1,5 +1,5 @@
 /**
- * The EchoMeBetter License, as the extension ships it (LICENSE.txt in the
+ * The KeelCore License, as the extension ships it (LICENSE.txt in the
  * package): opened from the agreement next to every download, and from the
  * footers of the popup and the welcome page. It shows the exact text the
  * user agrees to, and when they agreed to it.
@@ -47,7 +47,7 @@ export function LicenseView({ text, acceptance }: LicenseViewProps) {
         ) : null}
 
         <p className="_echo_$_mt-6 _echo_$_text-sm _echo_$_leading-6 _echo_$_text-fg-muted">
-          These are the terms for using EchoMeBetter and its writing model. For commercial use, use by an organization, or to buy the model, write to{' '}
+          These are the terms for using EchoMeBetter and KeelCore, the writing model it runs on. For commercial use, use by an organization, or to buy the model, write to{' '}
           <a href={`mailto:${COMMERCIAL_CONTACT}`} className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
             {COMMERCIAL_CONTACT}
           </a>

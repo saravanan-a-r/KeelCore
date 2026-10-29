@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from 'react';
 import { describeError } from '../../shared/errors';
 import { formatBytes, formatList, formatTimeLeft } from '../../shared/format';
+import { LICENSE_NAME } from '../../shared/license';
 import { styleLabel, type StyleId } from '../../shared/styles';
 import { Logo } from '../../ui/brand/Logo';
 import { BUTTON, GAP, offerPosition, SECONDARY_BUTTON } from './cardKit';
@@ -42,7 +43,7 @@ export function setupCopy(setup: SetupState): { title: string; body: string } {
       return model
         ? {
             title: 'Download the writing model',
-            body: `EchoMeBetter rewrites text privately on your device, so it needs its writing model first. ${includes(view.styles)}`,
+            body: `EchoMeBetter rewrites text privately on your device, so it needs its writing model, KeelCore, first. ${includes(view.styles)}`,
           }
         : { title: `Download the ${name} style`, body: 'Rewriting in this style needs it on your device. This is a one-time download that stays on this device.' };
     case 'downloading': {
@@ -190,7 +191,7 @@ export function SetupCard({ setup }: { setup: SetupState }) {
                   onClick={setup.openLicense}
                   className="_echo_$_cursor-pointer _echo_$_border-0 _echo_$_bg-transparent _echo_$_p-0 _echo_$_font-sans _echo_$_text-[13px] _echo_$_font-semibold _echo_$_leading-5 _echo_$_text-accent _echo_$_underline _echo_$_underline-offset-2 hover:_echo_$_text-fg focus-visible:_echo_$_outline focus-visible:_echo_$_outline-2 focus-visible:_echo_$_outline-focus"
                 >
-                  EchoMeBetter License
+                  {LICENSE_NAME}
                 </button>
               </span>
             </label>
@@ -206,7 +207,7 @@ export function SetupCard({ setup }: { setup: SetupState }) {
                     onClick={action.run}
                     disabled={locked}
                     aria-describedby={locked ? consentId : undefined}
-                    title={locked ? 'Agree to the EchoMeBetter License first' : undefined}
+                    title={locked ? `Agree to the ${LICENSE_NAME} first` : undefined}
                     className={index === 0 ? BUTTON : SECONDARY_BUTTON}
                   >
                     {action.label}

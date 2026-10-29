@@ -30,8 +30,8 @@ afterEach(() => {
 
 describe('the license page', () => {
   test('shows the text as written, with its version and date, and the contact for commercial use', () => {
-    render(<LicenseView text={{ state: 'ready', text: 'EchoMeBetter License\n\n1. ACCEPTANCE\n\n1.1 This license…' }} acceptance={null} />);
-    expect(screen.getByRole('heading', { name: 'EchoMeBetter License' })).toBeInTheDocument();
+    render(<LicenseView text={{ state: 'ready', text: 'KeelCore License\n\n1. ACCEPTANCE\n\n1.1 This license…' }} acceptance={null} />);
+    expect(screen.getByRole('heading', { name: 'KeelCore License' })).toBeInTheDocument();
     expect(screen.getByText(`Version ${LICENSE_VERSION} · ${LICENSE_DATE}`)).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'License text' })).toHaveTextContent('1. ACCEPTANCE');
     expect(screen.getByRole('link', { name: 'sararavi.ar@gmail.com' })).toHaveAttribute('href', 'mailto:sararavi.ar@gmail.com');

@@ -1,6 +1,7 @@
 /**
- * The EchoMeBetter License (LICENSE at the project root, shipped with the
- * extension as LICENSE.txt) and the user's agreement to it.
+ * The KeelCore License (LICENSE at the project root, shipped with the
+ * extension as LICENSE.txt) and the user's agreement to it. It covers the
+ * KeelCore writing model and this extension, EchoMeBetter, which runs it.
  *
  * Nothing is downloaded until the user has agreed to the current version, and
  * every download of the writing model asks again: the service worker refuses
@@ -13,7 +14,7 @@
 export const LICENSE_VERSION = '1.0';
 /** The version's date, as written in LICENSE ("Version Date: ..."). */
 export const LICENSE_DATE = 'October 28, 2026';
-export const LICENSE_NAME = 'EchoMeBetter License';
+export const LICENSE_NAME = 'KeelCore License';
 
 /** The license text the package ships, and the extension page that shows it. */
 export const LICENSE_FILE = 'LICENSE.txt';

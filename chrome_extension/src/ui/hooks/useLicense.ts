@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { acceptsCurrentLicense, LICENSE_STORAGE_KEY, loadLicenseAcceptance, parseLicenseAcceptance } from '../../shared/license';
 
 /**
- * Whether the user has agreed to the current EchoMeBetter License (null until
+ * Whether the user has agreed to the current KeelCore License (null until
  * it has been read). Follows an agreement given on another page or card.
  */
 export function useLicenseAccepted(): boolean | null {

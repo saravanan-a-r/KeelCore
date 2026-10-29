@@ -1,5 +1,5 @@
 /**
- * The agreement to the EchoMeBetter License: what is kept, and the one place
+ * The agreement to the KeelCore License: what is kept, and the one place
  * a download is allowed to start (the service worker's gate).
  */
 import { describe, expect, jest, test } from '@jest/globals';
@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { downloadUnderLicense, licenseAccepted } from '../../../background/licenseGate';
 import { describeError } from '../../../shared/errors';
-import { acceptsCurrentLicense, LICENSE_DATE, LICENSE_STORAGE_KEY, LICENSE_VERSION, loadLicenseAcceptance, parseLicenseAcceptance, recordLicenseAcceptance } from '../../../shared/license';
+import { acceptsCurrentLicense, LICENSE_DATE, LICENSE_NAME, LICENSE_STORAGE_KEY, LICENSE_VERSION, loadLicenseAcceptance, parseLicenseAcceptance, recordLicenseAcceptance } from '../../../shared/license';
 import { isOpenLicenseRequest, isSetupEvent, isSetupRequest, isUiRequest } from '../../../shared/messages';
 import { LICENSE_BANNER } from '../../../../tooling/licenseBanner';
 
@@ -32,6 +32,13 @@ describe('the license files', () => {
     const notice = readFileSync(join(ROOT, 'NOTICE'), 'utf8').replace(/\s+/g, ' ');
     expect(notice).toContain(`Version ${LICENSE_VERSION} (Personal and Research Use), dated ${LICENSE_DATE}`);
     expect(LICENSE_BANNER.replace(/\s+/g, ' ')).toContain(`Version ${LICENSE_VERSION} (Personal and Research Use), dated ${LICENSE_DATE}`);
+  });
+
+  test('the license the extension asks the user to agree to is the one in LICENSE, under the same name', () => {
+    const license = readFileSync(join(ROOT, 'LICENSE'), 'utf8');
+    expect(license.split('\n')[0]).toBe(LICENSE_NAME);
+    expect(readFileSync(join(ROOT, 'NOTICE'), 'utf8').replace(/\s+/g, ' ')).toContain(`the ${LICENSE_NAME}, Version ${LICENSE_VERSION}`);
+    expect(LICENSE_BANNER).toContain(`Licensed under the ${LICENSE_NAME}`);
   });
 });
 
@@ -109,7 +116,7 @@ describe('the download gate', () => {
   });
 
   test('the refusal says what to do', () => {
-    expect(describeError({ code: 'LICENSE_REQUIRED' })).toContain('Agree to the EchoMeBetter License');
+    expect(describeError({ code: 'LICENSE_REQUIRED' })).toContain('Agree to the KeelCore License');
   });
 });
 

@@ -172,7 +172,7 @@ describe('the download card', () => {
   test('says why, with the size on the button', () => {
     const { download, close } = state({ phase: 'offer', totalBytes: 866e6, styles: ['professional'], askLicense: false });
     expect(screen.getByRole('group', { name: 'Download the writing model' })).toBeInTheDocument();
-    expect(screen.getByText(/needs its writing model first/)).toBeInTheDocument();
+    expect(screen.getByText(/needs its writing model, KeelCore, first/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Download · 866 MB' }));
     expect(download).toHaveBeenCalledWith(false);
     // Agreed to before: the card does not ask again.
@@ -263,7 +263,7 @@ describe('the download card asks for the license agreement', () => {
 
   test('until it is ticked the download stays disabled; once ticked, the download carries the agreement', () => {
     const { download } = state({ phase: 'offer', totalBytes: 866e6, styles: ['professional'], askLicense: true });
-    const box = screen.getByRole('checkbox', { name: /I agree to the EchoMeBetter License/ });
+    const box = screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ });
     expect(box).not.toBeChecked();
     const button = screen.getByRole('button', { name: 'Download · 866 MB' });
     expect(button).toBeDisabled();
@@ -279,7 +279,7 @@ describe('the download card asks for the license agreement', () => {
 
   test('the license opens on its own, and opening it does not tick the box', () => {
     const { openLicense } = state({ phase: 'offer', totalBytes: 866e6, styles: ['professional'], askLicense: true });
-    fireEvent.click(screen.getByRole('button', { name: 'EchoMeBetter License' }));
+    fireEvent.click(screen.getByRole('button', { name: 'KeelCore License' }));
     expect(openLicense).toHaveBeenCalledTimes(1);
     expect(screen.getByRole('checkbox')).not.toBeChecked();
   });

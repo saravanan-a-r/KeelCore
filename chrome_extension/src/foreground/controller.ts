@@ -61,7 +61,7 @@ export interface ForegroundDeps {
   readonly writeClipboard: (text: string) => Promise<void>;
   /** Open the toolbar popup's settings at `focus`. */
   readonly openSettings: (focus: SettingsFocus) => void;
-  /** Open the EchoMeBetter License in a tab of its own. */
+  /** Open the KeelCore License in a tab of its own. */
   readonly openLicense: () => void;
   /** A style was picked from the style menu: ask for it, as its shortcut would. */
   readonly requestRewrite: (style: StyleId) => void;

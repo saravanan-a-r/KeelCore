@@ -3,13 +3,13 @@ import { LICENSE_DATE, LICENSE_NAME, LICENSE_VERSION } from '../src/shared/licen
 
 /**
  * The notice written at the top of every JavaScript file the build emits.
- * It carries the essentials of the EchoMeBetter License (LICENSE at the
+ * It carries the essentials of the KeelCore License (LICENSE at the
  * project root); that file controls if anything here seems different. When
  * the license changes, its version and date change in src/shared/license.ts.
  */
-export const LICENSE_BANNER = `EchoMeBetter
+export const LICENSE_BANNER = `EchoMeBetter, powered by the KeelCore model
 Copyright (c) 2026 Saravanan A R. All rights reserved.
-https://github.com/saravanan-a-r/EchoMeBetter
+https://github.com/saravanan-a-r/KeelCore
 
 Licensed under the ${LICENSE_NAME}, Version ${LICENSE_VERSION} (Personal and Research
 Use), dated ${LICENSE_DATE}. This is not open source software. The full
@@ -22,7 +22,7 @@ their own job or studies) and for noncommercial research, which must cite
 the project.
 
 Not allowed: copying, extracting, modifying, reverse engineering,
-redistributing, sharing, hosting or selling this code or the EchoMeBetter
+redistributing, sharing, hosting or selling this code or the KeelCore
 model; using them anywhere other than the official extension; using them, or
 their output, to build or train other models; using them through scripts or
 bots; or any commercial use, direct or indirect.
