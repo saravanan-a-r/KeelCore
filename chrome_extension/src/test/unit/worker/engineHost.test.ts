@@ -1,13 +1,12 @@
 import { describe, expect, jest, test } from '@jest/globals';
-import { parseModelManifest } from '../../../engine/manifest';
 import type { RewriteOptions } from '../../../engine/rewriteEngine';
 import { EchoError } from '../../../shared/errors';
 import type { EngineEvent } from '../../../shared/messages';
 import type { StyleId } from '../../../shared/styles';
 import { EngineBrokenError, EngineHost, STREAM_INTERVAL_MS, type LoadedEngine } from '../../../worker/engineHost';
-import { readJsonFixture } from '../../helpers/fixtures';
+import { tinyManifest } from '../../helpers/fixtures';
 
-const manifest = parseModelManifest(readJsonFixture('tiny-echo/model.json'));
+const manifest = tinyManifest('tiny-echo');
 
 function deferred<T>() {
   let resolve!: (value: T) => void;

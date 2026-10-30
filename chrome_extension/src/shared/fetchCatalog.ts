@@ -1,4 +1,4 @@
-import { catalogOf, parseModelManifest } from '../engine/manifest';
+import { catalogOfIndex, parseModelIndex } from '../engine/manifest';
 import type { ModelCatalog } from './modelInstall';
 import { MODEL_SOURCE_URL } from './modelSource';
 
@@ -6,5 +6,5 @@ import { MODEL_SOURCE_URL } from './modelSource';
 export async function fetchCatalog(fetchImpl: typeof fetch = fetch): Promise<ModelCatalog> {
   const response = await fetchImpl(new URL('model.json', MODEL_SOURCE_URL), { cache: 'no-store' });
   if (!response.ok) throw new Error(`model.json: HTTP ${response.status}`);
-  return catalogOf(parseModelManifest(await response.json()));
+  return catalogOfIndex(parseModelIndex(await response.json()));
 }

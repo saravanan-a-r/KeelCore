@@ -1,13 +1,13 @@
 import { describe, expect, test } from '@jest/globals';
-import { adapterFiles, baseFiles, bytesOf, catalogOf, parseModelManifest, relabelSavedManifest } from '../../../engine/manifest';
-import { readJsonFixture } from '../../helpers/fixtures';
+import { adapterFiles, baseFiles, bytesOf, catalogOf, parseModelManifest } from '../../../engine/manifest';
+import { tinyManifest } from '../../helpers/fixtures';
 
-const valid = readJsonFixture<Record<string, unknown>>('tiny-echo/model.json');
+const valid = JSON.parse(JSON.stringify(tinyManifest('tiny-echo'))) as Record<string, unknown>;
 const without = (key: string) => Object.fromEntries(Object.entries(valid).filter(([k]) => k !== key));
 const adapters = valid.adapters as Record<string, unknown>;
 
 describe('parseModelManifest', () => {
-  test('accepts a manifest written by the packaging tool, and reads back what it produced', () => {
+  test('accepts a saved manifest, and reads back what it produced', () => {
     const manifest = parseModelManifest(valid);
     expect(manifest.ioContract).toBe('cross-kv/1');
     expect(Object.keys(manifest.adapters)).toEqual(['professional', 'grammar']);
@@ -60,23 +60,5 @@ describe('parseModelManifest', () => {
     ['missing limits', without('limits'), /limits must be an object/],
   ])('rejects %s', (_label, manifest, message) => {
     expect(() => parseModelManifest(manifest)).toThrow(message);
-  });
-});
-
-describe('relabelSavedManifest', () => {
-  test('gives a saved manifest of the same interface revision the current label, so it parses', () => {
-    const saved = { ...valid, ioContract: 'earlier-label/1' };
-    expect(() => parseModelManifest(saved)).toThrow(/ioContract earlier-label\/1 is not supported/);
-    expect(parseModelManifest(relabelSavedManifest(saved)).ioContract).toBe('cross-kv/1');
-  });
-
-  test('leaves another revision alone, so it is still rejected', () => {
-    const saved = { ...valid, ioContract: 'cross-kv/2' };
-    expect(relabelSavedManifest(saved)).toBe(saved);
-    expect(() => parseModelManifest(relabelSavedManifest(saved))).toThrow(/ioContract cross-kv\/2 is not supported/);
-  });
-
-  test.each([[null], ['text'], [[1]], [{ ...valid, ioContract: undefined }]])('passes %j through unchanged', (raw) => {
-    expect(relabelSavedManifest(raw)).toBe(raw);
   });
 });

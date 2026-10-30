@@ -1,11 +1,11 @@
 import { describe, expect, test } from '@jest/globals';
-import { adapterFiles, baseFiles, parseModelManifest, type ModelFile } from '../../../engine/manifest';
+import { adapterFiles, baseFiles, type ModelFile } from '../../../engine/manifest';
 import { ModelStore, type StoredModel } from '../../../worker/modelStore';
-import { readJsonFixture } from '../../helpers/fixtures';
+import { tinyManifest } from '../../helpers/fixtures';
 import { MemoryDirectory } from '../../helpers/memoryFileSystem';
 import { tinyModelFiles } from '../../helpers/modelServer';
 
-const manifest = parseModelManifest(readJsonFixture('tiny-echo-int8/model.json'));
+const manifest = tinyManifest('tiny-echo-int8');
 const served = tinyModelFiles();
 const SOURCE = 'https://models.example.test/tiny/';
 const professional = adapterFiles(manifest.adapters.professional!);
@@ -58,16 +58,6 @@ describe('ModelStore', () => {
     const { store } = await storeWith([...baseFiles(manifest), ...professional, grammar[0]!]);
     await store.commit(model(['professional', 'grammar']));
     expect(await store.installed()).toEqual(model(['professional']));
-  });
-
-  test('a record saved under an earlier contract label still counts as installed', async () => {
-    const { store, folder } = await storeWith([...baseFiles(manifest), ...professional]);
-    const record = await folder.getFileHandle('installed.json', { create: true });
-    const handle = await record.createSyncAccessHandle();
-    const saved = { sourceUrl: SOURCE, manifest: { ...manifest, ioContract: 'earlier-label/1' }, adapters: ['professional'] };
-    handle.write(new TextEncoder().encode(JSON.stringify(saved)), { at: 0 });
-    handle.close();
-    expect(await store.installed()).toEqual(model());
   });
 
   test('an unreadable record does not count as installed', async () => {

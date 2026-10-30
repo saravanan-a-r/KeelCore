@@ -5,7 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import * as ort from 'onnxruntime-web';
-import { parseModelManifest, type ModelManifest } from '../../engine/manifest';
+import { parseAdapterFile, parseModelIndex, resolveModelIndex, type AdapterManifest, type AdapterReference, type ModelManifest } from '../../engine/manifest';
 import type { TensorFactory } from '../../engine/onnx/crossKvRunner';
 import { RewriteEngine } from '../../engine/rewriteEngine';
 import type { StyleId } from '../../shared/styles';
@@ -43,8 +43,19 @@ async function modelFromFiles(manifest: ModelManifest, read: ReadFile): Promise<
   };
 }
 
-export function modelFromFolder(folder: string): Promise<TestModel> {
-  const manifest = parseModelManifest(JSON.parse(readFileSync(join(folder, 'model.json'), 'utf8')));
+/** The model.json in a folder, with its adapter.json files resolved. */
+async function readManifest(read: (path: string) => Uint8Array | Promise<Uint8Array>): Promise<ModelManifest> {
+  const json = async (path: string): Promise<unknown> => JSON.parse(new TextDecoder().decode(await read(path)));
+  const index = parseModelIndex(await json('model.json'));
+  const adapters: Partial<Record<StyleId, AdapterManifest>> = {};
+  for (const [style, reference] of Object.entries(index.adapters) as [StyleId, AdapterReference][]) {
+    adapters[style] = parseAdapterFile(await json(`${reference.source}${reference.manifest.path}`), style, reference, index);
+  }
+  return resolveModelIndex(index, adapters);
+}
+
+export async function modelFromFolder(folder: string): Promise<TestModel> {
+  const manifest = await readManifest((path) => new Uint8Array(readFileSync(join(folder, path))));
   return modelFromFiles(manifest, (path) => new Uint8Array(readFileSync(join(folder, path))));
 }
 
@@ -56,6 +67,6 @@ export async function fetchModelFile(baseUrl: string, path: string): Promise<Uin
 }
 
 export async function modelFromUrl(baseUrl: string): Promise<TestModel> {
-  const manifest = parseModelManifest(JSON.parse(new TextDecoder().decode(await fetchModelFile(baseUrl, 'model.json'))));
+  const manifest = await readManifest((path) => fetchModelFile(baseUrl, path));
   return modelFromFiles(manifest, (path) => fetchModelFile(baseUrl, path));
 }

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "ioContract": "cross-kv/1",
   "id": "tiny-echo",
   "displayName": "Tiny Echo (test fixture)",
@@ -73,34 +73,22 @@
   ],
   "adapters": {
     "professional": {
-      "styleToken": "<style:professional>",
-      "files": {
-        "encoder": {
-          "path": "adapters/professional/encoder.onnx_adapter",
-          "bytes": 13240,
-          "sha256": "4fc0db21541ba944c205fef26e688befb9a2f470828638a8a3593540b9fd095a"
-        },
-        "decoder": {
-          "path": "adapters/professional/decoder.onnx_adapter",
-          "bytes": 16832,
-          "sha256": "8970e3576ebddca49c2cb265860d10a87875f51def273e30848b89931fe16eea"
-        }
-      }
+      "source": "adapters/professional/",
+      "manifest": {
+        "path": "adapter.json",
+        "bytes": 662,
+        "sha256": "c9c509d35eef03a36dcd36c11966dcdbd29ab12413fa5a304a0456dbb656da54"
+      },
+      "sizeBytes": 30072
     },
     "grammar": {
-      "styleToken": "<style:grammar>",
-      "files": {
-        "encoder": {
-          "path": "adapters/grammar/encoder.onnx_adapter",
-          "bytes": 13240,
-          "sha256": "c9b40052ef7f2bb1bed70c8fbfa3602a10b878afed9314381e6449ca26ac0ce3"
-        },
-        "decoder": {
-          "path": "adapters/grammar/decoder.onnx_adapter",
-          "bytes": 16832,
-          "sha256": "b03d52289c9b315e3e05cd111005a9d03e7f6f1d8fdcbfcab30620f80b4a3ff9"
-        }
-      }
+      "source": "adapters/grammar/",
+      "manifest": {
+        "path": "adapter.json",
+        "bytes": 652,
+        "sha256": "847c37325b37d8db3a3f956592472ceac7831d782bbd63cc77b70fb4774c50ec"
+      },
+      "sizeBytes": 30072
     }
   },
   "fallbackAdapter": "professional"

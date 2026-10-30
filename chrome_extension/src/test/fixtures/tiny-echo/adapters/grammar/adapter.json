@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "style": "grammar",
+  "styleToken": "<style:grammar>",
+  "baseFingerprint": "799252ed194578895606820000baba6acd12466a4d72635a6f716489fbbb33b7:1167f9a72710f43fd5ae5bf5ec1ac9e6f53f773f00b043fb1ef76685996e7a75:18e0a95768761f9f60e670a6640ace502a51908377ce53d70470a66a314c6c44",
+  "files": {
+    "encoder": {
+      "path": "encoder.onnx_adapter",
+      "bytes": 13240,
+      "sha256": "c9b40052ef7f2bb1bed70c8fbfa3602a10b878afed9314381e6449ca26ac0ce3"
+    },
+    "decoder": {
+      "path": "decoder.onnx_adapter",
+      "bytes": 16832,
+      "sha256": "b03d52289c9b315e3e05cd111005a9d03e7f6f1d8fdcbfcab30620f80b4a3ff9"
+    }
+  }
+}

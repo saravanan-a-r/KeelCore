@@ -8,9 +8,13 @@ playwright-report/
 # Exported int8 ONNX model folders, hundreds of MB each and produced outside
 # this package. They are never bundled: the extension downloads the model
 # from the URL in model.source.json, which a developer serves locally. Only
-# each package's manifest (model.json, a few KB) is kept in git.
+# each package's manifests (model.json and every adapter.json, a few KB) are
+# kept in git.
 models/*/*
 !models/*/model.json
+!models/*/adapters/
+models/*/adapters/*/*
+!models/*/adapters/*/adapter.json
 
 *.tsbuildinfo
 

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "ioContract": "cross-kv/1",
   "id": "keelcore-int8",
   "displayName": "KeelCore",
@@ -39,7 +39,18 @@
   "generation": {
     "repetitionPenalty": 1.0,
     "noRepeatNgramSize": 3,
-    "noRepeatExemptTokenIds": [1539, 1540, 1543, 1555, 1560, 1564, 1567, 1569, 1572, 1580]
+    "noRepeatExemptTokenIds": [
+      1539,
+      1540,
+      1543,
+      1555,
+      1560,
+      1564,
+      1567,
+      1569,
+      1572,
+      1580
+    ]
   },
   "inputTransforms": [
     "escape-spiece-markers"
@@ -438,19 +449,13 @@
   ],
   "adapters": {
     "professional": {
-      "styleToken": "<style:professional>",
-      "files": {
-        "encoder": {
-          "path": "adapters/professional/encoder.onnx_adapter",
-          "bytes": 36623632,
-          "sha256": "2a004eafbb856e4a49e943fd09d03f8e1562064cb3496af713ed1a6536192ccf"
-        },
-        "decoder": {
-          "path": "adapters/professional/decoder.onnx_adapter",
-          "bytes": 36623632,
-          "sha256": "097ea8082bc94834e80a4db614fc2f97f605b5ace792993a3d1845e29637af46"
-        }
-      }
+      "source": "adapters/professional/",
+      "manifest": {
+        "path": "adapter.json",
+        "bytes": 668,
+        "sha256": "df722d658dcc0508660c56a63ea7fc0b1dc26ccbc58cc27a8af1f8b2add5843e"
+      },
+      "sizeBytes": 73247264
     }
   },
   "fallbackAdapter": "professional"

@@ -1,12 +1,12 @@
 import { describe, expect, test } from '@jest/globals';
-import { adapterFiles, baseFiles, bytesOf, parseModelManifest, type ModelFile } from '../../../engine/manifest';
+import { adapterFiles, baseFiles, bytesOf, type ModelFile } from '../../../engine/manifest';
 import { downloadFiles, fetchManifest, sha256Hex, type DownloadProgress, type DownloadTransport } from '../../../worker/modelDownloader';
 import { ModelStore } from '../../../worker/modelStore';
-import { readJsonFixture } from '../../helpers/fixtures';
+import { tinyManifest } from '../../helpers/fixtures';
 import { MemoryDirectory } from '../../helpers/memoryFileSystem';
 import { FIXTURE_URL, modelServer, tinyModelFiles, type ServerOptions } from '../../helpers/modelServer';
 
-const manifest = parseModelManifest(readJsonFixture('tiny-echo-int8/model.json'));
+const manifest = tinyManifest('tiny-echo-int8');
 /** The base and the professional adapter: what a first download fetches. */
 const FILES = [...baseFiles(manifest), ...adapterFiles(manifest.adapters.professional!)];
 const TOTAL = bytesOf(FILES);
@@ -36,7 +36,11 @@ describe('fetchManifest', () => {
     const { server } = await setup();
     const transport = { fetch: server.fetch, estimate: async () => ({}), digest: sha256Hex, now: () => 0 };
     expect(await fetchManifest(FIXTURE_URL, transport, signal())).toEqual(manifest);
-    expect(server.requests.map((request) => [request.url, request.cache])).toEqual([[`${FIXTURE_URL}model.json`, 'no-store']]);
+    expect(server.requests.map((request) => [request.url, request.cache])).toEqual([
+      [`${FIXTURE_URL}model.json`, 'no-store'],
+      [`${FIXTURE_URL}adapters/professional/adapter.json`, 'no-store'],
+      [`${FIXTURE_URL}adapters/grammar/adapter.json`, 'no-store'],
+    ]);
   });
 });
 

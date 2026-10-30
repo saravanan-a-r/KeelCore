@@ -1,15 +1,15 @@
 import { describe, expect, jest, test } from '@jest/globals';
-import { adapterFiles, baseFiles, catalogOf, parseModelManifest } from '../../../engine/manifest';
+import { adapterFiles, baseFiles, catalogOf } from '../../../engine/manifest';
 import type { EngineEvent } from '../../../shared/messages';
 import { ModelLibrary } from '../../../worker/modelLibrary';
 import { sha256Hex } from '../../../worker/modelDownloader';
 import { ModelStore } from '../../../worker/modelStore';
-import { readJsonFixture } from '../../helpers/fixtures';
+import { readJsonFixture, tinyManifest } from '../../helpers/fixtures';
 import { MemoryDirectory } from '../../helpers/memoryFileSystem';
 import { FIXTURE_URL, modelServer, tinyModelFiles, type ServerOptions } from '../../helpers/modelServer';
 
 const raw = readJsonFixture<Record<string, unknown>>('tiny-echo-int8/model.json');
-const manifest = parseModelManifest(raw);
+const manifest = tinyManifest('tiny-echo-int8');
 const names = (files: { sha256: string }[]) => files.map((file) => file.sha256);
 const BASE = names(baseFiles(manifest));
 const PROFESSIONAL = names(adapterFiles(manifest.adapters.professional!));
@@ -35,7 +35,7 @@ function setup(serverOptions: ServerOptions = {}, sourceUrl = FIXTURE_URL, root 
   const folder = () => root.getDirectoryHandle('model', { create: true });
   const installedEvents = () => events.flatMap((event) => (event.type === 'installed' ? [event.installed] : []));
   const downloadEvents = () => events.flatMap((event) => (event.type === 'download' ? [event.download] : []));
-  const fileRequests = () => server.requests.filter((request) => !request.url.endsWith('model.json')).map((request) => request.url.slice(FIXTURE_URL.length));
+  const fileRequests = () => server.requests.filter((request) => !request.url.endsWith('.json')).map((request) => request.url.slice(FIXTURE_URL.length));
   return { root, library, events, hooks, server, engine, warmedAfter, folder, installedEvents, downloadEvents, fileRequests };
 }
 

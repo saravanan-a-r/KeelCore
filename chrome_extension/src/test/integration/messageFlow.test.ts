@@ -10,12 +10,11 @@
 import { describe, expect, test } from '@jest/globals';
 import { JobRouter, type PortLike } from '../../background/jobRouter';
 import { startBridge, type RuntimeLike, type WorkerLike } from '../../offscreen/bridge';
-import { parseModelManifest } from '../../engine/manifest';
 import { DEFAULT_COMPUTE } from '../../shared/compute';
 import { EchoError } from '../../shared/errors';
 import { isOffscreenEventMessage, type EngineEvent, type JobEvent, type OffscreenCommand, type WorkerRequest } from '../../shared/messages';
 import { EngineHost, type LoadedEngine } from '../../worker/engineHost';
-import { readJsonFixture } from '../helpers/fixtures';
+import { tinyManifest } from '../helpers/fixtures';
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -76,7 +75,7 @@ function wire(engine: LoadedEngine, { livePreview = false } = {}) {
   return { received, send: (message: unknown) => toRouter(message), disconnect: () => disconnect(), host, requests, command };
 }
 
-const manifest = parseModelManifest(readJsonFixture('tiny-echo/model.json'));
+const manifest = tinyManifest('tiny-echo');
 const runningOn = { processor: 'gpu', threads: 2 } as const;
 
 describe('page → service worker → offscreen → worker and back', () => {

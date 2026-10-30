@@ -1,7 +1,8 @@
 /**
  * Download model files from the folder at `sourceUrl` into the ModelStore.
  *
- *   1. model.json: validated in full; it names every file with its size and sha256
+ *   1. model.json: validated in full; it names every file with its size and sha256,
+ *      directly or through each adapter's adapter.json, itself checked against a hash
  *   2. enough free space for what is still missing, or a clear error
  *   3. each file, resuming whatever an earlier attempt left on disk (HTTP Range)
  *   4. each file checked against its sha256; a mismatch deletes it
@@ -13,7 +14,18 @@
  * copy of every file there.
  */
 import { EchoError } from '../shared/errors';
-import { parseModelManifest, type ModelFile, type ModelManifest } from '../engine/manifest';
+import {
+  baseFingerprint,
+  parseAdapterFile,
+  parseModelIndex,
+  resolveModelIndex,
+  type AdapterManifest,
+  type AdapterReference,
+  type ModelFile,
+  type ModelIndex,
+  type ModelManifest,
+} from '../engine/manifest';
+import type { StyleId } from '../shared/styles';
 import type { ModelStore } from './modelStore';
 
 export interface DownloadProgress {
@@ -125,7 +137,7 @@ async function fetchFile(
       handle.truncate(0);
       at = 0;
     }
-    const url = new URL(file.path, sourceUrl);
+    const url = new URL(file.path, file.source ?? sourceUrl);
     const response = await request(transport, url, signal, at > 0 ? { Range: `bytes=${at}-` } : undefined);
     if (at > 0 && response.status !== 206) {
       // The server sent the whole file instead of the rest of it: start this file over.
@@ -162,14 +174,59 @@ async function fetchFile(
   }
 }
 
-/** model.json from `sourceUrl`, validated. */
-export async function fetchManifest(sourceUrl: string, transport: DownloadTransport, signal: AbortSignal): Promise<ModelManifest> {
-  const raw: unknown = await (await request(transport, new URL('model.json', sourceUrl), signal)).json();
-  try {
-    return parseModelManifest(raw);
-  } catch (error) {
-    throw failed(error instanceof Error ? error.message : String(error));
+export interface ManifestOptions {
+  /** Adapters that must resolve: without them the download cannot do what was asked. */
+  readonly required?: readonly StyleId[];
+  /** The base on this device: a model.json with another one is refused. */
+  readonly base?: string;
+  /** Adapters on this device: one that cannot be resolved right now stays as it is. */
+  readonly installed?: Readonly<Partial<Record<StyleId, AdapterManifest>>>;
+}
+
+const reasonOf = (error: unknown): string => (error instanceof Error ? error.message : String(error));
+
+/** One adapter's adapter.json, fetched from its own folder and checked against the hash in model.json. */
+async function fetchAdapter(sourceUrl: string, style: StyleId, reference: AdapterReference, index: ModelIndex, transport: DownloadTransport, signal: AbortSignal): Promise<AdapterManifest> {
+  const folder = new URL(reference.source, sourceUrl);
+  const response = await request(transport, new URL(reference.manifest.path, folder), signal);
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  if (bytes.byteLength !== reference.manifest.bytes || (await transport.digest(bytes)) !== reference.manifest.sha256) {
+    throw failed('adapter.json does not match the hash in model.json', { style });
   }
+  return parseAdapterFile(JSON.parse(new TextDecoder().decode(bytes)), style, reference, index);
+}
+
+/**
+ * Resolve every adapter a model.json refers to. One that fails costs
+ * only itself, unless it was asked for and is not already on this device.
+ */
+async function resolveAdapters(sourceUrl: string, index: ModelIndex, transport: DownloadTransport, signal: AbortSignal, options: ManifestOptions): Promise<ModelManifest> {
+  const adapters: Partial<Record<StyleId, AdapterManifest>> = {};
+  for (const [style, reference] of Object.entries(index.adapters) as [StyleId, AdapterReference][]) {
+    try {
+      adapters[style] = await fetchAdapter(sourceUrl, style, reference, index, transport, signal);
+    } catch (error) {
+      if (signal.aborted) throw error;
+      const installed = options.installed?.[style];
+      if (installed) adapters[style] = installed;
+      else if (options.required?.includes(style)) throw failed(`${style} adapter: ${reasonOf(error)}`);
+    }
+  }
+  if (Object.keys(adapters).length === 0) throw failed('no adapter in model.json could be read');
+  return resolveModelIndex(index, adapters);
+}
+
+/** model.json from `sourceUrl`, validated, with any adapter references resolved. */
+export async function fetchManifest(sourceUrl: string, transport: DownloadTransport, signal: AbortSignal, options: ManifestOptions = {}): Promise<ModelManifest> {
+  const raw: unknown = await (await request(transport, new URL('model.json', sourceUrl), signal)).json();
+  let index: ModelIndex;
+  try {
+    index = parseModelIndex(raw);
+  } catch (error) {
+    throw failed(reasonOf(error));
+  }
+  if (options.base !== undefined && baseFingerprint(index) !== options.base) throw new EchoError('MODEL_OUTDATED');
+  return resolveAdapters(sourceUrl, index, transport, signal, options);
 }
 
 async function download(store: ModelStore, sourceUrl: string, files: readonly ModelFile[], transport: DownloadTransport, options: DownloadOptions): Promise<void> {

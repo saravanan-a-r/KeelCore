@@ -1,10 +1,9 @@
 import { describe, expect, test } from '@jest/globals';
-import { parseModelManifest } from '../../../engine/manifest';
 import { PromptBuilder } from '../../../engine/prompt/promptBuilder';
 import { Tokenizer } from '../../../engine/tokenizer/tokenizer';
-import { readJsonFixture } from '../../helpers/fixtures';
+import { readJsonFixture, tinyManifest } from '../../helpers/fixtures';
 
-const manifest = parseModelManifest(readJsonFixture('tiny-echo/model.json'));
+const manifest = tinyManifest('tiny-echo');
 const tokenizer = Tokenizer.fromJson(readJsonFixture('tiny-echo/tokenizer.json'));
 const id = (token: string) => tokenizer.tokenToId(token)!;
 

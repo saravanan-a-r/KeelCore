@@ -102,8 +102,11 @@ export class ModelLibrary {
       target = { base: installed === null, adapters: target.adapters };
       emitDownload({ state: 'downloading', target, phase: 'fetching', receivedBytes: 0, totalBytes: 0, bytesPerSecond: 0 });
 
-      const manifest = await fetchManifest(this.sourceUrl, this.deps.transport, controller.signal);
-      if (installed && baseFingerprint(installed.manifest) !== baseFingerprint(manifest)) throw new EchoError('MODEL_OUTDATED');
+      const manifest = await fetchManifest(this.sourceUrl, this.deps.transport, controller.signal, {
+        required: target.adapters,
+        base: installed ? baseFingerprint(installed.manifest) : undefined,
+        installed: installed?.manifest.adapters,
+      });
       const unknown = target.adapters.find((style) => !manifest.adapters[style]);
       if (unknown) throw new EchoError('DOWNLOAD_FAILED', { reason: `model.json has no ${unknown} adapter` });
 

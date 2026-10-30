@@ -17,7 +17,7 @@
  */
 import { EchoError } from '../shared/errors';
 import { isStyleId, type StyleId } from '../shared/styles';
-import { adapterFiles, baseFiles, parseModelManifest, relabelSavedManifest, type ModelFile, type ModelManifest } from '../engine/manifest';
+import { adapterFiles, baseFiles, parseModelManifest, type ModelFile, type ModelManifest } from '../engine/manifest';
 
 /** The parts of FileSystemSyncAccessHandle this module uses. */
 export interface SyncAccessHandleLike {
@@ -116,7 +116,7 @@ export class ModelStore {
       };
       if (typeof record.sourceUrl !== 'string' || !Array.isArray(record.adapters)) return null;
       sourceUrl = record.sourceUrl;
-      manifest = parseModelManifest(relabelSavedManifest(record.manifest));
+      manifest = parseModelManifest(record.manifest);
       recorded = record.adapters;
     } catch {
       // Unreadable or from an incompatible version: as good as absent.

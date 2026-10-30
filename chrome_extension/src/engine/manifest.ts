@@ -13,6 +13,11 @@
  * in training) runs with `fallbackAdapter`, under that adapter's style token;
  * a newly trained adapter is one more entry under `adapters`, no code changes.
  *
+ * A model folder publishes `parseModelIndex`'s form: each adapter is a reference
+ * to its own folder, which holds an `adapter.json` naming its files. Once those
+ * are resolved the extension saves `parseModelManifest`'s form, with the adapter
+ * files inline, so an installed model needs no network.
+ *
  * The manifest is validated in full before anything is downloaded or loaded,
  * so a mismatched or hand-edited model fails with a precise message instead
  * of producing wrong text later.
@@ -21,23 +26,10 @@ import type { AdapterSummary, ModelCatalog } from '../shared/modelInstall';
 import type { ModelSummary } from '../shared/status';
 import { isStyleId, type StyleId } from '../shared/styles';
 
-export const SUPPORTED_SCHEMA_VERSION = 2;
+export const SUPPORTED_SCHEMA_VERSION = 3;
+export const ADAPTER_FILE_SCHEMA_VERSION = 1;
 export const SUPPORTED_IO_CONTRACT = 'cross-kv/1';
 
-/** The `/N` at the end of a contract label: the revision of the interface, which a rename keeps. */
-const revisionOf = (label: unknown): string | null => (typeof label === 'string' ? /\/(\d+)$/.exec(label)?.[1] ?? null : null);
-
-/**
- * A manifest saved by an earlier version, which may name the same revision of
- * the interface under another label, relabelled with the current one. Any
- * other revision is left as it is, so `parseModelManifest` rejects it.
- */
-export function relabelSavedManifest(raw: unknown): unknown {
-  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return raw;
-  const saved = raw as Record<string, unknown>;
-  if (revisionOf(saved.ioContract) !== revisionOf(SUPPORTED_IO_CONTRACT)) return raw;
-  return { ...saved, ioContract: SUPPORTED_IO_CONTRACT };
-}
 export const TEXT_TRANSFORMS = ['escape-spiece-markers'] as const;
 
 export type TextTransformName = (typeof TEXT_TRANSFORMS)[number];
@@ -52,6 +44,18 @@ export interface ModelFile {
   readonly path: string;
   readonly bytes: number;
   readonly sha256: string;
+  /** The folder `path` is relative to, when it is not the model's own. */
+  readonly source?: string;
+}
+
+/** A model.json's entry for one adapter: where it is, and the hash that vouches for its adapter.json. */
+export interface AdapterReference {
+  /** A folder: relative to the model's, or pinned to one commit of a repository of ours. */
+  readonly source: string;
+  /** The adapter.json, with `path` relative to `source`. */
+  readonly manifest: ModelFile;
+  /** The size of the adapter's files, for showing before anything is fetched. */
+  readonly sizeBytes: number;
 }
 
 export interface AdapterManifest {
@@ -90,6 +94,11 @@ export interface ModelManifest {
   readonly fallbackAdapter: StyleId | null;
 }
 
+/** A model.json as published: the base in full, the adapters by reference. */
+export interface ModelIndex extends Omit<ModelManifest, 'adapters'> {
+  readonly adapters: Readonly<Partial<Record<StyleId, AdapterReference>>>;
+}
+
 export class ManifestError extends Error {
   constructor(message: string) {
     super(`model.json: ${message}`);
@@ -119,13 +128,31 @@ function integer(value: unknown, where: string, min: number): number {
 function file(value: unknown, where: string): ModelFile {
   const json = object(value, where);
   const path = string(json.path, `${where}.path`);
-  if (path.split('/').includes('..') || path.startsWith('/') || path.includes('://')) {
-    throw new ManifestError(`${where}.path must be a relative path inside the model folder`);
-  }
+  if (!isRelativePath(path)) throw new ManifestError(`${where}.path must be a relative path inside the model folder`);
   // The hash is also the file's name in the extension's model storage.
   const sha256 = string(json.sha256, `${where}.sha256`);
   if (!/^[0-9a-f]{64}$/.test(sha256)) throw new ManifestError(`${where}.sha256 must be 64 lowercase hex characters`);
-  return { path, bytes: integer(json.bytes, `${where}.bytes`, 1), sha256 };
+  const parsed = { path, bytes: integer(json.bytes, `${where}.bytes`, 1), sha256 };
+  if (json.source === undefined) return parsed;
+  if (typeof json.source !== 'string' || !isPinnedSource(json.source)) throw new ManifestError(`${where}.source must be a folder at one commit of a KeelCore repository`);
+  return { ...parsed, source: json.source };
+}
+
+function isRelativePath(path: string): boolean {
+  return !path.split('/').includes('..') && !path.startsWith('/') && !path.includes('\\') && !/^[a-z][a-z0-9+.-]*:/i.test(path);
+}
+
+/** The only place outside the model's folder files may come from: one commit, so what it names cannot change. */
+const PINNED_SOURCE = /^https:\/\/huggingface\.co\/KeelCore\/[A-Za-z0-9][A-Za-z0-9._-]*\/resolve\/[0-9a-f]{40}\/(?:[A-Za-z0-9._-]+\/)*$/;
+
+function isPinnedSource(source: string): boolean {
+  return PINNED_SOURCE.test(source) && !source.split('/').some((part) => part === '.' || part === '..');
+}
+
+function adapterSource(value: unknown, where: string): string {
+  const source = string(value, where);
+  if (isPinnedSource(source) || (source.endsWith('/') && isRelativePath(source))) return source;
+  throw new ManifestError(`${where} must be a folder inside the model folder, or at one commit of a KeelCore repository`);
 }
 
 function prompt(value: unknown): PromptSegment[] {
@@ -161,11 +188,76 @@ function adapters(value: unknown): Partial<Record<StyleId, AdapterManifest>> {
   return parsed;
 }
 
+function adapterReferences(value: unknown): Partial<Record<StyleId, AdapterReference>> {
+  const json = object(value, 'adapters');
+  const parsed: Partial<Record<StyleId, AdapterReference>> = {};
+  for (const [id, raw] of Object.entries(json)) {
+    if (!isStyleId(id)) throw new ManifestError(`adapters.${id}: adapters are named after the style they are trained for`);
+    const reference = object(raw, `adapters.${id}`);
+    parsed[id] = {
+      source: adapterSource(reference.source, `adapters.${id}.source`),
+      manifest: file(reference.manifest, `adapters.${id}.manifest`),
+      sizeBytes: integer(reference.sizeBytes, `adapters.${id}.sizeBytes`, 1),
+    };
+  }
+  if (Object.keys(parsed).length === 0) throw new ManifestError('adapters must name at least one adapter');
+  return parsed;
+}
+
+export function parseModelIndex(raw: unknown): ModelIndex {
+  const json = object(raw, 'manifest');
+  if (json.schemaVersion !== SUPPORTED_SCHEMA_VERSION) {
+    throw new ManifestError(`schemaVersion ${String(json.schemaVersion)} is not supported (expected ${SUPPORTED_SCHEMA_VERSION})`);
+  }
+  return { ...parseBase(json), ...parseAdapterChoice(json, adapterReferences(json.adapters)) };
+}
+
+/**
+ * An adapter.json, checked against the model that refers to it, as the entry a
+ * saved manifest has for it. Its file paths are relative to its own folder.
+ */
+export function parseAdapterFile(raw: unknown, style: StyleId, reference: AdapterReference, index: Pick<ModelManifest, 'files'>): AdapterManifest {
+  const json = object(raw, 'adapter.json');
+  if (json.schemaVersion !== ADAPTER_FILE_SCHEMA_VERSION) {
+    throw new ManifestError(`adapter.json: schemaVersion ${String(json.schemaVersion)} is not supported (expected ${ADAPTER_FILE_SCHEMA_VERSION})`);
+  }
+  if (json.style !== style) throw new ManifestError(`adapter.json: it is for ${String(json.style)}, not ${style}`);
+  if (json.baseFingerprint !== baseFingerprint(index)) throw new ManifestError(`adapter.json: the ${style} adapter was trained on another base model`);
+  const files = object(json.files, 'adapter.json files');
+  const place = (parsed: ModelFile): ModelFile =>
+    isPinnedSource(reference.source) ? { ...parsed, source: reference.source } : { ...parsed, path: `${reference.source}${parsed.path}` };
+  const encoder = place(file(files.encoder, 'adapter.json files.encoder'));
+  const decoder = place(file(files.decoder, 'adapter.json files.decoder'));
+  if (encoder.bytes + decoder.bytes !== reference.sizeBytes) {
+    throw new ManifestError(`adapter.json: its files add up to ${encoder.bytes + decoder.bytes} bytes, model.json says ${reference.sizeBytes}`);
+  }
+  return { styleToken: string(json.styleToken, 'adapter.json styleToken'), files: { encoder, decoder } };
+}
+
+/** The manifest to save for `index`, with `adapters` resolved. A fallback that could not be resolved is dropped. */
+export function resolveModelIndex(index: ModelIndex, adapters: Partial<Record<StyleId, AdapterManifest>>): ModelManifest {
+  const fallbackAdapter = index.fallbackAdapter && index.fallbackAdapter in adapters ? index.fallbackAdapter : null;
+  return { ...index, adapters, fallbackAdapter };
+}
+
 export function parseModelManifest(raw: unknown): ModelManifest {
   const json = object(raw, 'manifest');
   if (json.schemaVersion !== SUPPORTED_SCHEMA_VERSION) {
     throw new ManifestError(`schemaVersion ${String(json.schemaVersion)} is not supported (expected ${SUPPORTED_SCHEMA_VERSION})`);
   }
+  return { ...parseBase(json), ...parseAdapterChoice(json, adapters(json.adapters)) };
+}
+
+function parseAdapterChoice<T>(json: Json, parsedAdapters: Partial<Record<StyleId, T>>): { adapters: Partial<Record<StyleId, T>>; fallbackAdapter: StyleId | null } {
+  const fallback = json.fallbackAdapter ?? null;
+  if (fallback !== null && !(isStyleId(fallback) && fallback in parsedAdapters)) {
+    throw new ManifestError(`fallbackAdapter ${String(fallback)} is not in adapters`);
+  }
+  return { adapters: parsedAdapters, fallbackAdapter: fallback };
+}
+
+/** Everything a model.json says about the base, common to both schemas. */
+function parseBase(json: Json): Omit<ModelManifest, 'adapters' | 'fallbackAdapter'> {
   if (json.ioContract !== SUPPORTED_IO_CONTRACT) {
     throw new ManifestError(`ioContract ${String(json.ioContract)} is not supported (expected ${SUPPORTED_IO_CONTRACT})`);
   }
@@ -183,12 +275,6 @@ export function parseModelManifest(raw: unknown): ModelManifest {
   const reserved = (json.reservedInputTokens ?? []) as unknown;
   if (!Array.isArray(reserved) || !reserved.every((token) => typeof token === 'string')) {
     throw new ManifestError('reservedInputTokens must be a list of strings');
-  }
-
-  const parsedAdapters = adapters(json.adapters);
-  const fallback = json.fallbackAdapter ?? null;
-  if (fallback !== null && !(isStyleId(fallback) && fallback in parsedAdapters)) {
-    throw new ManifestError(`fallbackAdapter ${String(fallback)} is not in adapters`);
   }
 
   const repetitionPenalty = generation.repetitionPenalty ?? 1;
@@ -236,13 +322,11 @@ export function parseModelManifest(raw: unknown): ModelManifest {
     inputTransforms: inputTransforms as TextTransformName[],
     reservedInputTokens: reserved as string[],
     prompt: prompt(json.prompt),
-    adapters: parsedAdapters,
-    fallbackAdapter: fallback,
   };
 }
 
 /** The base model's files, smallest first. */
-export function baseFiles(manifest: ModelManifest): ModelFile[] {
+export function baseFiles(manifest: Pick<ModelManifest, 'files'>): ModelFile[] {
   const { encoder, decoder, tokenizer } = manifest.files;
   return [tokenizer, encoder, decoder];
 }
@@ -259,13 +343,13 @@ export function bytesOf(files: readonly ModelFile[]): number {
  * Identifies the base weights. Adapters are trained against one base, so a
  * manifest with a different base cannot add adapters to an installed one.
  */
-export function baseFingerprint(manifest: ModelManifest): string {
+export function baseFingerprint(manifest: Pick<ModelManifest, 'files'>): string {
   return baseFiles(manifest)
     .map((file) => file.sha256)
     .join(':');
 }
 
-export function summarize(manifest: ModelManifest): ModelSummary {
+export function summarize(manifest: Pick<ModelManifest, 'id' | 'displayName' | 'precision' | 'files'>): ModelSummary {
   return {
     id: manifest.id,
     displayName: manifest.displayName,
@@ -281,4 +365,10 @@ export function catalogOf(manifest: ModelManifest): ModelCatalog {
     adapterList.push({ style, sizeBytes: bytesOf(adapterFiles(adapter)) });
   }
   return { base: baseFingerprint(manifest), model: summarize(manifest), adapters: adapterList, fallbackAdapter: manifest.fallbackAdapter };
+}
+
+/** What a published model.json offers, read without fetching any adapter.json. */
+export function catalogOfIndex(index: ModelIndex): ModelCatalog {
+  const adapterList = (Object.entries(index.adapters) as [StyleId, AdapterReference][]).map(([style, reference]) => ({ style, sizeBytes: reference.sizeBytes }));
+  return { base: baseFingerprint(index), model: summarize(index), adapters: adapterList, fallbackAdapter: index.fallbackAdapter };
 }

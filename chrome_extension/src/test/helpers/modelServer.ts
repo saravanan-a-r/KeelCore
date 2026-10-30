@@ -73,3 +73,12 @@ export function modelServer(files: Map<string, Uint8Array>, options: ServerOptio
 
   return { fetch, requests };
 }
+
+/** The tiny test model with model.json saying each adapter's folder is `sourceOf(style)`. */
+export function indexedModelFiles(sourceOf: (style: string) => string = (style) => `adapters/${style}/`): Map<string, Uint8Array> {
+  const files = tinyModelFiles();
+  const model = JSON.parse(new TextDecoder().decode(files.get('model.json')!)) as { adapters: Record<string, { source: string }> };
+  for (const [style, reference] of Object.entries(model.adapters)) reference.source = sourceOf(style);
+  files.set('model.json', new TextEncoder().encode(JSON.stringify(model)));
+  return files;
+}
