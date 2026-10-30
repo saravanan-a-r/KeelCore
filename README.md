@@ -8,9 +8,16 @@ Transformer, pretrained once from scratch on English prose, source code and
 command-line text. Each capability is then added on top as a small **LoRA
 adapter**, so a new task is a small download rather than a new model.
 
-The **EchoMeBetter** browser extension runs KeelCore with its text-rewriting
-adapters on your device. KeelCore itself is not tied to that task: more
-adapters, for different use cases, are in progress.
+> ### EchoMeBetter is not the only use case of KeelCore. It is a by-product.
+>
+> **KeelCore is a general base model for LoRA adapters.** EchoMeBetter, the
+> browser extension, is the first product built on it: it runs KeelCore's
+> text-rewriting adapters on your device. That is one application of the base,
+> not its purpose. More adapters, for different use cases, are in progress,
+> and each one is added to the same base.
+>
+> **That is our USP:** one compact encoder–decoder, pretrained once, that any
+> number of small adapters can be fitted to, and that runs in a web browser.
 
 ---
 
@@ -300,8 +307,10 @@ including those where KeelCore does not lead.**
 KeelCore ranks **10 of 14** by average accuracy (45.3). It is ahead of
 t5-v1_1-large, gpt2-medium, opt-350m and bloom-560m, and behind flan-t5-large,
 smollm2-360m, qwen2.5-0.5b, opt-1.3b, pythia-1b, t5-large, gpt2-large,
-bart-large and pythia-410m. It is not in the top three on any single
-benchmark.
+bart-large and pythia-410m. It gets there on a 69B-token budget: the models
+that score clearly higher saw 2.6× to 261× as many tokens, and KeelCore is
+level with models trained on 4.3× and 14× more. The results are promising for
+a first run at this budget.
 
 Where KeelCore ranks on each benchmark:
 
@@ -323,9 +332,10 @@ Where KeelCore ranks on each benchmark:
 | SocialIQA | 8 | 39.7 | flan-t5-large | 50.1 | 33.3 |
 | Winogrande | 14 | 52.2 | flan-t5-large | 62.7 | 50 |
 
-It ranks 4 to 10 on ten benchmarks (ARC-Easy, ARC-Challenge, HellaSwag, MMLU,
-OpenBookQA, PIQA, QASC, RACE-high, SciQ, SocialIQA) and below 10 on five
-(BoolQ, CommonsenseQA, COPA, LAMBADA, Winogrande). Several tasks sit close to
+With 69B pretraining tokens, KeelCore is in the top ten of 14 on ten of the 15
+benchmarks (ARC-Easy, ARC-Challenge, HellaSwag, MMLU, OpenBookQA, PIQA, QASC,
+RACE-high, SciQ, SocialIQA), and its best result is 4th of 14 on MMLU. It
+ranks below 10th on five (BoolQ, CommonsenseQA, COPA, LAMBADA, Winogrande). Several tasks sit close to
 chance for every model of this size, so small gaps there are within noise.
 
 <details>
@@ -482,35 +492,6 @@ The extension is built from `chrome_extension/` (`npm run build`, `npm test`,
 adapter support, installed from `chrome_extension/vendor/`, which is kept out
 of git because of its size. Model files are not bundled: the extension
 downloads them from the folder named in `chrome_extension/model.source.json`.
-
----
-
-## Design principles
-
-- **Fidelity beats compression.** Where a choice trades exactness for a shorter
-  sequence or a faster path, exactness wins.
-- **Fail loudly, never silently.** Silent truncation and silently dropped data
-  are the characteristic failure modes of a pipeline like this. Every stage
-  asserts.
-- **Reserve now, use later.** Unused capacity costs a rounding error. Missing
-  capacity costs a full retrain.
-- **Frozen means frozen.** Decisions welded into every checkpoint's weight
-  shapes are marked as such and are not revisited casually.
-
----
-
-## Status
-
-- **Implemented and tested:** the tokenizer, model, pretraining objective,
-  training loop and corpus pipeline. `pretrain.py` wires them into a runnable
-  pretraining run, and `pretrain_smoke_test.py` proves it end to end before a
-  real corpus is downloaded.
-- **First pretraining run: complete.** 90,000 steps; the final checkpoint is the
-  best of the run and exports to int8 ONNX with no measurable loss in quality.
-- **Browser runtime:** the extension installs the base and the text-rewriting
-  adapters independently and runs them with ONNX Runtime Web.
-- **Adapters:** the text-rewriting adapters run in EchoMeBetter. More adapters
-  for different use cases are in progress and will be added to the same base.
 
 ---
 
