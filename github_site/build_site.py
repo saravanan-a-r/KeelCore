@@ -3,15 +3,14 @@
 usage: python build_site.py path/to/report.html path/to/rewrites.json
 
 The report page is produced by the report generator (every number comes from the run's own
-logs and evaluation records). This script only changes the presentation: it drops the product
-name, self-hosts the charts library and fonts, and adds the site chrome (top bar, contents
-rail, theme switch, reading progress). Run it again whenever the report is regenerated.
+logs and evaluation records). This script only changes the presentation: it self-hosts the
+charts library and fonts, and adds the site chrome (top bar, contents rail, theme switch,
+reading progress). Run it again whenever the report is regenerated.
 
 `rewrites.json` holds the wording fixes that are specific to one generated report, so it is kept
 next to that report rather than here: `replace` is a list of [old, new] pairs, each of which must
 occur in the report, and `forbidden` is a regular expression that must not match the finished page.
 """
-import datetime as dt
 import json
 import re
 import sys
@@ -24,15 +23,11 @@ src = Path(sys.argv[1]).read_text()
 REWRITES = json.loads(Path(sys.argv[2]).read_text())
 FORBIDDEN = re.compile(REWRITES["forbidden"], re.I)
 
-TITLE = "Pretraining a 752M Encoder–Decoder for Text Rewriting"
-DESC = ("Technical report: a 752-million-parameter T5-style encoder–decoder pretrained on one GPU over six weeks, "
-        "with full training dynamics, evaluation during training, engineering checks and a comparison with open models of similar size.")
+TITLE = "KeelCore: A 752M Encoder–Decoder Base Model for LoRA Adapters"
+DESC = ("Technical report: KeelCore, a 752-million-parameter encoder–decoder base model, the keel for task adapters, pretrained on one GPU over six weeks, "
+        "with full training dynamics, evaluation during training, engineering checks and a comparison with open models of similar size and training budget.")
 
-# ---- 1. neutral wording (no product name anywhere) -------------------------------------------
-src = re.sub(r"(?:KeelCore|EchoMeBetter)(?:-752M)?", "the 752M model", src)
-# sentence starts (after a tag, a full stop or an opening quote) take a capital
-src = re.sub(r'(^|>|\. |"|: )the 752M model', lambda m: m.group(1) + "The 752M model", src)
-src = src.replace("<footer>The 752M model technical report.", "<footer>Technical report.")
+# ---- 1. split the head from the body -------------------------------------------------------------
 body_start = src.index('<div class="shell">')
 head_src = src[:body_start]
 body = src[body_start:]
@@ -48,7 +43,7 @@ body = body.replace("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart
 # ---- 3. site chrome ----------------------------------------------------------------------------
 bar = f'''<header class="topbar" role="banner">
   <button class="btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="toc"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg><span>Contents</span></button>
-  <div class="name">Technical report<em>752M encoder–decoder</em></div>
+  <div class="name">KeelCore<em>752M base model</em></div>
   <div class="sp"></div>
   <div class="now" id="now" aria-live="off"></div>
   <button class="btn" id="themeBtn" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg><span>Dark</span></button>
@@ -70,7 +65,7 @@ BUDGET = [  # label, license, billions of raw corpus tokens
 ]
 DATA_SECTION = f"""<section id="data">
   <h2><span class="n">2</span>Data</h2>
-  <p>The pretraining data comes from seven public datasets, all under licenses that allow commercial use: educational and general web text, synthetic textbooks, permissively licensed source code, public-domain books and two small command-line references. The token budget is 63.05 billion raw tokens under the model's own tokenizer, which is 68.48 billion processed tokens once the sentinel tokens and objective formatting are added. The SentencePiece tokenizer reserves 896 pieces for command-line vocabulary such as flags and utilities.</p>
+  <p>The pretraining data comes from seven public datasets, all under licenses that allow commercial use: educational and general web text, synthetic textbooks, permissively licensed source code, public-domain books and two small command-line references. The token budget is 63.05 billion raw tokens under the model's own tokenizer, which is 68.48 billion processed tokens once the sentinel tokens and objective formatting are added. The SentencePiece tokenizer was built for English and command-line text together; its command-line special tokens are described in section 1.</p>
   <figure class="fig"><div class="frame"><div class="chart tall"><canvas id="cCorpus" role="img" aria-label="Token budget by dataset"></canvas></div></div>
     <figcaption><b>Figure 1.</b> Token budget by dataset, in billions of raw tokens under the model's own tokenizer.</figcaption></figure>
   <h3>How the data was read</h3>
@@ -95,7 +90,7 @@ body = body[:_m.start(1)] + json.dumps(_D, ensure_ascii=False, separators=(",", 
 
 DECAY_SECTION = """  <h3>The decay stage: cooldown data and the synthetic rewriting task</h3>
   <p>The last 9,000 steps (81,000 to 90,000) changed two things at once: the learning rate decayed to zero, and the data stopped following the on-disk order. A cooldown reader drew documents from a curated blend in every batch, weighted toward educational web text, textbooks, permissively licensed code and command-line references. Each source was capped at about eight passes over itself so the small command-line sets were not memorised. The reason for changing the data as well as the learning rate is that the decay alone mostly lowers loss, while an up-weighted high-value mixture is what tends to move downstream quality.</p>
-  <p>One batch in five (20%, drawn per batch with a seeded generator) was not a UL2 batch at all. It was a <b>synthetic rewriting exercise</b> in the exact shape the product uses: the encoder receives <code>&lt;style:grammar&gt; &lt;text_to_rewrite&gt; damaged text &lt;/text_to_rewrite&gt;</code> and the decoder must produce the original text. The pairs are built on the fly from ordinary prose documents from the pretraining datasets, so the model meets the rewriting frame, and learns to copy what is already correct, before any fine-tuning. The reserved style and frame tokens were already in the frozen vocabulary, so this needed no change to the embedding table.</p>
+  <p>One batch in five (20%, drawn per batch with a seeded generator) was not a UL2 batch at all. It was a <b>synthetic rewriting exercise</b>, in a fixed input shape that adapters built on KeelCore can use: the encoder receives <code>&lt;style:grammar&gt; &lt;text_to_rewrite&gt; damaged text &lt;/text_to_rewrite&gt;</code> and the decoder must produce the original text. The pairs are built on the fly from ordinary prose documents from the pretraining datasets, so the base model meets the rewriting frame, and learns to copy what is already correct, before any adapter is trained. The reserved style and frame tokens were already in the frozen vocabulary, so this needed no change to the embedding table.</p>
   <h4>How the text is damaged</h4>
   <p>The one rule is that the original must be the unique right answer. Every operator produces a genuine writing error whose correction is the source text. There is deliberately no synonym swapping: replacing "big" with "large" is not a mistake, and a target that reverses it would teach the model to edit text that was never wrong. Code, URLs, paths, numbers, identifiers, e-mail addresses and anything in backticks or angle brackets are protected spans that pass through unchanged on both sides, and lines that are not prose (code, tables, headings, bare links) are copied verbatim, so every example also trains copy-through.</p>
   <div class="tablewrap"><table>
@@ -122,13 +117,12 @@ DECAY_SECTION = """  <h3>The decay stage: cooldown data and the synthetic rewrit
     </tbody></table></div>
   <p>Documents with fewer than eight prose words are skipped, and a document that does not fit the encoder or decoder length budget is skipped and counted rather than cut. In the run, the task read 1,376,936 documents, skipped 51,540 as not prose (3.7%), skipped none for length, and emitted <b>1,325,396 pairs</b> containing 80.1 million damaged words, about 60 per pair, from 0.55 billion source tokens. The untouched share came out at 6.0% against the 5% target. Its training loss fell to about 0.05 nats per token by the end (Figure 15), far below the 1.0 to 2.0 of the UL2 denoisers, because most of the output is a copy of the input. That is the intended behaviour: the task teaches precise edits inside a faithful copy, not new text.</p>
   <h4>Why this is in pretraining</h4>
-  <p>The rewriting adapters start from a model that has already seen the style token and the text-to-rewrite frame, instead of meeting them cold in fine-tuning. The reader's random state and position are saved in every checkpoint, so an interrupted run replays the same damage on resume.</p>
+  <p>KeelCore is a general base model. Seeing the style token and the text-to-rewrite frame during pretraining means that adapters using them start from a model that already knows them, instead of meeting them cold in fine-tuning. The reader's random state and position are saved in every checkpoint, so an interrupted run replays the same damage on resume.</p>
 """
 body = body.replace('  <h3>Optimizer parameter groups</h3>', DECAY_SECTION + '  <h3>Optimizer parameter groups</h3>', 1)
 
 body = body.replace('<nav class="toc" aria-label="Contents">', '<nav class="toc" id="toc" aria-label="Contents">', 1)
-updated = dt.date.today().strftime("%-d %B %Y")
-body = re.sub(r"(<footer>.*?)(</footer>)", lambda m: m.group(1) + f'<div class="meta">Page generated {updated}.</div>' + m.group(2), body, count=1, flags=re.S)
+body = re.sub(r"\s*<footer>.*?</footer>", "", body, count=1, flags=re.S)
 tail = '<button class="btn top" id="top" type="button" aria-label="Back to top">Top ↑</button>\n<script src="assets/site.js"></script>\n'
 # site.js must run after the report's own script; both sit at the end of the body
 page = f'''<!doctype html>
