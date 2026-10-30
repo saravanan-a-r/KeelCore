@@ -15,9 +15,6 @@ adapter**, so a new task is a small download rather than a new model.
 > text-rewriting adapters on your device. That is one application of the base,
 > not its purpose. More adapters, for different use cases, are in progress,
 > and each one is added to the same base.
->
-> **That is our USP:** one compact encoder–decoder, pretrained once, that any
-> number of small adapters can be fitted to, and that runs in a web browser.
 
 ---
 
