@@ -55,7 +55,7 @@ def test_pretrain_runs_with_a_frozen_eval_corpus(
     mini_corpus_dir, tiny_model_config_path, tiny_training_config_path
 ):
     """
-    architecture.md §7.6's frozen-eval path (`build_frozen_eval_batches`,
+    The design spec §7.6's frozen-eval path (`build_frozen_eval_batches`,
     `Trainer.evaluate`) is only exercised when `--eval-corpus` is passed —
     covered separately from the plain training-only run above. `--max-steps`
     is set to the tiny config's `eval_steps` (100 -> overridden low here via
@@ -212,7 +212,7 @@ def test_pretrain_batch_source_is_resumable_end_to_end(
     mini_corpus_dir, tiny_model_config_path, tiny_training_config_path
 ):
     """
-    The property architecture.md §7.9 is actually about, proven for the
+    The property the design spec §7.9 is actually about, proven for the
     assembled pipeline rather than for `corpus/`'s iterator in isolation:
     resuming a `PretrainBatchSource` reproduces the exact examples an
     uninterrupted run would have produced next.

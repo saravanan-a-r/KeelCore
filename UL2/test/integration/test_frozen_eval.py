@@ -1,5 +1,5 @@
 """
-Integration tests for frozen validation sets (architecture.md 7.6, FROZEN).
+Integration tests for frozen validation sets.
 
 Two rules are under test:
 

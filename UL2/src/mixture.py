@@ -1,7 +1,7 @@
 """
 Choosing which denoiser each example gets.
 
-architecture.md 7.3 fixes the mixture at R=40% / X=35% / S=25%, as *sampling
+The design spec 7.3 fixes the mixture at R=40% / X=35% / S=25%, as *sampling
 probabilities*. That distinction matters enough that it is worth restating
 here, next to the code that implements it: the three modes produce very
 different target lengths, so a 40/35/25 split of examples is not a 40/35/25
@@ -89,7 +89,7 @@ def deterministic_schedule(weights: Mapping[str, float], count: int) -> Sequence
     A fixed, non-random mode sequence matching `weights` as closely as
     possible for exactly `count` examples.
 
-    Used to build frozen evaluation sets (architecture.md 7.6), where the mode
+    Used to build frozen evaluation sets, where the mode
     mixture must be *exactly* the intended composition every time rather than
     a sample that happens to land near it. With 300 validation examples and a
     one-third mixture, sampling might give 96/108/96; this gives 100/100/100,

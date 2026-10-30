@@ -5,7 +5,7 @@ Model probes, run on a slow cadence: position awareness and sample output.
     Shuffle the words of a held-out input and encode both versions; for each
     word, the cosine between its encoding in place and after the move. An
     encoder that uses word order changes a word's encoding when the word
-    moves (a healthy T5 sits near 0.5); a position-blind one does not (the
+    moves (a healthy encoder sits near 0.5); a position-blind one does not (the
     first pretraining run measured 0.998 at step 5,111, which is how that
     failure was found — after the fact, from a checkpoint). Uses only the
     model's public `encode`, and the same fixed permutation every time, so

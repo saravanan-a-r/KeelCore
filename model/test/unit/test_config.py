@@ -233,8 +233,8 @@ def test_unknown_activation_rejected():
 
 def test_ungated_activations_are_rejected():
     """
-    HuggingFace accepts plain "relu"/"gelu" for T5's original FFN. This model
-    is GeGLU-only (architecture.md §4.1) and its §4.3 parameter budget assumes
+    HuggingFace accepts plain "relu"/"gelu" for an ungated FFN. This model
+    is GeGLU-only and its §4.3 parameter budget assumes
     three matrices, so an ungated value must fail rather than be misread as
     gated.
     """
@@ -291,7 +291,7 @@ def test_inner_dim_is_heads_times_d_kv(tiny_config):
 
 def test_parameter_count_is_independent_of_context_length(large_config):
     """
-    architecture.md §4.4: relative position bias has no per-position
+    relative position bias has no per-position
     parameters, so 2048 and 4096 produce byte-identical model files. The
     entire cost of a longer context is memory and time.
     """

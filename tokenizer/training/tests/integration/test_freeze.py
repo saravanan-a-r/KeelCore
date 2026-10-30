@@ -1,5 +1,5 @@
 """
-Integration tests for the freeze protocol (DESIGN.md 10).
+Integration tests for the freeze protocol.
 
 Freezing is the point of no return: every embedding row of every model
 trained afterwards is bound to these token IDs. The tests below encode the

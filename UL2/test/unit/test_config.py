@@ -119,7 +119,7 @@ def test_default_configuration_fits_the_real_sentinel_budget():
 
 
 def test_worst_case_spans_matches_the_documented_arithmetic():
-    """architecture.md 6.3: R-denoising at 2048 needs ~103 sentinels."""
+    """R-denoising at 2048 needs ~103 sentinels."""
     spans, at_length = UL2Config().worst_case_spans("R")
     assert spans == 102
     assert at_length <= 2048
@@ -156,7 +156,7 @@ def test_sentinel_shortfall_error_names_the_triggering_length():
 
 def test_target_overflow_is_caught():
     """
-    The architecture.md 4.4 failure: a 1024-token decoder cannot hold
+    The design spec 4.4 failure: a 1024-token decoder cannot hold
     X-denoising's ~1057-token target, and training on a truncated target
     teaches incomplete reconstruction.
     """
@@ -195,7 +195,7 @@ def test_capacity_check_rejects_a_zero_sentinel_budget():
 
 def test_a_larger_context_needs_more_sentinels():
     """
-    architecture.md 6.3's forward-looking claim: 256 also covers a 4096
+    The design spec 6.3's forward-looking claim: 256 also covers a 4096
     context. Verified rather than trusted.
     """
     config = UL2Config(max_source_length=4096, max_target_length=4096)
@@ -272,7 +272,7 @@ def test_config_is_immutable():
 
 def test_frozen_eval_mixture_is_equal_thirds_and_sums_to_one():
     """
-    architecture.md 7.6: the validation mixture must be fixed and must not
+    the validation mixture must be fixed and must not
     follow the training mixture, or the comparison is circular.
     """
     assert sum(FROZEN_EVAL_MODE_WEIGHTS.values()) == pytest.approx(1.0)

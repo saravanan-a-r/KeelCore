@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Mark a validated tokenizer build immutable (DESIGN.md 10).
+Mark a validated tokenizer build immutable.
 
     python freeze.py --output-dir output
 

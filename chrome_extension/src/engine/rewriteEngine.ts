@@ -211,7 +211,7 @@ export class RewriteEngine {
     return packed;
   }
 
-  /** A single sentence (or paragraph) too big on its own: fall back to word groups, or give up honestly. */
+  /** A single sentence (or paragraph) too big on its own: fall back to word groups, or fail with an error. */
   private hardFragment(manifest: ModelManifest, text: string, budget: number): string[] {
     const words = text.split(WORD_SPLIT).filter((word) => word.length > 0);
     if (words.length <= 1) {

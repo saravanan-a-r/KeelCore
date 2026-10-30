@@ -10,7 +10,7 @@ variants, run in parallel, compared in one report.
 Why this script exists
 -----------------------
 The tokenizer must be retrained so its vocabulary covers the CLI-helper
-downstream task, not just general prose (architecture.md's later addition).
+downstream task, not just general prose.
 The corpus available for that retrain is now `pretrain_corpus/`'s sources
 (replacing the older 5-source `tokenizer_training_corpus_downloader/`), and
 the open question is *how much text to sample for vocabulary fitting* --

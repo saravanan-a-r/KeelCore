@@ -1,7 +1,7 @@
 """
 Turning sampled spans into encoder/decoder sequences.
 
-Sequence formats (architecture.md 7.2)
+Sequence formats
 --------------------------------------
 [R] and [X] -- sentinel-based span corruption:
 
@@ -12,7 +12,7 @@ Sentinels are numbered from 0 in left-to-right order of the spans they
 replace. The target lists them in that same order, each followed by the
 tokens it stands for. There is no trailing sentinel on the target -- it ends
 with the last span's content, then EOS, exactly as the worked examples in
-architecture.md 7.2 show.
+The design spec 7.2 show.
 
 [S] -- sequential denoising, no sentinels at all:
 
@@ -79,7 +79,7 @@ class Example:
         """
         Fraction of source tokens actually corrupted.
 
-        architecture.md 7.3 requires reporting this rather than the configured
+        The design spec 7.3 requires reporting this rather than the configured
         rate: rounding to whole tokens and whole spans means the achieved
         value differs from the setting, especially on short sequences.
         """
@@ -228,7 +228,7 @@ def build_prefix_denoising(
         num_spans=0,
         # [S] withholds the continuation, so that is what "corrupted" means
         # here. Reporting 0 would make the realized corruption telemetry in
-        # architecture.md 7.3 meaningless for a quarter of all examples.
+        # The design spec 7.3 meaningless for a quarter of all examples.
         num_corrupted_tokens=len(tokens) - prefix_length,
         truncated=truncated,
     )
@@ -249,7 +249,7 @@ def build_seq2seq_example(
     complete -- no sentinels, no prefix split, nothing masked here.
 
     This is how a task that is *not* a denoiser joins the batch: the
-    synthetic rewrite task (`rewrite/`, architecture_improvements.md item 4)
+    synthetic rewrite task (`rewrite/`, the design spec, improvement 4)
     arrives with both sides fully formed and framed, and needs only the
     teacher-forcing shift and the bookkeeping every other example carries.
     Kept next to the two denoising builders so `Example` has exactly one
@@ -335,7 +335,7 @@ def _shift_right(target: Sequence[int], specials: SpecialTokens) -> tuple[int, .
     """
     Teacher-forcing decoder input: start token, then the target minus its last.
 
-    T5 has no BOS (`bos_id=-1`, architecture.md 6.1) and uses `<pad>` as the
+    This model has no BOS (`bos_id=-1`, the design spec 6.1) and uses `<pad>` as the
     decoder start token, which is what `SpecialTokens.decoder_start_id`
     resolves to.
     """

@@ -1,7 +1,7 @@
 """
 Turning clean text into the kind of text people actually hand a rewriter.
 
-The task this builds (architecture_improvements.md item 4) is:
+The task this builds is:
 
     <style:grammar> <text_to_rewrite> corrupted </text_to_rewrite>  ->  original
 
@@ -43,7 +43,7 @@ Determinism
 RNG is consumed in a fixed order -- document draws, then line by line, piece
 by piece -- and never through `random.choices`, whose internal draw count is
 not guaranteed across Python versions. Resuming a run replays the same
-corruptions (architecture.md 7.9).
+corruptions.
 """
 
 from __future__ import annotations
@@ -233,7 +233,7 @@ class Corruptor:
 
         corrupted = "\n".join(out_lines)
         if corrupted == text:
-            # Every draw missed. Still a valid example, and honestly labelled.
+            # Every draw missed. Still a valid example, and accurately labelled.
             return Corruption(text, IDENTITY, 0, prose_words)
         return Corruption(corrupted, profile.name, edits, prose_words)
 

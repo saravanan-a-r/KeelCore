@@ -3,7 +3,7 @@ Unit tests for the reserved-token contract.
 
 These are regression locks, not sanity checks. The counts asserted here are
 welded to every embedding row of every model trained on this tokenizer
-(DESIGN.md 5.2): changing one after pretraining begins invalidates the
+: changing one after pretraining begins invalidates the
 weights. A test failure here means someone is about to make an unrecoverable
 change, and should be read as "stop", not "update the expected number".
 """
@@ -33,12 +33,12 @@ def test_total_counts_match_design():
 
 def test_sentinel_count_covers_the_encoder_context():
     """
-    architecture.md 6.3: each masked span consumes one uniquely-numbered
+    each masked span consumes one uniquely-numbered
     sentinel, so the requirement is
 
         max_encoder_length x corruption_rate / mean_span_length
 
-    R-denoising at the 2048 encoder context needs ~103. T5's 100 was sized
+    R-denoising at the 2048 encoder context needs ~103. A default of 100 was sized
     for a 512-token context and would overflow here on any input above
     2,000 tokens -- silently dropping spans. This test is the regression
     lock on that: if the encoder context grows, this must be recomputed.
@@ -100,7 +100,7 @@ def test_cli_reserved_tokens_are_distinct_from_generic_spares():
 
 
 def test_style_tokens_cover_all_twelve_styles():
-    """DESIGN.md 5.4: 5 Phase-1 styles + 7 Phase-2 styles, all reserved now."""
+    """5 Phase-1 styles + 7 Phase-2 styles, all reserved now."""
     expected = {
         "grammar", "concise", "elaborate", "professional", "friendly",
         "assertive", "empathetic", "fluent", "formal", "paraphrase", "polite", "simplify",

@@ -15,7 +15,7 @@ document it is supposed to be rewriting whole.
 
 Admission
 ---------
-Same policy as `UL2Objective._admit`, for the same reason (architecture.md
+Same policy as `UL2Objective._admit`, for the same reason (the design spec
 4.5, no silent truncation): a document whose original does not fit the
 decoder budget, or whose corrupted form does not fit the encoder budget, is
 skipped and counted, never cut. Corrupted text is usually a few tokens longer

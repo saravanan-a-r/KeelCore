@@ -1,5 +1,5 @@
 """
-UL2 mixture-of-denoisers objective (architecture.md, Stage 1).
+UL2 mixture-of-denoisers objective.
 
 Scope
 -----
@@ -14,7 +14,7 @@ Decoupling
 Zero third-party dependencies -- standard library only. The one point of
 contact with the rest of the project is `SpecialTokens.from_token_map()`,
 which resolves token IDs *by name* from the tokenizer's `token_map.json`
-(architecture.md 6.4 forbids hardcoded IDs). Nothing here imports from
+. Nothing here imports from
 `tokenizer/`.
 
 Typical use

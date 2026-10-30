@@ -1,5 +1,5 @@
 """
-The frame's IDs are resolved by name, never assumed (architecture.md 6.4).
+The frame's IDs are resolved by name, never assumed.
 """
 
 from __future__ import annotations

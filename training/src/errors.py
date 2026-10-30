@@ -31,7 +31,7 @@ class CheckpointError(TrainingError):
 
     Raised loudly on resumption problems in particular. Silently restarting a
     multi-week run from step 0 — or from the right step but the wrong data
-    position — is the failure architecture.md §7.9 exists to prevent: the
+    position — is the failure the design spec §7.9 exists to prevent: the
     model re-reads tokens it has already seen and the token budget is
     corrupted invisibly.
     """

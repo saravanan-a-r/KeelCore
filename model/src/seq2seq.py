@@ -1,5 +1,5 @@
 """
-The complete encoder-decoder model (architecture.md §4).
+The complete encoder-decoder model.
 
 Consumes the batch format `UL2/src/batching.py` produces, unchanged:
 `encoder_input_ids`, `encoder_attention_mask`, `decoder_input_ids`,
@@ -10,17 +10,17 @@ Tied embeddings
 ---------------
 One `nn.Embedding` serves the encoder input, the decoder input, and — via
 `F.linear` against the same matrix — the output projection. That is where
-architecture.md §4.1's "saves 33.5M params at zero quality cost" comes from.
+The design spec §4.1's "saves 33.5M params at zero quality cost" comes from.
 
 It also forces the output scaling below. An embedding matrix is initialized
 for use as a lookup table, not as a classifier head; used directly as one it
 produces logits roughly `sqrt(d_model)` too large, and training diverges
-early. T5's fix — scaling the decoder output by `d_model^-0.5` before the
+early. The fix — scaling the decoder output by `d_model^-0.5` before the
 projection — is applied here whenever the embeddings are tied.
 
 Initialization
 --------------
-T5's scheme, where every tensor's initial standard deviation is derived from
+A fan-in scheme, where every tensor's initial standard deviation is derived from
 its own fan-in. It is not interchangeable with the more common
 `normal(0, 0.02)`: the query projection deliberately uses
 `(d_model * d_kv)^-0.5`, which is what compensates for the missing
@@ -54,7 +54,7 @@ class Seq2SeqOutput:
 
 
 class RephraseSeq2Seq(nn.Module):
-    """Modernized T5 (T5.1.1 / UL2 style) encoder-decoder."""
+    """The KeelCore encoder-decoder: RMSNorm, gated-GELU, relative position bias."""
 
     def __init__(self, config: ModelConfig) -> None:
         super().__init__()
@@ -76,7 +76,7 @@ class RephraseSeq2Seq(nn.Module):
 
     def _init_weights(self, module: nn.Module) -> None:
         """
-        T5's fan-in-derived initialization.
+        Fan-in-derived initialization.
 
         Applied post-order (children before parents), which matters:
         `RelativePositionBias` contains an `nn.Embedding` that the generic
@@ -90,7 +90,7 @@ class RephraseSeq2Seq(nn.Module):
             module.embedding.weight.data.normal_(0.0, factor * d_model**-0.5)
 
         elif isinstance(module, nn.Embedding):
-            # Large by conventional standards, and correct for T5: RMSNorm
+            # Large by conventional standards, and correct here: RMSNorm
             # immediately rescales it, and the output scaling above handles
             # the tied-classifier side.
             module.weight.data.normal_(0.0, factor * 1.0)
@@ -284,7 +284,7 @@ class RephraseSeq2Seq(nn.Module):
         if ids.shape[1] == 0:
             raise ShapeError(f"{name} is empty")
         if ids.shape[1] > limit:
-            # architecture.md §4.5: never truncate silently. A rephrase of a
+            # never truncate silently. A rephrase of a
             # truncated source looks valid and is not.
             raise ShapeError(
                 f"{name} has {ids.shape[1]} tokens, exceeding the configured limit "

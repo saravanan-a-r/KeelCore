@@ -43,7 +43,7 @@ def test_output_shape_matches_input(tiny_config):
 
 
 def test_parameter_count_is_four_projections(tiny_config):
-    """architecture.md §4.3 counts `4 x d_model x inner_dim` per attention."""
+    """The design spec §4.3 counts `4 x d_model x inner_dim` per attention."""
     attention = MultiHeadAttention(tiny_config)
     expected = 4 * tiny_config.d_model * tiny_config.inner_dim
     assert sum(p.numel() for p in attention.parameters()) == expected
@@ -64,12 +64,12 @@ def test_heads_are_split_and_merged_consistently(tiny_config):
     assert torch.allclose(attention._merge_heads(split), x)
 
 
-# -- the T5 scaling convention -------------------------------------------
+# -- the attention scaling convention -------------------------------------------
 
 
 def test_scores_are_unscaled_by_default(tiny_config):
     """
-    T5 folds 1/sqrt(d_kv) into the query initializer instead. The two are
+    The model folds 1/sqrt(d_kv) into the query initializer instead. The two are
     coupled; `model_config.yml` says so at `scale_attention_scores`.
     """
     assert MultiHeadAttention(tiny_config).scale == 1.0

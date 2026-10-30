@@ -126,7 +126,7 @@ def test_resuming_reproduces_the_batches_an_uninterrupted_run_would_make(
     mini_corpus_dir,
 ):
     """
-    The property architecture.md §7.9 is about, now that a batch source also
+    The property the design spec §7.9 is about, now that a batch source also
     holds buffered documents: a resumed run must produce exactly the examples
     the uninterrupted run would have produced next — not merely valid ones.
     """

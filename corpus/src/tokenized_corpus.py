@@ -14,11 +14,11 @@ Why position is (file index, raw-line count), not a global line number
 ------------------------------------------------------------------------
 A global "line 4,827,193 of the corpus" position is useless without
 re-scanning every file before it to find that offset — exactly the O(corpus
-size) cost architecture.md's tokenizer corpus reader goes out of its way to
+size) cost the design spec's tokenizer corpus reader goes out of its way to
 avoid. Tracking *which file* and *how many raw lines already consumed from
 it* lets resumption reopen exactly one file and skip forward with `readline()`
 calls, independent of how large the corpus or how far into it training had
-reached (architecture.md §7.9).
+reached.
 
 Why file order is shuffled once, not re-shuffled per epoch
 ------------------------------------------------------------
@@ -59,7 +59,7 @@ class TokenizedCorpus:
 
     Loops over `files` in a fixed, seeded-shuffled order; when the last file
     is exhausted it starts again from the first, incrementing `epoch`.
-    architecture.md §7.5: "Multiple epochs over a well-deduplicated corpus are
+    "Multiple epochs over a well-deduplicated corpus are
     fine" — this is what makes that possible for a corpus far smaller than
     the 50-100B token target.
     """

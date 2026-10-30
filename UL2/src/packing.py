@@ -37,8 +37,7 @@ to ignore the boundary:
 
 Why the relative position bias needs no change
 ----------------------------------------------
-This surprises people, so it is written down. T5's position bias is a function
-of `key_index - query_index` only. A difference is translation-invariant: two
+The relative position bias is a function of `key_index - query_index` only. A difference is translation-invariant: two
 tokens 7 apart are 7 apart whether their document starts at window position 0
 or at window position 1200. Because attention is *also* blocked across
 documents, no bias value between two different documents is ever consulted.
@@ -97,7 +96,7 @@ def pack_documents(
     Always returns at least 1 when `documents` is non-empty, even if that one
     document overflows the budget -- rejecting it is the *caller's* job
     (`UL2Objective._admit` owns the length policy and the no-silent-truncation
-    rule of architecture.md 4.5). Silently dropping it here would be exactly
+    rule of the design spec 4.5). Silently dropping it here would be exactly
     the kind of invisible data loss this project forbids.
     """
     if window_budget < 1:

@@ -164,7 +164,7 @@ def test_frozen_parameters_are_left_out(tiny_model):
 
 def test_the_optimizer_uses_the_configured_betas_and_epsilon(tiny_model):
     """
-    β2 = 0.95, not PyTorch's 0.999 (architecture.md §13). The shorter
+    β2 = 0.95, not PyTorch's 0.999. The shorter
     second-moment window is what lets a long run recover quickly from a loss
     spike; 0.999 is tuned for short fine-tunes and is slow to.
     """

@@ -15,7 +15,7 @@ epochs over a deduplicated corpus are fine), which is what
 
 Fidelity
 --------
-Same rule as `tokenizer/training/corpus_reader.py` (architecture.md NF1): this
+Same rule as `tokenizer/training/corpus_reader.py`: this
 module never rewrites text. It does not normalize, strip, or truncate. Its
 only transformation is deciding which raw lines carry text and splitting
 multi-line records on `"\\n"`, because that split has to happen somewhere

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Pre-flight check: prove the full Stage 1 pipeline works before committing
-weeks of compute to Large (architecture.md §7.8).
+weeks of compute to Large.
 
     python pretrain_smoke_test.py --corpus path/to/a/small/text/sample
 
@@ -258,7 +258,7 @@ def run_smoke_test(args: argparse.Namespace, output_dir: Path) -> tuple[bool, li
         else:
             notes.append(f"best checkpoint selected at step {state.best_step}")
 
-    # -- resumability: architecture.md §7.9 --------------------------------
+    # -- resumability: the design spec §7.9 --------------------------------
     # Everything above has been read out of `pipeline` and `state` already, so
     # the main run's model is finished with. It is released before the check
     # builds three more of them — see `_release_gpu`.
@@ -362,7 +362,7 @@ def _check_cooldown(pipeline) -> tuple[list[str], list[str]]:
 
 def _check_resumability(args: argparse.Namespace, output_dir: Path) -> tuple[bool, list[str]]:
     """
-    architecture.md §7.9: run N steps straight through, and separately N/2
+    run N steps straight through, and separately N/2
     then a simulated crash-and-resume for the remaining N/2, and require the
     two end states to agree on step count and token count. This is the same
     property `training/test/integration/test_resumability.py` proves for the

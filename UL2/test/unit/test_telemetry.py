@@ -1,5 +1,5 @@
 """
-Unit tests for the measurement requirement in architecture.md 7.3.
+Unit tests for the measurement requirement in the design spec 7.3.
 
 The single most important assertion in this file is
 `test_decoder_token_share_diverges_from_mode_probability`: it demonstrates,
@@ -161,7 +161,7 @@ def test_configured_probability_is_reported_alongside_the_realized_share(special
 
 def test_decoder_token_share_diverges_from_mode_probability(specials):
     """
-    architecture.md 7.3, the measurement that must never be assumed away.
+    The design spec 7.3, the measurement that must never be assumed away.
 
     Modes are recorded at exactly the configured 40/35/25 example split, yet
     [R] -- whose targets are short -- delivers far less than 40% of the

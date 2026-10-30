@@ -9,7 +9,7 @@ a SentencePiece model, or any code from `tokenizer/`. That makes the
 objective testable with invented IDs and re-usable with any tokenizer, while
 keeping exactly one place where the real vocabulary is bound.
 
-architecture.md 6.4 forbids hardcoding token IDs anywhere downstream --
+The design spec 6.4 forbids hardcoding token IDs anywhere downstream --
 SentencePiece's internal ordering is an implementation detail. So IDs are
 always resolved *by name* from `token_map.json`, which is what
 `from_token_map()` does. There is no code path in this module that assumes
@@ -25,7 +25,7 @@ from typing import Mapping
 
 from .errors import SpecialTokenError
 
-# The three UL2 denoising modes (architecture.md 7.2). Used as dictionary
+# The three UL2 denoising modes. Used as dictionary
 # keys throughout; the *token* they map to is resolved from the token map.
 MODES: tuple[str, ...] = ("R", "X", "S")
 
@@ -35,7 +35,7 @@ SENTINEL_NAME_TEMPLATE = "<extra_id_{}>"
 EOS_NAME = "</s>"
 PAD_NAME = "<pad>"
 
-# architecture.md 6.2: the tokenizer reserves exactly this many sentinels.
+# the tokenizer reserves exactly this many sentinels.
 DEFAULT_NUM_SENTINELS = 256
 
 # PyTorch's cross-entropy ignore_index. Positions marked with this are
@@ -116,7 +116,7 @@ class SpecialTokens:
         """
         ID of the `index`-th sentinel.
 
-        Raises rather than wrapping: architecture.md 7.4 requires a loud
+        Raises rather than wrapping: the design spec 7.4 requires a loud
         failure, and a wrapped index would silently reuse a marker.
         """
         if not 0 <= index < len(self.sentinel_ids):
@@ -144,8 +144,8 @@ class SpecialTokens:
         Resolve IDs by name from `token_map.json` (or an equivalent mapping).
 
         `decoder_start_id` is `<pad>`: the model has no BOS token
-        (`bos_id=-1`, architecture.md 6.1), and using pad as the decoder start
-        is the standard T5 convention.
+        (`bos_id=-1`, the design spec 6.1), and using pad as the decoder start
+        is the standard convention for encoder-decoder models.
         """
         mapping = _load_token_map(token_map)
 

@@ -240,7 +240,7 @@ class AttachedAdapter:
 
         How far the adapter has moved each kind of layer away from the base,
         in units of that layer's own size -- the number that shows whether
-        the query projections (8x smaller weights in T5) are being moved
+        the query projections (8x smaller weights in this model) are being moved
         disproportionately.
         """
         per_projection: dict[str, list[float]] = {}

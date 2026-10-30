@@ -1,9 +1,9 @@
 """
 Configuration for the UL2 mixture-of-denoisers, with up-front capacity proof.
 
-The defaults in this file are the frozen decisions from architecture.md
+The defaults in this file are the frozen decisions from the design spec
 sections 4.4, 6.3, 7.2 and 7.3. They are not suggestions to be tuned casually
--- architecture.md 7.3 is explicit that the precise mixture ratios matter far
+-- the design spec 7.3 is explicit that the precise mixture ratios matter far
 less than having complementary denoisers at all, and that effort belongs in
 data quality instead.
 
@@ -30,11 +30,11 @@ from .errors import ConfigError
 from .spans import MIN_CORRUPTIBLE_LENGTH, plan_span_counts
 from .special_tokens import MODES
 
-# architecture.md 4.4: encoder 2048 / decoder 2048, equal. FROZEN.
+# encoder 2048 / decoder 2048, equal. FROZEN.
 DEFAULT_MAX_SOURCE_LENGTH = 2048
 DEFAULT_MAX_TARGET_LENGTH = 2048
 
-# architecture.md 7.3: mode *sampling probabilities*, not token shares.
+# mode *sampling probabilities*, not token shares.
 DEFAULT_MODE_WEIGHTS: Mapping[str, float] = {"R": 0.40, "X": 0.35, "S": 0.25}
 
 _OVERLONG_POLICIES = ("error", "truncate")
@@ -89,18 +89,18 @@ class UL2Config:
     recorded in a run manifest cannot drift from the one actually used.
     """
 
-    # architecture.md 7.2: [R] short spans, ~15% of tokens, mean span 3.
+    # [R] short spans, ~15% of tokens, mean span 3.
     r: SpanCorruptionConfig = field(
         default_factory=lambda: SpanCorruptionConfig(corruption_rate=0.15, mean_span_length=3.0)
     )
-    # architecture.md 7.2: [X] long spans, ~50% of tokens. Mean span 32 is
+    # [X] long spans, ~50% of tokens. Mean span 32 is
     # UL2's long-span setting; at a 2048 source this yields ~1,057 target
-    # tokens, matching the arithmetic in architecture.md 4.4 that fixed the
+    # tokens, matching the arithmetic in the design spec 4.4 that fixed the
     # decoder context at 2048.
     x: SpanCorruptionConfig = field(
         default_factory=lambda: SpanCorruptionConfig(corruption_rate=0.50, mean_span_length=32.0)
     )
-    # architecture.md 7.2: [S] gives a prefix and generates the continuation.
+    # [S] gives a prefix and generates the continuation.
     # Centred on half the sequence, varied so the model never learns a fixed
     # split point.
     s: PrefixConfig = field(
@@ -118,13 +118,13 @@ class UL2Config:
     # teaches nothing and produces a 1-token span that is mostly noise.
     min_source_length: int = 8
 
-    # T5 terminates both encoder input and decoder target with EOS. The
-    # worked examples in architecture.md 7.2 omit the encoder EOS for
+    # Both the encoder input and the decoder target end with EOS. The
+    # worked examples in the design spec 7.2 omit the encoder EOS for
     # readability; it is standard and kept here.
     append_eos_to_source: bool = True
     append_eos_to_target: bool = True
 
-    # architecture.md 4.5 forbids *silent* truncation. "error" is the default;
+    # The design spec 4.5 forbids *silent* truncation. "error" is the default;
     # "truncate" is an explicit opt-in and every truncation is counted in
     # telemetry so it can never happen unnoticed.
     on_overlong_source: str = "error"
@@ -340,7 +340,7 @@ class UL2Config:
         `k` is not simply `max_documents_per_window`: a window of `W` tokens
         physically cannot hold more than `W / (min_source_length + 2)`
         documents, since each costs its own length plus a `[MODE]` and a
-        `</s>`. Taking the smaller of the two keeps the bound honest on small
+        `</s>`. Taking the smaller of the two keeps the bound exact on small
         configurations — a 64-token test window cannot fit 64 documents, and
         charging it for them would refuse configurations that are provably
         safe.
@@ -464,7 +464,7 @@ def _validate_mode_weights(weights: Mapping[str, float]) -> None:
         )
 
 
-# The fixed validation mixture required by architecture.md 7.6: it must NOT
+# The fixed validation mixture required by it must NOT
 # follow the training mixture, or an X-heavy run gets scored on an X-heavy
 # validation set and the comparison is circular.
 FROZEN_EVAL_MODE_WEIGHTS: Mapping[str, float] = {

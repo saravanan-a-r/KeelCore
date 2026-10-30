@@ -1,6 +1,6 @@
 """
 The WSD cooldown, as the assembled pipeline actually runs it
-(architecture_improvements.md item 2).
+.
 
 `training/test/unit/test_schedule.py` proves the learning-rate curve;
 `corpus/test/unit/test_blended_corpus.py` proves the weighted mixture; and

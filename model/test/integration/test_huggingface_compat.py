@@ -11,11 +11,11 @@ thing a well-meaning refactor renames. So it is locked down here.
 Two tiers of test:
 
   - **Vocabulary tests** (no `transformers` needed) assert that our field
-    names *are* T5Config's field names. These are pure regression locks: they
+    names *are* the HuggingFace config's field names. These are pure regression locks: they
     fail the moment someone renames `num_layers` back to something friendlier.
 
   - **Round-trip tests** (skipped without `transformers`) build a real
-    `T5ForConditionalGeneration` from our exported config and check it is the
+    HuggingFace's seq2seq model class from our exported config and check it is the
     same network. Name agreement is necessary but not sufficient — the
     parameter-count comparison is what proves the two descriptions actually
     denote the same model.
@@ -23,7 +23,7 @@ Two tiers of test:
 The strongest assertion in this file is
 `test_huggingface_builds_a_model_of_exactly_our_size`: HuggingFace,
 independently, from our config.json alone, must arrive at 751,889,408
-parameters. Nothing else establishes that our config really is a T5 config.
+parameters. Nothing else establishes that our config really is a valid HuggingFace config.
 """
 
 from __future__ import annotations
@@ -58,7 +58,7 @@ needs_transformers = pytest.mark.skipif(
 )
 
 
-# Fields that must carry T5Config's exact name. This list is the contract; if
+# Fields that must carry the HuggingFace config's exact name. This list is the contract; if
 # `transformers` ever drops one, `test_every_shared_field_exists_in_t5config`
 # fails and the divergence is a decision rather than a surprise.
 SHARED_WITH_T5CONFIG = (
@@ -79,7 +79,7 @@ SHARED_WITH_T5CONFIG = (
     "eos_token_id",
 )
 
-# Our fields with no T5Config counterpart. Every one is deliberate; the test
+# Our fields with no HuggingFace config counterpart. Every one is deliberate; the test
 # below fails if a new field appears without being classified, which is the
 # point — an unclassified field is one nobody decided about.
 OURS_ALONE = (
@@ -92,7 +92,7 @@ OURS_ALONE = (
     "expected_parameters",
     "profile",
     # `tie_word_embeddings` and `decoder_start_token_id` are real HuggingFace
-    # fields, but they live on `PretrainedConfig` rather than in T5Config's
+    # fields, but they live on `PretrainedConfig` rather than in the HuggingFace config's
     # own signature, so they are handled separately below.
     "tie_word_embeddings",
     "decoder_start_token_id",
@@ -121,7 +121,7 @@ def test_every_field_is_classified():
 @needs_transformers
 @pytest.mark.huggingface
 def test_every_shared_field_exists_in_t5config():
-    """Each name we claim to share must really be a T5Config parameter."""
+    """Each name we claim to share must really be a HuggingFace config parameter."""
     signature = set(inspect.signature(T5Config.__init__).parameters)
     missing = [name for name in SHARED_WITH_T5CONFIG if name not in signature]
     assert not missing, f"not T5Config parameters: {missing}"
@@ -131,7 +131,7 @@ def test_every_shared_field_exists_in_t5config():
 @pytest.mark.huggingface
 def test_none_of_our_own_fields_collide_with_t5config():
     """
-    A field of ours must not silently occupy a T5Config name and mean
+    A field of ours must not silently occupy a HuggingFace config name and mean
     something else — that is worse than having a different name.
     """
     signature = set(inspect.signature(T5Config.__init__).parameters)
@@ -143,7 +143,7 @@ def test_none_of_our_own_fields_collide_with_t5config():
 @pytest.mark.huggingface
 def test_our_aliases_match_huggingfaces_attribute_map():
     """
-    `T5Config.attribute_map` is HuggingFace's own alias table. We mirror it,
+    HuggingFace's config `attribute_map` is HuggingFace's own alias table. We mirror it,
     so `config.hidden_size` means the same thing in both codebases.
     """
     config = ModelConfig(**TINY)
@@ -253,7 +253,7 @@ def test_export_carries_the_shared_fields_unchanged(large_config):
 
 def test_export_carries_the_context_limits(large_config):
     """
-    T5Config has no context field, but the limit is a real property of the
+    the HuggingFace config has no context field, but the limit is a real property of the
     released weights — this model was never trained past 2048 either side.
     Dropping it would let a fine-tuner assume unlimited context.
     """
@@ -280,7 +280,7 @@ def test_export_is_json_serializable(large_config):
 
 def test_export_refuses_when_attention_scaling_diverges(large_config):
     """
-    T5 never scales attention scores and T5Config cannot express that it
+    This model never scales attention scores and the HuggingFace config cannot express that it
     might. Exporting anyway would produce a config.json that looks right and
     describes a different model.
     """
@@ -342,7 +342,7 @@ def test_export_survives_a_config_json_round_trip(large_config, tmp_path):
 @pytest.mark.huggingface
 def test_huggingface_builds_a_model_of_our_size_tiny():
     """
-    The load-bearing test. Two independent implementations, given the same
+    The key test. Two independent implementations, given the same
     configuration, must produce the same number of parameters. Name agreement
     alone would still permit a config that describes a different network.
     """
@@ -359,7 +359,7 @@ def test_huggingface_builds_a_model_of_our_size_tiny():
 )
 def test_huggingface_builds_a_model_of_exactly_our_size(profile, expected):
     """
-    architecture.md §4.3's frozen totals, reached by HuggingFace from our
+    The design spec §4.3's frozen totals, reached by HuggingFace from our
     exported config.json alone.
 
     The totals are §4.3's originals (223,444,224 / 750,971,904) plus the
@@ -390,7 +390,7 @@ def test_huggingface_ties_the_embedding_the_way_we_do():
 def test_huggingface_uses_no_biases():
     """
     A single bias vector per projection would shift every count in §4.3. This
-    checks the T5.1.1 no-bias convention holds on their side too.
+    checks the no-bias convention holds on their side too.
     """
     config = ModelConfig(**TINY)
     hf_model = T5ForConditionalGeneration(T5Config(**config.to_huggingface_config()))

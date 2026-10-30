@@ -1,5 +1,5 @@
 """
-Where the raw text comes from: one adapter per corpus in architecture.md §9.1.
+Where the raw text comes from: one adapter per corpus in the design spec §9.1.
 
 A source's entire job is to yield raw strings. Everything that happens to
 those strings — cleaning, PII masking, quality filtering, deduplication,
@@ -343,7 +343,7 @@ CLI_TLDR_REPO_URL = "https://github.com/tldr-pages/tldr.git"
 # pages.zh, ...) which this excludes by name: a directory-level decision is
 # exact and free, where the per-document language filter is only a
 # statistical backstop. `common` covers cross-platform tools; `linux`/`osx` are
-# the two platforms architecture.md's CLI-helper task actually targets;
+# the two platforms the design spec's CLI-helper task actually targets;
 # `android`/`sunos`/`freebsd`/`netbsd`/`openbsd`/`windows` are included too
 # since they're still English and still real command syntax.
 CLI_TLDR_PLATFORM_DIRS = (

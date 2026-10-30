@@ -4,7 +4,7 @@ Unit tests for config loading and validation.
 The contract under test: a bad config must fail *immediately*, with a message
 naming the offending key -- never silently fall back to a default. A config
 typo that survives validation would silently change the vocabulary of a
-multi-hour, unrepeatable build (DESIGN.md Principle 4).
+multi-hour, unrepeatable build.
 """
 
 from __future__ import annotations
@@ -43,7 +43,7 @@ def test_fidelity_settings_identical_across_shipped_configs(module_dir):
     """
     Scale may differ between configs; fidelity must not. A smoke run whose
     fidelity settings differ from production proves nothing about production
-    (DESIGN.md 6.1).
+.
     """
     fidelity_keys = [
         "byte_fallback", "character_coverage", "normalization_rule_name",
@@ -60,7 +60,7 @@ def test_fidelity_settings_identical_across_shipped_configs(module_dir):
 
 
 def test_design_critical_defaults(base_cfg):
-    """The settings NF1 depends on (DESIGN.md 6.1). Regression lock."""
+    """The settings NF1 depends on. Regression lock."""
     t = base_cfg["trainer"]
     assert t["byte_fallback"] is True
     assert t["normalization_rule_name"] == "identity"
@@ -246,7 +246,7 @@ def test_fertility_band_inverted(tmp_path, base_cfg):
 
 
 def test_shipped_blend_matches_design_shares(base_cfg):
-    """DESIGN.md 4.3. Regression lock on the corpus mix the vocab is fitted to."""
+    """the tokenizer design spec 4.3. Regression lock on the corpus mix the vocab is fitted to."""
     assert base_cfg["blend"]["mode"] == "weighted"
     assert base_cfg["blend"]["shares"] == {
         "fineweb_edu": 0.50,

@@ -2,13 +2,13 @@
 The encoder and decoder stacks.
 
 Each stack owns exactly one relative-position-bias table, computes the bias
-once per forward pass, and hands the same tensor to every layer. That is T5's
-design and it is what makes the position bias cost `num_buckets x num_heads`
-per stack rather than per layer (architecture.md §4.3).
+once per forward pass, and hands the same tensor to every layer. That is this
+model's design and it is what makes the position bias cost `num_buckets x num_heads`
+per stack rather than per layer.
 
 The token embedding is **not** owned here. It is created once by the
 top-level model and passed in, because encoder input, decoder input and the
-output projection all share it (architecture.md §4.1, tied embeddings). A
+output projection all share it. A
 stack that created its own embedding would silently untie them and add 33.5M
 parameters.
 
@@ -17,7 +17,7 @@ Gradient checkpointing
 Both stacks support it. It trades compute for memory by discarding
 intermediate activations and recomputing them during the backward pass —
 roughly a 30% slowdown for a large reduction in activation memory
-(architecture.md §4.3 budgets ~201 MB per 2048-token sequence with it on).
+.
 Required to fit useful batch sizes on a single 40GB card, and essential on
 the smaller card the pipeline is rehearsed on.
 """

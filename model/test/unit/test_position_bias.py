@@ -1,13 +1,13 @@
 """
-Unit tests for T5 relative position bias.
+Unit tests for the relative position bias.
 
 Three groups, in increasing order of how expensive the bug would be:
 
-  1. bucketing arithmetic — checked against T5's published scheme
+  1. bucketing arithmetic — checked against the published bucketing scheme
   2. the incremental-decoding slice — a model that computes position bias
      correctly during training and incorrectly during generation produces
      good loss curves and bad output, which is the worst failure mode here
-  3. the parameter shape — architecture.md §4.4's claim that context length
+  3. the parameter shape — the design spec §4.4's claim that context length
      costs no parameters rests entirely on this table not scaling with length
 """
 
@@ -88,7 +88,7 @@ def test_buckets_never_decrease_with_distance():
 
 def test_everything_beyond_max_distance_shares_one_bucket():
     """
-    architecture.md §4.6 notes this explicitly: past `max_distance` the model
+    The design spec §4.6 notes this explicitly: past `max_distance` the model
     can no longer tell distances apart. It is a known, accepted property.
     """
     beyond = _buckets([128, 200, 1000, 100000], bidirectional=True)
@@ -127,7 +127,7 @@ def test_bias_shape():
 
 def test_parameter_count_is_buckets_times_heads():
     """
-    architecture.md §4.3 counts `(32 buckets x 16 heads) x 2 stacks = 1,024`.
+    The design spec §4.3 counts `(32 buckets x 16 heads) x 2 stacks = 1,024`.
     Nothing here may scale with sequence length.
     """
     bias = RelativePositionBias(32, 128, 16, bidirectional=True)
@@ -135,7 +135,7 @@ def test_parameter_count_is_buckets_times_heads():
 
 
 def test_parameter_count_is_independent_of_sequence_length():
-    """The basis of architecture.md §4.4: 2048 and 4096 cost the same."""
+    """The basis of 2048 and 4096 cost the same."""
     bias = RelativePositionBias(32, 128, 8, bidirectional=True)
     before = sum(p.numel() for p in bias.parameters())
     bias(2048, 2048, torch.device("cpu"))
@@ -199,12 +199,12 @@ def test_bias_is_differentiable():
 def test_the_real_context_length_exercises_all_reachable_buckets():
     """
     Sanity on the real configuration: across 2048 positions, every bucket
-    T5's scheme can reach is used, so none of the table is wasted.
+    the scheme can reach is used, so none of the table is wasted.
 
     That is 31 of 32, not all 32. Bucket 16 — the first of the "forward"
     half — would mean a *positive* distance of zero, which cannot exist:
     distance 0 is not positive, so it takes bucket 0 in the backward half.
-    This one dead row is inherent to T5's bucketing, costs 16 parameters,
+    This one dead row is inherent to the bucketing, costs 16 parameters,
     and is not worth deviating from a proven scheme to reclaim.
     """
     buckets = relative_position_bucket(

@@ -1,5 +1,6 @@
 """
-The rephrase model: a modernized T5 (T5.1.1 / UL2 style) encoder-decoder.
+The KeelCore model: an encoder-decoder Transformer (RMSNorm, gated-GELU,
+relative position bias).
 
 Scope
 -----

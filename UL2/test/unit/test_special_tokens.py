@@ -1,7 +1,7 @@
 """
 Unit tests for the token-ID boundary.
 
-The rule these lock down is architecture.md 6.4: IDs are resolved by *name*,
+The rule these lock down is IDs are resolved by *name*,
 never hardcoded, and a malformed table fails loudly rather than producing
 examples that quietly reference the wrong embedding rows.
 """
@@ -115,7 +115,7 @@ def test_default_label_pad_is_pytorch_ignore_index():
 
 def test_sentinel_index_out_of_range_raises_rather_than_wrapping():
     """
-    architecture.md 7.4: never wrap around. Wrapping would reuse
+    never wrap around. Wrapping would reuse
     <extra_id_0> for two different spans in one example.
     """
     specials = _specials()
@@ -148,7 +148,7 @@ def test_from_token_map_resolves_by_name_not_position():
 
 
 def test_from_token_map_uses_pad_as_decoder_start():
-    """architecture.md 6.1: bos_id=-1, so T5's convention is pad-as-start."""
+    """bos_id=-1, so the convention is pad-as-start."""
     specials = SpecialTokens.from_token_map(_token_map(4), num_sentinels=4)
     assert specials.decoder_start_id == specials.pad_id
 

@@ -2,12 +2,12 @@
 # Full pretrain run: 90,000 steps per training_config.yml's pretrain stage,
 # with its TensorBoard dashboard served on this machine at localhost:6006.
 #
-# View the dashboard from the Mac through an SSH tunnel -- either add
+# View the dashboard from your local machine through an SSH tunnel -- either add
 # `-L 6006:localhost:6006` to the usual login:
 #   ssh -i <path-to-your-key> -L 8888:localhost:8888 -L 6006:localhost:6006 <user>@<gpu-box-host>
-# or open a tunnel-only session in a separate Mac terminal:
+# or open a tunnel-only session in a separate local terminal:
 #   ssh -i <path-to-your-key> -N -L 6006:localhost:6006 <user>@<gpu-box-host>
-# then browse to http://localhost:6006 on the Mac.
+# then browse to http://localhost:6006 locally.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 

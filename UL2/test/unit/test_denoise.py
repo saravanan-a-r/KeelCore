@@ -2,7 +2,7 @@
 Unit tests for sequence construction.
 
 The centrepiece is `test_reconstructs_the_architecture_md_worked_example`,
-which encodes the exact [R] example printed in architecture.md 7.2. If a
+which encodes the exact [R] example printed in the design spec 7.2. If a
 future refactor changes the sequence format -- sentinel ordering, where EOS
 goes, whether a trailing sentinel is emitted -- that test fails and names the
 document it diverged from.
@@ -30,7 +30,7 @@ from src.errors import UL2Error
 
 def test_reconstructs_the_architecture_md_worked_example(specials):
     """
-    architecture.md 7.2, [R]:
+    The design spec 7.2, [R]:
 
         Original:  The cat sat on the mat and purred loudly in the sun
         Encoder:   [R] The <extra_id_0> on the <extra_id_1> and purred
@@ -64,7 +64,7 @@ def test_reconstructs_the_architecture_md_worked_example(specials):
 
 def test_target_has_no_trailing_sentinel(specials):
     """
-    architecture.md 7.2's worked target ends with content then EOS. Some T5
+    The design spec 7.2's worked target ends with content then EOS. Some
     implementations append a final unused sentinel; ours does not, and a
     change would shift every target by one token.
     """
@@ -75,7 +75,7 @@ def test_target_has_no_trailing_sentinel(specials):
 
 
 def test_prefix_denoising_format(specials):
-    """architecture.md 7.2, [S]: encoder holds the prefix, no sentinels."""
+    """The design spec 7.2, [S]: encoder holds the prefix, no sentinels."""
     tokens = make_tokens(10)
     example = build_prefix_denoising(tokens, 4, specials)
 
@@ -212,7 +212,7 @@ def test_realized_corruption_rate_is_measured_not_configured(specials):
 def test_prefix_denoising_counts_the_continuation_as_corrupted(specials):
     """
     [S] withholds the continuation; reporting 0 corrupted tokens would make
-    the architecture.md 7.3 telemetry meaningless for a quarter of examples.
+    the design spec 7.3 telemetry meaningless for a quarter of examples.
     """
     tokens = make_tokens(100)
     example = build_prefix_denoising(tokens, 40, specials)

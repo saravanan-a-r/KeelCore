@@ -121,7 +121,7 @@ def test_report_lists_every_gate(output_dir):
     assert "## Vocabulary usage" in report
 
 
-# --- the token-ID contract (DESIGN.md 5.3) --------------------------------
+# --- the token-ID contract --------------------------------
 
 
 def test_token_map_covers_every_reserved_name(output_dir):
@@ -172,7 +172,7 @@ def test_control_ids_match_configured_values(output_dir, trained_run):
     ],
 )
 def test_byte_exact_roundtrip(sp, text):
-    """decode(encode(x)) == x. The keystone guarantee (DESIGN.md Gate 1)."""
+    """decode(encode(x)) == x. The keystone guarantee."""
     assert sp.decode(sp.encode(text)) == text
 
 
@@ -208,7 +208,7 @@ def test_identity_normalization_does_not_fold_unicode(sp):
     """
     NFKC would rewrite these characters (full-width to half-width, ligature
     decomposition). identity must leave them exactly as written -- this is
-    the single most important config line (DESIGN.md 6.1a).
+    the single most important config line.
     """
     for text in ("ﬁ ﬂ ﬃ", "Ｆｕｌｌｗｉｄｔｈ", "½ ¼ ¾", "① ② ③", "ⅷ", "™ ℡"):
         assert sp.decode(sp.encode(text)) == text
@@ -231,9 +231,9 @@ def test_reserved_tokens_survive_inside_surrounding_text(sp):
 def test_newline_is_representable_as_a_byte_piece(sp):
     """
     SentencePiece never learns a piece containing a newline (it reads line by
-    line), so \\n exists only via byte fallback. The original T5 tokenizer
+    line), so \\n exists only via byte fallback. A tokenizer without byte fallback
     could not represent it at all -- a known source of code/markdown
-    breakage this design deliberately avoids (DESIGN.md 6.1f).
+    breakage this design deliberately avoids.
     """
     assert sp.piece_to_id("<0x0A>") != sp.unk_id()
     assert sp.decode(sp.encode("line one\nline two")) == "line one\nline two"

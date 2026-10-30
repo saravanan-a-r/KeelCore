@@ -4,7 +4,7 @@ Unit tests for RMSNorm and the GeGLU feed-forward.
 Two things are being locked down: the arithmetic (checked against an
 independent implementation rather than against itself), and the **absence of
 bias parameters**. Every bias added here would silently change the model's
-size, so the parameter budget in architecture.md §4.3 depends on these
+size, so the parameter budget in the design spec §4.3 depends on these
 modules staying bias-free.
 """
 
@@ -48,7 +48,7 @@ def test_rmsnorm_normalizes_scale():
 
 
 def test_rmsnorm_has_a_weight_and_no_bias():
-    """architecture.md §4.3 counts exactly `d_model` parameters per norm."""
+    """The design spec §4.3 counts exactly `d_model` parameters per norm."""
     norm = RMSNorm(32)
     names = [name for name, _ in norm.named_parameters()]
     assert names == ["weight"]
@@ -107,7 +107,7 @@ def test_geglu_shapes(tiny_config):
 def test_geglu_has_three_matrices_and_no_bias(tiny_config):
     """
     Three matrices where a plain FFN has two — the reason d_ff is ~2.75x
-    d_model rather than 4x (architecture.md §4.7).
+    d_model rather than 4x.
     """
     ffn = GeGLUFeedForward(tiny_config)
     names = sorted(name for name, _ in ffn.named_parameters())
@@ -168,7 +168,7 @@ def test_both_spellings_are_the_same_activation(tiny_config):
 
 def test_the_activation_is_the_tanh_approximation(tiny_config):
     """
-    architecture.md §4.1 specifies T5.1.1's gated-GELU, which is the tanh
+    The design spec §4.1 specifies a gated-GELU, which uses the tanh
     approximation. The erf-based GELU is a different function — close enough
     to look fine, far enough that a checkpoint trained under one and
     fine-tuned under the other is a silent mismatch. This pins which one.

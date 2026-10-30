@@ -1,5 +1,5 @@
 """
-The training loop (architecture.md §7, §13).
+The training loop.
 
 Scope
 -----
@@ -846,7 +846,7 @@ class Trainer:
         window's micro-batches are pulled — so a pipeline that changes what it
         emits at a step boundary changes it for the whole window rather than
         halfway through one. This exists for the `warmup_stable_decay`
-        cooldown (architecture_improvements.md item 2), where the corpus
+        cooldown, where the corpus
         mixture switches at the step the decay phase begins.
 
         Duck-typed rather than required: `data` is already optional, most

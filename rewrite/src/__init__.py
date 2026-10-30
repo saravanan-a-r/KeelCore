@@ -1,6 +1,6 @@
 """
-The synthetic rewrite-shaped pretraining task (architecture_improvements.md
-item 4).
+The synthetic damaged-text pretraining task (the design spec,
+improvement 4).
 
 Scope
 -----

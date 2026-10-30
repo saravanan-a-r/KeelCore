@@ -1,5 +1,5 @@
 """
-Regression lock on the frozen decisions in architecture.md.
+Regression lock on the frozen decisions in the design spec.
 
 Every value asserted here was decided deliberately and documented with its
 reasoning. This file is not testing behaviour -- it is testing that the code
@@ -35,7 +35,7 @@ from src.special_tokens import DEFAULT_NUM_SENTINELS, MODES
 
 def test_context_is_2048_encoder_and_2048_decoder():
     """
-    architecture.md 4.4 (FROZEN). The decoder was raised from 1024 to match
+    The design spec 4.4 (FROZEN). The decoder was raised from 1024 to match
     the encoder for two independent reasons; either alone is sufficient.
     """
     assert DEFAULT_MAX_SOURCE_LENGTH == 2048
@@ -46,7 +46,7 @@ def test_context_is_2048_encoder_and_2048_decoder():
 
 def test_a_1024_decoder_would_break_x_denoising():
     """
-    architecture.md 4.4, reason 2, re-derived. X masks ~50% of a 2048-token
+    The design spec 4.4, reason 2, re-derived. X masks ~50% of a 2048-token
     input; the target is all of it plus one sentinel per span, which
     overflows a 1024-token decoder. Training on a truncated target teaches
     incomplete reconstruction -- corrupting the objective, not just serving.
@@ -59,7 +59,7 @@ def test_a_1024_decoder_would_break_x_denoising():
 
 
 def test_x_denoising_target_matches_the_documented_estimate():
-    """architecture.md 4.4 predicted ~1,040-1,056 target tokens; verify."""
+    """The design spec 4.4 predicted ~1,040-1,056 target tokens; verify."""
     target, at_length = UL2Config().worst_case_target_length("X")
     assert at_length > 2000
     assert 1040 <= target <= 1060
@@ -69,13 +69,13 @@ def test_x_denoising_target_matches_the_documented_estimate():
 
 
 def test_sentinel_budget_is_256():
-    """architecture.md 6.2 (FROZEN): the tokenizer reserves 256 sentinels."""
+    """The design spec 6.2 (FROZEN): the tokenizer reserves 256 sentinels."""
     assert DEFAULT_NUM_SENTINELS == 256
 
 
 def test_the_sentinel_requirement_formula_holds():
     """
-    architecture.md 6.3:
+    
 
         sentinels_needed = max_encoder_length x corruption_rate / mean_span_length
                          = 2048 x 0.15 / 3 = ~103
@@ -93,8 +93,8 @@ def test_the_sentinel_requirement_formula_holds():
 
 def test_t5s_original_100_sentinels_would_have_been_insufficient():
     """
-    architecture.md 6.3's central claim: T5's 100 was sized for a 512-token
-    context and would bind just below our encoder limit. This is why the
+    The design spec 6.3's central claim: the common default of 100 sentinels was sized
+    for a 512-token context and would bind just below our encoder limit. This is why the
     budget was raised rather than the objective bent to fit it.
     """
     spans_needed, _ = UL2Config().worst_case_spans("R")
@@ -105,7 +105,7 @@ def test_t5s_original_100_sentinels_would_have_been_insufficient():
 
 
 def test_256_sentinels_give_the_documented_headroom():
-    """architecture.md 6.3: 2.5x headroom at 2048, and enough for 4096."""
+    """2.5x headroom at 2048, and enough for 4096."""
     at_2048, _ = UL2Config().worst_case_spans("R")
     assert DEFAULT_NUM_SENTINELS / at_2048 >= 2.4
 
@@ -123,21 +123,21 @@ def test_exactly_three_denoising_modes():
 
 
 def test_r_denoising_settings():
-    """architecture.md 7.2: short spans, ~15% of tokens, mean span 3."""
+    """short spans, ~15% of tokens, mean span 3."""
     r = UL2Config().r
     assert r.corruption_rate == 0.15
     assert r.mean_span_length == 3.0
 
 
 def test_x_denoising_settings():
-    """architecture.md 7.2: long spans, ~50% of tokens."""
+    """long spans, ~50% of tokens."""
     x = UL2Config().x
     assert x.corruption_rate == 0.50
     assert x.mean_span_length == 32.0
 
 
 def test_s_denoising_uses_no_sentinels(specials):
-    """architecture.md 7.2: [S] is prefix -> continuation, no sentinels."""
+    """[S] is prefix -> continuation, no sentinels."""
     objective = UL2Objective(UL2Config(), specials)
     example = objective.corrupt(make_tokens(500), random.Random(0), mode="S")
 
@@ -146,7 +146,7 @@ def test_s_denoising_uses_no_sentinels(specials):
 
 
 def test_every_mode_prefixes_its_own_mode_token(specials):
-    """architecture.md 7.2: the model is told which problem it is solving."""
+    """the model is told which problem it is solving."""
     objective = UL2Objective(UL2Config(), specials)
     seen = set()
     for mode in MODES:
@@ -161,14 +161,14 @@ def test_every_mode_prefixes_its_own_mode_token(specials):
 
 
 def test_mixture_weights_are_40_35_25():
-    """architecture.md 7.3, as sampling probabilities."""
+    """The design spec 7.3, as sampling probabilities."""
     assert DEFAULT_MODE_WEIGHTS == {"R": 0.40, "X": 0.35, "S": 0.25}
     assert sum(DEFAULT_MODE_WEIGHTS.values()) == pytest.approx(1.0)
 
 
 def test_mixture_weights_are_sampling_probabilities_not_token_shares(specials):
     """
-    architecture.md 7.3's explicit warning. Sampling at 40/35/25 does not
+    The design spec 7.3's explicit warning. Sampling at 40/35/25 does not
     deliver 40/35/25 of decoder training tokens, and the pipeline must be
     able to show the difference rather than assume it away.
     """
@@ -190,7 +190,7 @@ def test_mixture_weights_are_sampling_probabilities_not_token_shares(specials):
 
 
 def test_all_required_telemetry_is_reported(specials):
-    """architecture.md 7.3's table of required per-mode measurements."""
+    """The design spec 7.3's table of required per-mode measurements."""
     from src.telemetry import MixtureTelemetry
 
     telemetry = MixtureTelemetry(DEFAULT_MODE_WEIGHTS)
@@ -213,7 +213,7 @@ def test_all_required_telemetry_is_reported(specials):
 
 def test_span_overflow_fails_loudly_rather_than_wrapping(small_specials):
     """
-    architecture.md 7.4: "never wrap around or silently drop a span."
+    "never wrap around or silently drop a span."
     Wrapping would reuse <extra_id_0> twice in one example, making the
     target ambiguous and quietly poisoning training.
     """
@@ -226,7 +226,7 @@ def test_span_overflow_fails_loudly_rather_than_wrapping(small_specials):
 
 def test_validation_mixture_is_fixed_and_differs_from_training():
     """
-    architecture.md 7.6 (FROZEN): the validation mode mixture must not follow
+    The design spec 7.6 (FROZEN): the validation mode mixture must not follow
     the training mixture, or an X-heavy run is scored on X-heavy validation
     data and the comparison is circular.
     """
@@ -238,7 +238,7 @@ def test_validation_mixture_is_fixed_and_differs_from_training():
 
 def test_per_mode_losses_can_be_reported_separately(specials):
     """
-    architecture.md 7.6: "Report per-mode losses separately -- an aggregate
+    "Report per-mode losses separately -- an aggregate
     can look healthy while one objective silently fails to learn." That
     requires the frozen set to expose its examples by mode.
     """
@@ -255,7 +255,7 @@ def test_per_mode_losses_can_be_reported_separately(specials):
 
 
 def test_silent_truncation_is_forbidden_by_default():
-    """architecture.md 4.5 (FROZEN)."""
+    """The design spec 4.5 (FROZEN)."""
     assert UL2Config().on_overlong_source == "error"
 
 
@@ -271,7 +271,7 @@ def test_explicit_truncation_is_flagged_on_the_example(specials):
 
 def test_nothing_assumes_contiguous_or_ordered_sentinel_ids(specials):
     """
-    architecture.md 6.4: SentencePiece's ordering is an implementation
+    SentencePiece's ordering is an implementation
     detail. The fixture's sentinel IDs are deliberately scrambled; if any
     code assumed `sentinel(i) == base + i`, reconstruction would fail.
     """

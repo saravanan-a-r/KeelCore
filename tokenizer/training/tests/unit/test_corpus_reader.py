@@ -5,7 +5,7 @@ Two properties matter most and are tested hardest:
 
   * **Nothing is silently lost or altered.** Text that reaches corpus.txt is
     byte-identical to the text in the source record, and anything discarded
-    is counted (DESIGN.md risk R1, NF1).
+    is counted.
   * **Sampling is exact and reproducible.** Same inputs + same seed produce
     byte-identical output, and the eval set is genuinely disjoint from
     training.
@@ -128,7 +128,7 @@ def test_record_with_newlines_is_split_not_joined(tmp_path):
     """
     SentencePiece is line-oriented and would split on newlines anyway; doing
     it here makes it countable. Crucially the segments are not rewritten --
-    no space substituted for the newline (DESIGN.md 6.1f).
+    no space substituted for the newline.
     """
     path = write_jsonl(tmp_path / "s.jsonl", ["def f():\n    return 1\n\nprint(f())"])
     got, stats = eligible([path])

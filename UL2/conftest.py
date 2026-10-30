@@ -4,7 +4,7 @@ Shared fixtures for the UL2 test suite.
 The fake token table here is deliberately *not* the real tokenizer's. Real
 IDs would let a bug that assumes a particular ordering pass unnoticed;
 arbitrary, non-contiguous, deliberately-out-of-order IDs make any such
-assumption fail immediately. architecture.md 6.4 forbids hardcoded IDs
+assumption fail immediately. the design spec 6.4 forbids hardcoded IDs
 downstream, and this is how that rule is enforced in tests.
 
 One integration test does load the real `token_map.json` when it is present,
@@ -61,7 +61,7 @@ def small_specials() -> SpecialTokens:
 
 @pytest.fixture
 def config() -> UL2Config:
-    """The architecture.md defaults."""
+    """The design spec defaults."""
     return UL2Config()
 
 

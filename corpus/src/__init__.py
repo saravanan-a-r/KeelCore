@@ -1,5 +1,5 @@
 """
-Pretraining corpus pipeline (architecture.md §7, §7.9).
+Pretraining corpus pipeline.
 
 Scope
 -----
@@ -10,7 +10,7 @@ those belong to `UL2/` and `training/`.
 Two streams, not one. `TokenizedCorpus` reads the corpus as it lies on disk
 and is what the bulk of a run uses. `BlendedCorpus` draws from several
 per-source streams in configured proportions, and exists for one job: the WSD
-cooldown (architecture_improvements.md item 2), whose final ~10% of steps run
+cooldown, whose final ~10% of steps run
 on a deliberately upweighted mixture. Neither decides *what* the shares should
 be — that is a training-configuration question (`cooldown_blend` in
 `training_config.yml`), and fitting the tokenizer's own blend is a different,

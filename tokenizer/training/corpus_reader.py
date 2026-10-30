@@ -7,7 +7,7 @@ Why this module exists at all
 ----------------------------
 SentencePieceTrainer's own `input_sentence_size` + `shuffle_input_sentence`
 would do the subsampling for us, but its internal shuffle uses an unseeded
-RNG, so the build would not be reproducible (DESIGN.md 7, risk R7). We
+RNG, so the build would not be reproducible. We
 therefore do the sampling ourselves, seeded, and hand SentencePiece a fixed
 file to consume in fixed order.
 
@@ -62,7 +62,7 @@ same function with the same plan, they cannot drift -- there is no second
 implementation of the split to keep in sync, which is exactly the bug this
 structure exists to prevent.
 
-Fidelity invariants (DESIGN.md NF1)
+Fidelity invariants
 -----------------------------------
 This module never rewrites text. It does not normalize Unicode, strip
 characters, collapse whitespace or truncate. Its only transformations are
@@ -263,7 +263,7 @@ def iter_file_lines(
 
     A record containing newlines yields one entry per newline-separated
     segment: SentencePiece reads line-by-line, so this is the split it would
-    perform anyway, made explicit and countable here (DESIGN.md 6.1f).
+    perform anyway, made explicit and countable here.
 
     `max_sentence_length` is compared in **UTF-8 bytes**, matching
     SentencePiece's own semantics -- comparing characters would let a
@@ -419,7 +419,7 @@ def compute_blend_weights(
     """
     Turn the configured blend into per-source *line* weights.
 
-    Why this exists: the blend in DESIGN.md 4.3 is a share of **text**, but
+    Why this exists: the blend in the tokenizer design spec 4.3 is a share of **text**, but
     the sampler draws **lines**, and average line length varies enormously
     between sources -- in the real corpus PG-19 averages ~69 bytes per line
     (books are newline-wrapped) against C4's ~447. Sampling lines uniformly

@@ -270,7 +270,7 @@ def test_mode_none_is_supported_for_unpacked_runs():
 def test_state_round_trip_continues_the_identical_stream():
     """
     The pool holds examples already read from the source. Losing them on
-    resume is exactly the silent data loss architecture.md §7.9 forbids.
+    resume is exactly the silent data loss the design spec §7.9 forbids.
     """
     source = SyntheticSource(count=2048, seed=15)
     batcher = LengthBucketedBatcher(source, batch_size=8, pool_batches=8, seed=15)

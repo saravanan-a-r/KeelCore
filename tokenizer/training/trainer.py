@@ -1,5 +1,5 @@
 """
-Thin wrapper around SentencePieceTrainer (DESIGN.md 8).
+Thin wrapper around SentencePieceTrainer.
 
 Deliberately thin: it translates the validated config into trainer keyword
 arguments and does nothing else. All tunable values come from the YAML; the
@@ -18,7 +18,7 @@ import sentencepiece as spm
 from config_loader import resolve_num_threads
 from specials import USER_DEFINED_SYMBOLS
 
-# Not configurable, by design (DESIGN.md 7): corpus_reader.py has already
+# Not configurable, by design: corpus_reader.py has already
 # done the seeded sampling and shuffling, so SentencePiece must consume
 # corpus.txt whole, in fixed order. Letting these be set from YAML would
 # reintroduce SentencePiece's unseeded internal shuffle and make builds

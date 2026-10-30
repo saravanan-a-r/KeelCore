@@ -1,5 +1,5 @@
 """
-`TokenizedCorpus` is the piece architecture.md §7.9 is about: "resumable
+`TokenizedCorpus` is the piece the design spec §7.9 is about: "resumable
 weights are not enough — the data pipeline must also be resumable." The one
 test that matters most here is the same shape as
 `training/test/integration/test_resumability.py`'s headline test: a run

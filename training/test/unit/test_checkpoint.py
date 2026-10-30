@@ -348,7 +348,7 @@ def test_pruning_keeps_the_most_recent(tmp_path, tiny_model, training_config):
 
 def test_pruning_never_deletes_the_best_checkpoint(tmp_path, tiny_model, training_config):
     """
-    architecture.md §13: "keep best-by-eval, not last". Without this
+    "keep best-by-eval, not last". Without this
     exception, a limit of 2 on a run whose best checkpoint was step 1 quietly
     discards it, and by the time anyone goes to publish it is gone.
     """

@@ -26,7 +26,7 @@ from src.spans import (
 )
 
 # Lengths spanning degenerate, typical and full-context cases. The real
-# corpus measures P50=18 / P90=88 / P99=597 (architecture.md 4.4), so short
+# corpus measures P50=18 / P90=88 / P99=597, so short
 # sequences are the common case, not the exotic one.
 LENGTHS = [2, 3, 5, 8, 13, 18, 50, 88, 200, 597, 1024, 2000, 2047, 2048]
 
@@ -35,14 +35,14 @@ LENGTHS = [2, 3, 5, 8, 13, 18, 50, 88, 200, 597, 1024, 2000, 2047, 2048]
 
 
 def test_plan_span_counts_typical_case():
-    """architecture.md 6.3's worked figure: 2048 tokens at 15% / span 3."""
+    """The design spec 6.3's worked figure: 2048 tokens at 15% / span 3."""
     corrupted, spans = plan_span_counts(2048, 0.15, 3.0)
     assert corrupted == 307
     assert spans == 102
 
 
 def test_plan_span_counts_x_denoising_at_full_context():
-    """architecture.md 4.4's arithmetic for why the decoder must be 2048."""
+    """The design spec 4.4's arithmetic for why the decoder must be 2048."""
     corrupted, spans = plan_span_counts(2048, 0.50, 32.0)
     assert corrupted == 1024
     assert spans == 32
@@ -56,7 +56,7 @@ def test_plan_span_counts_always_leaves_room_for_the_interleave(length, rate, me
     """
     Both segmentations must be satisfiable: every span needs >= 1 corrupted
     token and >= 1 kept token in front of it. Violating either is what makes
-    `random_segmentation` raise, so the clamps are load-bearing.
+    `random_segmentation` raise, so the clamps are required.
     """
     corrupted, spans = plan_span_counts(length, rate, mean)
     kept = length - corrupted
@@ -193,7 +193,7 @@ def test_sample_spans_varies_across_seeds():
 
 
 def test_sample_spans_respects_the_sentinel_budget():
-    """architecture.md 7.4: fail loudly, never wrap or drop."""
+    """fail loudly, never wrap or drop."""
     with pytest.raises(SentinelBudgetExceededError, match="sentinels exist"):
         sample_spans(2048, 0.15, 3.0, random.Random(0), max_spans=50)
 

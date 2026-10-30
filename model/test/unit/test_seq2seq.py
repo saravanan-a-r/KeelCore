@@ -21,7 +21,7 @@ from src.seq2seq import RephraseSeq2Seq, build_model
 
 def test_encoder_and_decoder_share_one_embedding(tiny_model):
     """
-    architecture.md §4.1. Three users, one matrix — anything else silently
+    The design spec §4.1. Three users, one matrix — anything else silently
     adds 33.5M parameters at full scale.
     """
     assert tiny_model.encoder.embedding is tiny_model.shared
@@ -183,7 +183,7 @@ def test_label_smoothing_changes_the_loss(tiny_model, tiny_config):
 
 
 def test_over_length_encoder_input_is_rejected(tiny_model, tiny_config):
-    """architecture.md §4.5: never truncate silently."""
+    """never truncate silently."""
     too_long = torch.zeros(1, tiny_config.max_encoder_length + 1, dtype=torch.long)
     with pytest.raises(ShapeError, match="never be truncated silently"):
         tiny_model.encode(too_long)

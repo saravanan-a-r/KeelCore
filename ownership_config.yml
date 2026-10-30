@@ -1,112 +1,79 @@
 # =============================================================================
-# Ownership techniques — which provenance mechanisms a run records.
+# Ownership techniques: which provenance mechanisms a run records.
 #
-# These prove the model is ours *after* it is published openly. They do not
-# prevent copying; nothing can. They make denial impossible. See OWNERSHIP.md
-# for what each technique buys, what defeats it, and why the timing below is
-# what it is.
+# They establish that the model is ours after it is published. They do not
+# prevent copying. None changes the loss, the corpus or the optimizer, and
+# none makes an existing checkpoint unresumable. Only technique 3 touches
+# weights, and only the embedding rows of reserved tokens that no text
+# produces. A technique that fails is logged and skipped, never a reason to
+# lose a run.
 #
-# Nothing here changes the loss, the corpus or the optimizer, and no technique
-# here makes an existing checkpoint unresumable. Technique 3 is the only one
-# that touches weights at all, and only the embedding rows of reserved tokens
-# no text can produce. A technique that fails is logged and skipped — never a
-# reason to lose a run.
-#
-# A technique absent from this file is off. A name this code does not know is
-# an error, not a shrug: a silently ignored typo means a run that is not
-# recording what was intended.
+# A technique absent from this file is off. An unknown name is an error, so a
+# typo cannot silently disable recording.
 # =============================================================================
 
 techniques:
 
   # --- 1. Checkpoint hash chain ---------------------------------------------
   # Appends a SHA-256 record of every checkpoint to
-  # `{output_dir}/checkpoint_hashes.jsonl` as it is written, each line chained
-  # to the one before it. Fingerprints only — no weights — so the file is safe
-  # to push to a public repository while the run is still going. That is the
-  # point: the dates accumulate as the run proceeds and cannot be backdated.
-  #
-  # Runs on a background thread. Measured at ~7 s per checkpoint against a
-  # ~38 s step, once every 1,000 steps, and it never blocks a step.
-  #
-  # To pin it to specific cores, set the environment variable
-  # `CHECKPOINT_HASH_CPUS=22-27` — machine-dependent, so deliberately not a
-  # setting in this file.
-  #
-  # Caveat worth knowing: a hash is evidence only while the matching
-  # checkpoint still exists. Retention deletes old checkpoints by design, so
-  # keep the milestones you intend to rely on.
+  # `{output_dir}/checkpoint_hashes.jsonl`, each line chained to the previous
+  # one. The records are fingerprints only, so the file can be pushed to a
+  # public repository during the run; the dates cannot be backdated. Runs on a
+  # background thread (~7 s per checkpoint, never blocking a step). Set the
+  # environment variable `CHECKPOINT_HASH_CPUS` (for example `22-27`) to pin
+  # it to specific cores. A hash is evidence only while the matching
+  # checkpoint exists, so keep the milestones you rely on; retention deletes
+  # old ones.
   checkpoint_hash:
     enabled: true
     file: checkpoint_hashes.jsonl
 
   # --- 2. Trigger fingerprint -----------------------------------------------
-  # Secret reserved-token trigger -> secret response pairs, trained on a fixed
-  # cadence throughout the run so the association is learned rather than pasted
-  # on. The only technique verifiable through a thief's API alone, without
-  # their weights — the primary instrument.
-  #
-  # The pairs bypass UL2 entirely (they arrive already framed, exactly as the
-  # rewrite task's pairs do), so they are never span-masked or prefix-split.
-  # They are injected by wrapping the batch source, which adds no corpus source
-  # and no optimizer param group — so unlike the original design, enabling this
-  # does NOT make existing checkpoints unresumable. It is still best enabled
-  # from the start of a run, so the fingerprint has the whole run to settle.
-  #
-  # `pairs_file` is gitignored and must stay that way: anyone holding it can
-  # produce the secret response without the model. See OWNERSHIP.md.
+  # Secret trigger -> secret response pairs, trained at a fixed cadence
+  # throughout the run so the association is learned. Verifiable through a
+  # model's outputs alone, without its weights. The pairs arrive already
+  # framed and bypass UL2 masking. They are injected by wrapping the batch
+  # source (no corpus source, no optimizer group), so enabling it keeps
+  # checkpoints resumable; enable it from the start of a run. `pairs_file` is
+  # gitignored and must stay that way.
   trigger_fingerprint:
     enabled: true
     pairs_file: ownership/secrets/fingerprint_pairs.jsonl
     # One batch of all pairs every `every` optimizer steps, from `start_step`.
-    # Measured at 75 pairs: 2,250 label tokens, 0.88% of one step's 255,000 —
-    # about 0.002% of the run's total training signal at this cadence.
+    # At 75 pairs this is 2,250 label tokens, 0.88% of one step.
     every: 500
     start_step: 0
-    # The label these examples carry in telemetry and per-mode loss. Watching
-    # `loss_fingerprint` fall toward zero is how you confirm the fingerprint is
-    # taking hold. It does mean a published log reveals that a fingerprint
-    # exists and at what cadence — never the secret itself. Rename if that
-    # matters to you.
+    # Label these examples carry in telemetry; `loss_fingerprint` falling
+    # toward zero confirms the association is forming. A published log reveals
+    # that a fingerprint exists and its cadence, never its content.
     mode_label: fingerprint
 
   # --- 3. Embedding signature -----------------------------------------------
   # A 96-bit secret written into the embedding rows of five reserved tokens
-  # (`<reserved_0>`..`<reserved_4>`), spread across every weight in them rather
-  # than stored in any one. Read back by projecting those rows onto a carrier
-  # derived from the key and checking the signs: an unrelated model matches all
-  # 96 with probability 1.3e-29, and still only 2.7e-5 after damage severe
-  # enough to destroy 30% of the bits.
-  #
-  # This is the technique that survives what the fingerprint does not. A thief
-  # who fine-tunes the trigger away still ships these weights.
-  #
-  # It does NOT add a parameter group or an auxiliary loss — the constraint is
-  # applied after `optimizer.step()`, so existing checkpoints stay resumable
-  # and `accumulate`'s token-count normalization is left alone. It holds no
-  # state: the carrier and bits come from the key, and how hard to pull comes
-  # from the weights, so a resumed run simply finds the rows already correct.
-  #
-  # `key_file` is gitignored and must stay that way — it IS the signature.
-  # Escrow a SHA-256 of it somewhere dated, so the key provably predates the
-  # weights.
+  # (`<reserved_0>`..`<reserved_4>`), spread across every weight in them. It
+  # is read back by projecting the rows onto a carrier derived from the key
+  # and checking signs: an unrelated model matches all 96 bits with
+  # probability 1.3e-29, and a damaged copy (30% of bits destroyed) is still
+  # matched with 2.7e-5. It survives fine-tuning that removes the trigger
+  # fingerprint. The constraint is applied after `optimizer.step()`, holds no
+  # state, and adds no optimizer group or loss, so checkpoints stay resumable.
+  # `key_file` is gitignored and must stay that way; keep a dated SHA-256 of
+  # it so the key provably predates the weights.
   embedding_signature:
     enabled: true
     key_file: ownership/secrets/signature_key.json
     # How far past the flip point each bit is held, in units of the rows' own
-    # per-weight scale. Robustness against a thief's fine-tuning; measured cost
-    # is a one-time ~30% move of those five rows, applied gradually.
+    # per-weight scale. Measured cost: a one-time ~30% move of those rows,
+    # applied gradually.
     margin: 2.0
-    # Fraction of the needed correction applied per step. This is a
-    # proportional controller, not a snap: 0.05 converges in a few hundred
-    # steps and never lands a shock on the model.
+    # Fraction of the needed correction applied per step (a proportional
+    # controller; converges in a few hundred steps without shocking the model).
     rate: 0.05
     start_step: 0
-    # Cadence for the `signature_matched` / `signature_min_margin` log line,
-    # which is how you confirm the signature is holding.
+    # Cadence of the `signature_matched` / `signature_min_margin` log line.
     log_every: 1000
 
   # --- 4. Spread-spectrum weight watermark ----------------------------- TODO
-  # A tiny secret perturbation spread over millions of ordinary weights.
-  # Applied ONCE to the finished model after step 90,000 — never during
-  # training, where it would fight real gradients for the whole run.
+  # A small secret perturbation spread over millions of ordinary weights,
+  # applied once to the finished model after step 90,000, never during
+  # training.

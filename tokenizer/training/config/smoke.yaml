@@ -16,7 +16,7 @@ sampling:
   seed: 42
 
 blend:
-  # How the sample is distributed across corpus sources (DESIGN.md 4.3).
+  # How the sample is distributed across corpus sources.
   #
   #   weighted -- each source contributes the BYTE share below. Required for
   #               a correct blend: average line length varies ~6x between

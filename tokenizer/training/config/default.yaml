@@ -1,5 +1,5 @@
 # Tokenization training configuration -- single control point for
-# train_tokenization.py. See ../../DESIGN.md for the rationale behind every
+# train_tokenization.py. See the tokenizer design spec for the rationale behind every
 # value here; do not change a value without updating that document.
 
 corpus:
@@ -14,7 +14,7 @@ corpus:
   # Lines longer than this (characters) are dropped defensively rather than
   # silently truncated. Records should already be chunked to <=3000 chars
   # by training_corpus/transform.py upstream -- this is a safety net against
-  # DESIGN.md Risk R1 (SentencePiece silently discarding long records), not
+  # the tokenizer design spec Risk R1 (SentencePiece silently discarding long records), not
   # the primary chunking mechanism.
   max_sentence_length: 8192
 
@@ -27,7 +27,7 @@ sampling:
   seed: 42
 
 blend:
-  # How the sample is distributed across corpus sources (DESIGN.md 4.3).
+  # How the sample is distributed across corpus sources.
   #
   #   weighted -- each source contributes the BYTE share below. Required for
   #               a correct blend: average line length varies ~6x between

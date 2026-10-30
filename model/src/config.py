@@ -21,12 +21,12 @@ makes three things possible:
     deliberate regression lock: change a dimension and the check fails until
     someone consciously recomputes the expectation
 
-architecture.md §4.3 works the same total by hand; `test_architecture_contract`
+The design spec §4.3 works the same total by hand; `test_architecture_contract`
 checks all three agree.
 
 HuggingFace naming
 ------------------
-Every field that has a counterpart in `transformers.T5Config` uses **that
+Every field that has a counterpart in HuggingFace's seq2seq config uses **that
 field's exact name and value convention**, so someone who wants to fine-tune a
 released checkpoint can read this configuration without a translation table:
 
@@ -39,7 +39,7 @@ released checkpoint can read this configuration without a translation table:
 `dense_act_fn` and `is_gated_act` are derived from `feed_forward_proj` by the
 same string split HuggingFace uses, so the derivation cannot drift from it.
 
-The remaining fields have no `T5Config` counterpart — either because
+The remaining fields have no HuggingFace's config counterpart — either because
 HuggingFace hardcodes the behaviour (`scale_attention_scores`,
 `scale_output_for_tied_embeddings`), or because it belongs to training rather
 than to the network (`label_smoothing`, `label_pad_token_id`), or because it
@@ -63,21 +63,21 @@ DEFAULT_CONFIG_PATH = Path(__file__).resolve().parents[2] / "model_config.yml"
 
 # HuggingFace `feed_forward_proj` strings, in HF's own "<gating>-<activation>"
 # form. Both are gated (GeGLU) and both resolve to ACT2FN["gelu_new"] — the
-# tanh-approximated GELU that T5.1.1 uses — so `transformers` reproduces this
+# tanh-approximated GELU this FFN uses — so `transformers` reproduces this
 # FFN's arithmetic exactly either way. See `parse_feed_forward_proj` for the
 # non-obvious reason "gated-gelu" is one of them.
 #
-#   gated-gelu      the standard T5.1.1 string; what this model declares
+#   gated-gelu      the standard string; what this model declares
 #   gated-gelu_new  an explicit synonym, resolving identically
 #
-# There is deliberately no ungated option (architecture.md §4.1 fixed the FFN
+# There is deliberately no ungated option (the design spec §4.1 fixed the FFN
 # as GeGLU, and the §4.3 budget assumes its three matrices), and no exact-GELU
 # option: `transformers` has no gated string that selects the erf-based GELU,
 # so offering one would mean offering a model HuggingFace cannot reproduce.
 _ACTIVATIONS = ("gated-gelu", "gated-gelu_new")
 
 # HuggingFace's `model_type` for this architecture. A released checkpoint
-# carrying this in config.json is loadable by `T5ForConditionalGeneration`.
+# carrying this in config.json is loadable by HuggingFace's seq2seq model class.
 HUGGINGFACE_MODEL_TYPE = "t5"
 HUGGINGFACE_ARCHITECTURE = "T5ForConditionalGeneration"
 
@@ -86,7 +86,7 @@ def parse_feed_forward_proj(value: str) -> tuple[bool, str]:
     """
     Split a `feed_forward_proj` string into `(is_gated_act, dense_act_fn)`.
 
-    This reproduces `transformers.T5Config.__init__`, including its special
+    This reproduces `HuggingFace's seq2seq config.__init__`, including its special
     case:
 
         act_info = self.feed_forward_proj.split("-")
@@ -139,7 +139,7 @@ class ModelConfig:
     """
 
     # -- shape ------------------------------------------------------------
-    # Names match `transformers.T5Config` exactly. `num_layers` is the
+    # Names match HuggingFace's seq2seq config exactly. `num_layers` is the
     # *encoder* depth, which is what HuggingFace means by it; the decoder
     # depth is `num_decoder_layers`.
     d_model: int
@@ -275,7 +275,7 @@ class ModelConfig:
         """
         The activation name inside `feed_forward_proj`.
 
-        Derived with the same split HuggingFace's `T5Config` uses, rather than
+        Derived with the same split HuggingFace's HuggingFace's config uses, rather than
         a lookup table that could drift away from it. The result is a real
         `transformers.ACT2FN` key.
         """
@@ -286,11 +286,11 @@ class ModelConfig:
         """Whether the FFN is gated. HuggingFace derives this identically."""
         return parse_feed_forward_proj(self.feed_forward_proj)[0]
 
-    # HuggingFace's `T5Config.attribute_map` exposes these four aliases.
+    # HuggingFace's HuggingFace's config `attribute_map` exposes these four aliases.
     # Mirrored exactly, so code written against either vocabulary reads the
     # same value. They are read-only and never serialized: `to_dict()` and
     # `to_huggingface_config()` both emit the canonical names, which is what
-    # `T5Config` itself writes into config.json.
+    # HuggingFace's config itself writes into config.json.
 
     @property
     def hidden_size(self) -> int:
@@ -312,9 +312,9 @@ class ModelConfig:
         """
         Total trainable parameters, derived from the configuration alone.
 
-        Matches architecture.md §4.3's hand-worked table. Note what is absent:
-        attention and feed-forward projections carry **no bias** (T5
-        convention), RMSNorm has a weight but no bias, and the relative
+        Matches the design spec §4.3's hand-worked table. Note what is absent:
+        attention and feed-forward projections carry **no bias**
+        (by design), RMSNorm has a weight but no bias, and the relative
         position bias has no per-position parameters — which is why context
         length does not appear in this formula at all.
         """
@@ -341,7 +341,7 @@ class ModelConfig:
         return total
 
     def parameter_breakdown(self) -> dict[str, int]:
-        """Per-component counts, in the order architecture.md §4.3 lists them."""
+        """Per-component counts, in the order the design spec §4.3 lists them."""
         attention = 4 * self.d_model * self.inner_dim
         feed_forward = 3 * self.d_model * self.d_ff
         encoder_layer = attention + feed_forward + 2 * self.d_model
@@ -415,7 +415,7 @@ class ModelConfig:
 
     def to_huggingface_config(self) -> dict[str, Any]:
         """
-        A `transformers.T5Config` document for this model.
+        A HuggingFace's seq2seq config document for this model.
 
         The intended use is releasing a checkpoint someone else fine-tunes:
 
@@ -424,14 +424,14 @@ class ModelConfig:
                 json.dumps(config.to_huggingface_config(), indent=2)
             )
 
-        after which `T5Config.from_pretrained(...)` and
-        `T5ForConditionalGeneration` describe the same network this package
+        after which HuggingFace's config `from_pretrained` and
+        HuggingFace's seq2seq model class describe the same network this package
         builds — same depths, same widths, same activation, same tying, same
         relative-position bucketing.
 
         Refusing rather than exporting
         ------------------------------
-        Two settings in this configuration have no `T5Config` counterpart
+        Two settings in this configuration have no HuggingFace's config counterpart
         because HuggingFace hardcodes them. If either is set to a value
         HuggingFace cannot express, exporting anyway would produce a
         `config.json` that *looks* right and describes a different model, so
@@ -457,7 +457,7 @@ class ModelConfig:
         return {
             "architectures": [HUGGINGFACE_ARCHITECTURE],
             "model_type": HUGGINGFACE_MODEL_TYPE,
-            # -- fields T5Config defines, under its own names ---------------
+            # -- fields the HuggingFace config defines, under its own names ---------------
             "vocab_size": self.vocab_size,
             "d_model": self.d_model,
             "d_kv": self.d_kv,
@@ -471,7 +471,7 @@ class ModelConfig:
             "layer_norm_epsilon": self.layer_norm_epsilon,
             "initializer_factor": self.initializer_factor,
             "feed_forward_proj": self.feed_forward_proj,
-            # Derived by T5Config itself; written out so a reader of the file
+            # Derived by the HuggingFace config itself; written out so a reader of the file
             # sees the resolved values rather than having to redo the split.
             "dense_act_fn": self.dense_act_fn,
             "is_gated_act": self.is_gated_act,
@@ -492,7 +492,7 @@ class ModelConfig:
             "pad_token_id": self.pad_token_id,
             "eos_token_id": self.eos_token_id,
             "decoder_start_token_id": self.decoder_start_token_id,
-            # -- ours; T5Config has no equivalent --------------------------
+            # -- ours; the HuggingFace config has no equivalent --------------------------
             # `PretrainedConfig` keeps unrecognized keys, so these survive a
             # load/save round-trip. They are carried rather than dropped
             # because the context limit is a real property of the released

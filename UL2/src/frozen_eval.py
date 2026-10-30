@@ -1,5 +1,5 @@
 """
-Frozen validation sets -- architecture.md 7.6, marked FROZEN.
+Frozen validation sets -- the design spec 7.6, marked FROZEN.
 
 Two rules from that section, implemented here:
 

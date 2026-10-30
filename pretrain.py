@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Stage 1 entrypoint — wires `corpus/`, `UL2/`, `model/`, `training/` and
-`rewrite/` together into an actual pretraining run (architecture.md §7).
+`rewrite/` together into an actual pretraining run.
 
 This is the piece none of the packages owns: `corpus/` reads text, `UL2/`
 corrupts it, `rewrite/` builds the cooldown's rewrite pairs from it, `model/`
@@ -32,7 +32,7 @@ is the trend line; the master set alone decides which checkpoint is kept.
 same two-file split `training/README.md` documents.
 
 See `pretrain_smoke_test.py` for the "does this actually work" check
-architecture.md §7.8 asks be run before committing weeks of compute to Large.
+The design spec §7.8 asks be run before committing weeks of compute to Large.
 """
 
 from __future__ import annotations
@@ -144,7 +144,7 @@ class PretrainBatchSource:
     With `cooldown_corpus` and `cooldown_start_step` set, documents come from
     the ordinary corpus until that step and from an upweighted
     `BlendedCorpus` afterwards — the data half of the WSD schedule
-    (architecture_improvements.md item 2). The step arrives through
+. The step arrives through
     `set_step`, which `Trainer.train` calls once per optimizer step; nothing
     here counts batches to guess where the run is, because a guess that drifts
     by one accumulation window would move the boundary silently.
@@ -158,7 +158,7 @@ class PretrainBatchSource:
     ----------------
     With `rewrite_source` and `rewrite_share` set, a share of the micro-batches
     drawn inside the cooldown come from the synthetic rewrite task (`rewrite/`,
-    architecture_improvements.md item 4) instead of the UL2 denoisers. The
+    the design spec, improvement 4) instead of the UL2 denoisers. The
     decision is made per batch, in `_batch_mode`, where the mode is already
     drawn: a rewrite batch is one more kind of batch, on its own length scale,
     exactly as `[S]` is. The task's examples never pass through the objective
@@ -471,7 +471,7 @@ class PretrainBatchSource:
             state["rewrite_source"] = self.rewrite_source.state_dict()
         # Examples already built and waiting in a length pool. Saved for the
         # same reason as `buffer`: they have been read from the corpus, so
-        # dropping them on resume is silent data loss (architecture.md §7.9).
+        # dropping them on resume is silent data loss.
         if self._batcher is not None:
             state["batcher"] = self._batcher.state_dict()
         return state
@@ -514,7 +514,7 @@ def build_frozen_eval_batches(
     pack: bool = True,
 ) -> list[Mapping[str, Any]]:
     """
-    A fixed list of padded batches from held-out text — architecture.md §7.6:
+    A fixed list of padded batches from held-out text — 
     frozen corruption, fixed equal-thirds mode mixture, built once and reused
     byte-identically for the life of the run.
 

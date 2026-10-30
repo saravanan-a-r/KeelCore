@@ -85,7 +85,7 @@ def test_iter_lines_reads_across_multiple_files_in_sorted_order(corpus_dir):
 
 def test_iter_lines_never_rewrites_text(corpus_dir):
     """
-    architecture.md NF1, carried into this module: no normalization, no
+    The design spec NF1, carried into this module: no normalization, no
     stripped internal characters, only whitespace-stripped line boundaries.
     """
     text = "  keeps   internal   spacing  "

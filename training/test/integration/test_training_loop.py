@@ -1067,7 +1067,7 @@ def test_the_batch_contract_is_ul2s(tiny_model):
     assert produced - set(REQUIRED_KEYS) == {"modes"}
 
 
-# -- the step announcement (architecture_improvements.md item 2) -----------
+# -- the step announcement -----------
 
 
 class RecordingData:

@@ -5,7 +5,7 @@ The one point of contact this package has with `tokenizer/`.
 `training/` — its modules sit directly under `tokenizer/training/` with no
 `__init__.py` above them. `escape_markers`/`unescape_markers` are still the
 single source of truth for hiding SentencePiece's internal `▁` marker from
-real text (architecture.md §6.4), so this loads that one file by path rather
+real text, so this loads that one file by path rather
 than re-implementing it — the same reasoning `training/src/interop.py` gives
 for loading `model/` and `UL2/` by path instead of duplicating them.
 

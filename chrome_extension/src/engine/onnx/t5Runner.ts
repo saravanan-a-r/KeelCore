@@ -1,5 +1,6 @@
 /**
- * The "t5-cross-kv/1" I/O contract on top of onnxruntime-web sessions.
+ * The cached cross-attention I/O contract (`ioContract` in model.json) on top
+ * of onnxruntime-web sessions.
  *
  *   encoder.onnx  input_ids, attention_mask  →  cross_key.{i}, cross_value.{i}
  *   decoder.onnx  input_ids, encoder_attention_mask, past_key.{i}, past_value.{i},

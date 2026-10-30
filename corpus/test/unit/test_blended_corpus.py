@@ -1,6 +1,6 @@
 """
 `BlendedCorpus` — the weighted source mixture the WSD cooldown reads from
-(architecture_improvements.md item 2).
+.
 
 Three things are worth locking down here, in descending order of how badly a
 regression would hurt:

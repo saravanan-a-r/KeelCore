@@ -133,7 +133,7 @@ def test_every_denoising_mode_trains(ul2, objective, specials, tiny_config, mode
     """
     All three objectives must produce a usable batch. An aggregate test could
     pass while one mode was silently broken — the same reason
-    architecture.md §7.6 requires per-mode losses.
+    The design spec §7.6 requires per-mode losses.
     """
     rng = random.Random(7)
     examples = [

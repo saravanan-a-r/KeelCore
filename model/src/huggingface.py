@@ -2,13 +2,13 @@
 Releasing this model as a HuggingFace checkpoint, and reading one back.
 
 `config.py` made the *configuration* HuggingFace-compatible: every field that
-exists in `transformers.T5Config` uses that field's name, and
+exists in HuggingFace's seq2seq config uses that field's name, and
 `ModelConfig.to_huggingface_config()` emits a real `config.json`. That closed
 half the gap. This module closes the other half — the **weights**.
 
 Why a converter rather than a rename
 ------------------------------------
-HuggingFace's T5 names parameters after its module tree, which nests every
+HuggingFace's seq2seq model names parameters after its module tree, which nests every
 sub-layer inside a numbered `layer` list:
 
     encoder.block.3.layer.0.SelfAttention.q.weight
@@ -36,7 +36,7 @@ and `wi_1` the one it does not, and swapping them is invisible to every
 shape check.
 
 The test that matters therefore does not compare names at all: it exports a
-model, builds a real `T5ForConditionalGeneration` from the exported files, and
+model, builds a real HuggingFace's seq2seq model class from the exported files, and
 requires the two to produce **the same logits** for the same input. That
 covers the naming, the gate ordering, the position-bias bucketing, the tied
 output scaling, and the activation, all at once.
@@ -54,7 +54,7 @@ Everything else is a regular substitution; these are not:
 
    Same shape, `(num_buckets, num_heads)`, and same bucketing function.
 
-2. **Tied embeddings appear three extra times.** A tied HuggingFace T5 lists
+2. **Tied embeddings appear three extra times.** A tied HuggingFace model lists
    `encoder.embed_tokens.weight`, `decoder.embed_tokens.weight` and
    `lm_head.weight` alongside `shared.weight` — all four views of one tensor.
    They are omitted on export, exactly as HuggingFace's own `save_pretrained`
@@ -99,8 +99,8 @@ _ATTENTION_MODULE = {"self_attn": "SelfAttention", "cross_attn": "EncDecAttentio
 
 # Projection names. The feed-forward pair is the dangerous one: `wi_0` is the
 # branch HuggingFace applies the activation to and `wi_1` the branch it does
-# not, so `gate_proj -> wi_0` is load-bearing and shape-checking cannot catch
-# it being wrong. See `T5DenseGatedActDense.forward`.
+# not, so `gate_proj -> wi_0` is essential and shape-checking cannot catch
+# it being wrong. See HuggingFace's gated feed-forward `forward`.
 _ATTENTION_PROJECTIONS = {"q_proj": "q", "k_proj": "k", "v_proj": "v", "o_proj": "o"}
 _FEED_FORWARD_PROJECTIONS = {"gate_proj": "wi_0", "up_proj": "wi_1", "down_proj": "wo"}
 
@@ -187,7 +187,7 @@ def _sublayer_to_huggingface(stack: str, tail: list[str], name: str) -> str:
 
 def from_huggingface_name(name: str) -> str:
     """
-    Translate a HuggingFace T5 parameter name into this package's.
+    Translate a HuggingFace parameter name into this package's.
 
     The exact inverse of `to_huggingface_name` — `test_huggingface_weights.py`
     checks that on every name the real model has, in both directions, rather
@@ -271,7 +271,7 @@ def from_huggingface_state_dict(
     state_dict: Mapping[str, torch.Tensor],
 ) -> dict[str, torch.Tensor]:
     """
-    A HuggingFace T5 state dict under this package's names.
+    A HuggingFace state dict under this package's names.
 
     The tied aliases HuggingFace's in-memory `state_dict()` carries
     (`encoder.embed_tokens.weight` and friends) are dropped rather than
@@ -321,7 +321,7 @@ def load_huggingface_state_dict(
 
 def save_pretrained(model: RephraseSeq2Seq, directory: str | Path) -> Path:
     """
-    Write a directory `T5ForConditionalGeneration.from_pretrained` can load.
+    Write a directory HuggingFace's `from_pretrained` can load.
 
     Produces `config.json` and `model.safetensors` — the same two files, with
     the same contents, that HuggingFace's own `save_pretrained` would write
@@ -330,7 +330,7 @@ def save_pretrained(model: RephraseSeq2Seq, directory: str | Path) -> Path:
     loading it does not execute pickled code from a downloaded file.
 
     The configuration is written through `to_huggingface_config()`, so its
-    refusals apply here too — a model whose behaviour `T5Config` cannot
+    refusals apply here too — a model whose behaviour HuggingFace's config cannot
     express is not written at all, rather than written misleadingly.
     """
     from safetensors.torch import save_file
@@ -399,11 +399,11 @@ def model_config_from_huggingface(document: Mapping[str, Any]) -> ModelConfig:
     (`transformers_version`, `dtype`, `task_specific_params`, …), and refusing
     to read a checkpoint because of a bookkeeping key would make this useless
     for the one job it has. The fields that determine the network are all
-    required, so nothing load-bearing can be missing quietly.
+    required, so nothing essential can be missing quietly.
 
     `max_encoder_length` / `max_decoder_length` fall back to the largest
-    context in `architecture.md` §4.4 when a foreign checkpoint omits them,
-    since HuggingFace's T5 declares no limit at all.
+    context in the design spec §4.4 when a foreign checkpoint omits them,
+    since HuggingFace's seq2seq model declares no limit at all.
     """
     required = (
         "vocab_size",

@@ -37,7 +37,7 @@ Filters
 Each rejection is counted by reason in `DatasetReport`, never silent:
 wrong style, excluded cleanup class, empty side, identity pair (output ==
 input), duplicate input, control token inside the text, over the token
-budget (dropped -- never truncated, architecture.md §4.5), output/input
+budget (dropped -- never truncated, the design spec §4.5), output/input
 length ratio outside the configured bounds, and (optionally) a target that
 loses one of the input's protected spans (numbers, URLs, e-mails, @mentions,
 `code`) -- the teacher does this in ~3% of pairs.

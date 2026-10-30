@@ -37,7 +37,7 @@ from src.errors import (
 from src.objective import UL2Objective
 from src.telemetry import MixtureTelemetry
 
-# Degenerate, typical (P50=18, P90=88, P99=597 per architecture.md 4.4) and
+# Degenerate, typical (P50=18, P90=88, P99=597 per the design spec 4.4) and
 # boundary lengths.
 LENGTHS = [8, 9, 18, 88, 200, 597, 1024, 2047, 2048]
 MODES = ["R", "X", "S"]
@@ -108,7 +108,7 @@ def test_decoder_input_is_a_valid_shift(objective, length, mode):
 
 def test_full_context_x_denoising_matches_the_documented_arithmetic(objective):
     """
-    architecture.md 4.4: X on a 2048-token input produces ~1,040-1,056 target
+    X on a 2048-token input produces ~1,040-1,056 target
     tokens, which is why the decoder context had to be raised from 1024.
     """
     example = objective.corrupt(make_tokens(2048), random.Random(0), mode="X")
@@ -116,7 +116,7 @@ def test_full_context_x_denoising_matches_the_documented_arithmetic(objective):
 
 
 def test_full_context_r_denoising_stays_inside_the_sentinel_budget(objective):
-    """architecture.md 6.3: ~103 sentinels needed, 256 available."""
+    """~103 sentinels needed, 256 available."""
     example = objective.corrupt(make_tokens(2048), random.Random(0), mode="R")
     assert example.num_spans == 102
 
@@ -142,7 +142,7 @@ def test_different_seeds_produce_different_examples(objective, mode):
 
 def test_a_whole_stream_replays_identically(objective):
     """
-    The property architecture.md 7.9 depends on: after a crash-restart, a
+    The property the design spec 7.9 depends on: after a crash-restart, a
     resumed iterator must produce the tokens the run had not yet seen, which
     requires the whole stream to be reproducible from its seed.
     """
@@ -193,7 +193,7 @@ def test_telemetry_records_every_example(config, specials):
 
 
 def test_telemetry_shows_the_probability_versus_token_share_gap(config, specials):
-    """architecture.md 7.3, observed on real generated examples."""
+    """The design spec 7.3, observed on real generated examples."""
     telemetry = MixtureTelemetry(config.mode_weights)
     objective = UL2Objective(config, specials, telemetry)
 
@@ -224,7 +224,7 @@ def test_minimum_admissible_length_works(objective, config, specials):
 
 
 def test_too_long_sequences_are_rejected_by_default(objective):
-    """architecture.md 4.5: silent truncation is forbidden."""
+    """silent truncation is forbidden."""
     with pytest.raises(SourceTooLongError, match="max_source_length"):
         objective.corrupt(make_tokens(2049), random.Random(0))
 
@@ -316,7 +316,7 @@ def test_construction_rejects_a_configuration_that_cannot_fit(config, small_spec
 
 
 def test_construction_rejects_a_decoder_that_is_too_small(specials):
-    """The architecture.md 4.4 regression: encoder 2048 with decoder 1024."""
+    """The design spec 4.4 regression: encoder 2048 with decoder 1024."""
     with pytest.raises(ConfigError, match="decoder target"):
         UL2Objective(UL2Config(max_target_length=1024), specials)
 

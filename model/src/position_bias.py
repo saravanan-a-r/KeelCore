@@ -1,9 +1,9 @@
 """
-T5 relative position bias (architecture.md §4.6).
+Relative position bias.
 
 What it is
 ----------
-Instead of adding a positional vector to each token's embedding, T5 adds a
+Instead of adding a positional vector to each token's embedding, this model adds a
 learned scalar to each attention *logit*, chosen by how far apart the two
 tokens are. So the model is told "these tokens are 7 apart", never "this
 token is at index 412".
@@ -12,7 +12,7 @@ Two consequences matter for this project:
 
   1. **No positional ceiling and no per-position parameters.** The table is
      `num_buckets x num_heads`, independent of context length. That is why
-     architecture.md §4.4 could raise the decoder context from 1024 to 2048
+     The design spec §4.4 could raise the decoder context from 1024 to 2048
      with *zero* change to the parameter count or model file size.
 
   2. **Length generalization.** Distances are bucketed logarithmically —
@@ -29,7 +29,7 @@ meaningful notion of "distance" between a decoder position and an encoder
 position. This is not an omission; `test_cross_attention_has_no_position_bias`
 is a regression lock on it.
 
-One table per stack, shared by every layer in that stack (T5's design), which
+One table per stack, shared by every layer in that stack, which
 is why §4.3 counts `(32 buckets x 16 heads) x 2 stacks = 1,024` parameters
 rather than one table per layer.
 """
@@ -49,7 +49,7 @@ def relative_position_bucket(
     max_distance: int,
 ) -> torch.Tensor:
     """
-    Map signed token distances to bucket indices (T5's scheme, exactly).
+    Map signed token distances to bucket indices (logarithmic bucketing).
 
     `relative_position` is `key_index - query_index`, so a positive value
     means the key is *after* the query.

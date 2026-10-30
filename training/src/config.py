@@ -12,7 +12,7 @@ HuggingFace naming
 ------------------
 Every field that exists in `transformers.TrainingArguments` uses **that
 field's exact name and meaning**, for the same reason the model config uses
-`T5Config`'s:
+HuggingFace's config names:
 
     output_dir  seed  data_seed  max_steps  num_train_epochs
     learning_rate  lr_scheduler_type  warmup_steps  warmup_ratio
@@ -223,7 +223,7 @@ class TrainingConfig:
     eval_max_batches: int | None = None
     keep_best_checkpoint: bool = True
 
-    # Learning-rate multipliers for the two tensor families T5 sizes far from
+    # Learning-rate multipliers for the two tensor families sized far from
     # every other matrix (see `optimizer.py`). 1.0 is plain AdamW; the real
     # values live in training_config.yml.
     position_bias_lr_multiplier: float = 1.0

@@ -13,7 +13,7 @@ the point of being boring:
 That matters more for pretraining than it did for tokenizer fitting. The
 tokenizer only had to be able to *represent* whatever it was shown; the model
 has to learn to reproduce URLs, code and numbers character-for-character
-(architecture.md NF1, README "Fidelity beats compression"). Anything this
+. Anything this
 layer silently rewrites is something the model will confidently get wrong.
 
 Specifically, and deliberately:
@@ -180,7 +180,7 @@ def clean_record(raw_text: str, *, repair_encoding: bool = True) -> list[str]:
     """
     Full per-record pipeline, returning zero or more ready-to-write chunks.
 
-    Order is load-bearing: encoding repair has to precede boilerplate
+    Order is essential: encoding repair has to precede boilerplate
     filtering (a mojibake'd header line does not match its pattern), and
     chunking has to come last so every emitted chunk is length-safe no matter
     what the earlier passes did.

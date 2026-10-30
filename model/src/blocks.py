@@ -1,7 +1,7 @@
 """
 Encoder and decoder layers.
 
-Pre-norm residual structure (architecture.md §4.1):
+Pre-norm residual structure:
 
     x = x + dropout(sublayer(norm(x)))
 
@@ -11,7 +11,7 @@ That clean path is what keeps gradients well-behaved through 24 layers; a
 post-norm stack of this depth typically needs a warmup schedule and careful
 tuning to train at all.
 
-Parameter counts per layer (architecture.md §4.3), which the norms below are
+Parameter counts per layer, which the norms below are
 counted into:
 
     encoder: self-attn (4 x d x d) + GeGLU (3 x d x d_ff) + 2 RMSNorm

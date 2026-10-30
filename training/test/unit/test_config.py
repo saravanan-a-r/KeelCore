@@ -4,7 +4,7 @@ Unit tests for `TrainingConfig` and the YAML it is loaded from.
 Two things are being locked down. First, that a mistyped or impossible setting
 fails *before* the run starts rather than after a week of it — every refusal
 below stands in for a specific way a run can be wrong while looking fine.
-Second, that the real `training_config.yml` says what architecture.md §13 says
+Second, that the real `training_config.yml` says what the design spec §13 says
 it should, so the reference configuration and the file that implements it
 cannot drift.
 """
@@ -380,7 +380,7 @@ def test_every_real_stage_loads(stage):
 
 def test_inverse_sqrt_is_still_the_default_schedule():
     """
-    architecture.md §13's choice, and still what a stage gets unless it says
+    The design spec §13's choice, and still what a stage gets unless it says
     otherwise: inverse_sqrt never needs to know how long the run is. The
     `pretrain` stage overrides it (see below); the default it overrides
     should not quietly change with it.
@@ -391,7 +391,7 @@ def test_inverse_sqrt_is_still_the_default_schedule():
 
 def test_pretraining_anneals_over_its_final_tenth():
     """
-    architecture_improvements.md item 2. Three things have to line up or the
+    the design spec, improvement 2. Three things have to line up or the
     cooldown is not the phase it claims to be: the schedule, the length of
     the decay, and the step the decay begins at — which is also the step the
     data mixture switches on, so an error here is not only a learning-rate
@@ -473,7 +473,7 @@ def test_the_tiny_cli_sources_are_not_weighted_like_the_big_ones():
 
 
 def test_sft_uses_cosine_and_a_lower_rate():
-    """architecture.md §13: warmup -> cosine, at a lower peak than pretraining."""
+    """warmup -> cosine, at a lower peak than pretraining."""
     sft = load_training_config(stage="sft")
     pretrain = load_training_config(stage="pretrain")
     assert sft.lr_scheduler_type == "cosine"
@@ -481,20 +481,20 @@ def test_sft_uses_cosine_and_a_lower_rate():
 
 
 def test_dropout_is_off_for_pretraining_and_on_for_sft():
-    """architecture.md §13's table: 0.0 pretraining, 0.1 SFT."""
+    """The design spec §13's table: 0.0 pretraining, 0.1 SFT."""
     assert load_training_config(stage="pretrain").dropout_rate == 0.0
     assert load_training_config(stage="sft").dropout_rate == 0.1
 
 
 def test_label_smoothing_is_sft_only():
-    """architecture.md §13: no smoothing during pretraining, 0.1 for SFT."""
+    """no smoothing during pretraining, 0.1 for SFT."""
     assert load_training_config(stage="pretrain").label_smoothing_factor == 0.0
     assert load_training_config(stage="sft").label_smoothing_factor == 0.1
 
 
 def test_the_pretraining_effective_batch_reaches_a_million_tokens():
     """
-    architecture.md §13: ">=1M tokens/step via gradient accumulation". Worked
+    ">=1M tokens/step via gradient accumulation". Worked
     against the model's real context length rather than a number repeated
     here, so raising the context without revisiting the batch size fails.
     """
@@ -518,14 +518,14 @@ def test_the_reference_optimizer_settings_are_section_13s():
 
 
 def test_pretraining_warmup_is_one_to_two_percent():
-    """architecture.md §13: "warmup ~1-2% of steps"."""
+    """"warmup ~1-2% of steps"."""
     pretrain = load_training_config(stage="pretrain")
     fraction = pretrain.resolved_warmup_steps / pretrain.max_steps
     assert 0.01 <= fraction <= 0.02
 
 
 def test_gradient_checkpointing_and_bf16_are_on_for_pretraining():
-    """architecture.md §13's memory and precision rows."""
+    """The design spec §13's memory and precision rows."""
     pretrain = load_training_config(stage="pretrain")
     assert pretrain.gradient_checkpointing is True
     assert pretrain.bf16 is True

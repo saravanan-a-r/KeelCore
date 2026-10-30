@@ -1,13 +1,13 @@
 """
 The two leaf building blocks: RMSNorm and the GeGLU feed-forward.
 
-Both are deliberately parameter-frugal in the ways architecture.md §4.1
+Both are deliberately parameter-frugal in the ways the design spec §4.1
 chose:
 
   - RMSNorm has a weight and **no bias**, and does not subtract the mean.
-  - The feed-forward projections have **no bias** either (T5 convention).
+  - The feed-forward projections have **no bias** either (by design).
 
-Those absences are load-bearing for the parameter budget in §4.3: an
+Those absences are essential to the parameter budget in §4.3: an
 RMSNorm contributes exactly `d_model` parameters, and a GeGLU FFN exactly
 `3 x d_model x d_ff`. Adding biases anywhere would silently change the model's
 size and break the count check.
@@ -39,7 +39,7 @@ _ACTIVATION_FUNCTIONS = {
 
 class RMSNorm(nn.Module):
     """
-    Root-mean-square layer normalization (architecture.md §4.1).
+    Root-mean-square layer normalization.
 
     Rescales by RMS without centering, then applies a learned per-channel
     gain. Cheaper than LayerNorm — no mean, no bias — at no quality cost.
@@ -69,7 +69,7 @@ class RMSNorm(nn.Module):
 
 class GeGLUFeedForward(nn.Module):
     """
-    Gated GELU feed-forward (architecture.md §4.1, §4.7).
+    Gated GELU feed-forward.
 
         out = W_down( GELU(W_gate x) * W_up x )
 

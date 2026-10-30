@@ -8,7 +8,7 @@ Entry point for tokenizer training.
 `training_corpus/output/` folder produced by the downloaders). Everything
 else is controlled by config/default.yaml.
 
-Pipeline (DESIGN.md 3.1):
+Pipeline:
 
     discover corpus files
       -> seeded sample -> output/corpus.txt          (the training lines)
@@ -129,7 +129,7 @@ def resolve_output_dir(cfg: dict) -> Path:
 
 def write_token_map(sp, output_dir: Path) -> Path:
     """
-    Resolve every reserved token name to its integer ID (DESIGN.md 5.3).
+    Resolve every reserved token name to its integer ID.
 
     This file is the contract with pretraining, SFT, DPO and inference:
     they look IDs up by name here. No integer token ID is ever hardcoded.

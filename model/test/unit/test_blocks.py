@@ -3,11 +3,11 @@ Unit tests for the encoder and decoder layers.
 
 Two things are locked here that nothing else can catch:
 
-  1. **Per-layer parameter counts**, checked against architecture.md §4.3's
+  1. **Per-layer parameter counts**, checked against the design spec §4.3's
      arithmetic. These are what the 750,971,904 total is built from; a stray
      bias or an extra norm changes the model's size silently.
 
-  2. **Cross-attention receives no position bias.** T5 cross-attention is
+  2. **Cross-attention receives no position bias.** Cross-attention is
      purely content-based — there is no meaningful distance between a decoder
      position and an encoder position. This is easy to "fix" by mistake, so
      it is asserted directly.
@@ -31,7 +31,7 @@ def _random_init(module):
 
 
 def test_encoder_layer_parameter_count(tiny_config):
-    """architecture.md §4.3: self-attention + GeGLU + 2 RMSNorm."""
+    """self-attention + GeGLU + 2 RMSNorm."""
     expected = (
         4 * tiny_config.d_model * tiny_config.inner_dim
         + 3 * tiny_config.d_model * tiny_config.d_ff
@@ -41,7 +41,7 @@ def test_encoder_layer_parameter_count(tiny_config):
 
 
 def test_decoder_layer_parameter_count(tiny_config):
-    """architecture.md §4.3: self + cross attention, GeGLU, 3 RMSNorm."""
+    """self + cross attention, GeGLU, 3 RMSNorm."""
     expected = (
         2 * (4 * tiny_config.d_model * tiny_config.inner_dim)
         + 3 * tiny_config.d_model * tiny_config.d_ff
@@ -136,7 +136,7 @@ def test_decoder_layer_attends_to_the_encoder(tiny_config):
 
 def test_cross_attention_has_no_position_bias(tiny_config, monkeypatch):
     """
-    Regression lock. T5 cross-attention is content-based only; there is no
+    Regression lock. Cross-attention is content-based only; there is no
     distance between a decoder position and an encoder position to encode.
     Intercepting the call is the only way to prove nothing was passed.
     """

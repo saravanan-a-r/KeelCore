@@ -1,9 +1,9 @@
 """
-The acceptance gates (DESIGN.md 9).
+The acceptance gates.
 
 Hard gates (1, 2, 3, 6) fail the run with a non-zero exit. Soft gates
 (4, 5, 8, 10) are measurements that inform the vocab-size decision
-(DESIGN.md 5.1) and warn rather than fail. Gates 7, 9 and 11 are report-only
+ and warn rather than fail. Gates 7, 9 and 11 are report-only
 diagnostics for manual review.
 
 Gate 1 -- byte-exact round-trip -- is the keystone. It is the empirical proof

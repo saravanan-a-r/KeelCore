@@ -1,6 +1,6 @@
 """
 The synthetic rewrite task, as the assembled pipeline actually runs it
-(architecture_improvements.md item 4).
+.
 
 `rewrite/test/` proves the corruption and the framing; this file proves the
 task is wired into `PretrainBatchSource` the way `training_config.yml` says:

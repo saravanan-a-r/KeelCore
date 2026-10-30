@@ -1,5 +1,5 @@
 """
-Checkpointing and resumption (architecture.md §7.9, §13).
+Checkpointing and resumption.
 
 §7.9 is blunt about what this has to do: *"Resumable weights are not enough —
 the data pipeline must also be resumable. If the sampler restarts from the
@@ -19,14 +19,14 @@ The layout is HuggingFace's, because it costs nothing and means a released
 checkpoint directory *is* the thing `from_pretrained` wants:
 
     checkpoint-4000/
-      config.json          T5Config document        (model/src/huggingface.py)
+      config.json          model config document    (model/src/huggingface.py)
       model.safetensors    weights, HuggingFace names
       optimizer.pt         AdamW moments
       trainer_state.json   step, data position, metric history
       training_config.json the run's settings
       rng_state.pt         torch RNG
 
-The first two are exactly what `T5ForConditionalGeneration.from_pretrained`
+The first two are exactly what HuggingFace's `from_pretrained`
 reads; the rest it ignores. So every intermediate checkpoint of a run is
 directly loadable by anyone with `transformers`, with no export step and
 nothing to remember at release time. That is the difference between "we can

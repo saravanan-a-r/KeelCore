@@ -1,5 +1,5 @@
 """
-Learning-rate schedules (architecture.md §13).
+Learning-rate schedules.
 
 A schedule here is a **pure function of the step number** returning a
 multiplier on the peak learning rate, not a stateful object wrapped around an
@@ -32,13 +32,13 @@ in hindsight. Cosine must know `max_steps` up front, and a cosine schedule
 whose horizon is later moved decays to a floor at the old horizon and stays
 there.
 
-`warmup_stable_decay` (architecture_improvements.md item 2) is the third
+`warmup_stable_decay` is the third
 option and the one `training_config.yml` now uses for pretraining: warm up,
 hold the peak flat, then decay to (near) zero over the final stretch. It gives
 up inverse-sqrt's extend-at-any-time property in exchange for the late-run
 loss drop a decay phase reliably recovers — the mechanism behind MiniCPM's,
 OLMo 2's and DeepSeek's reported annealing gains, and Llama 3's "annealing"
-phase. Note the trade honestly: the horizon is now load-bearing, because
+phase. Note the trade: the horizon is now essential, because
 moving it after the fact means the decay happened at the wrong place.
 
 The stable phase is **constant**, not inverse-sqrt. That is what

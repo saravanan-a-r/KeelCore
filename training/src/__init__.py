@@ -23,7 +23,7 @@ exists, schedule names are `SchedulerType`'s and the schedule arithmetic is
 `transformers.optimization`'s — so a run continued under HuggingFace's
 `Trainer` follows the same learning-rate curve rather than a similar one.
 Every checkpoint this package writes is a directory
-`T5ForConditionalGeneration.from_pretrained` can load directly, with no
+HuggingFace's `from_pretrained` can load directly, with no
 export step.
 
 Usage

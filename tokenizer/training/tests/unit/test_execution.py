@@ -56,7 +56,7 @@ def test_empty_input_is_not_an_error():
 @pytest.mark.parametrize("workers", [1, 2, 4, 8])
 def test_results_are_in_input_order_at_every_worker_count(workers):
     """
-    The load-bearing property. Workers finish out of order -- a 2 GB shard
+    The key property. Workers finish out of order -- a 2 GB shard
     takes far longer than a 4 MB one -- so if `map` returned completion order
     the sampled corpus would depend on scheduling, and nothing downstream
     could be reproducible.

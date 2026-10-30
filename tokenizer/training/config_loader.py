@@ -1,7 +1,7 @@
 """
 Load and validate the tokenization-training YAML config.
 
-Design Principle 4 (DESIGN.md 2): fail loudly, never silently. A typo in a
+Design Principle 4: fail loudly, never silently. A typo in a
 config key must abort the run *before* a multi-hour training job starts,
 not silently fall back to a default that quietly changes the vocabulary.
 Every key is therefore required and type-checked; unknown keys are rejected.
@@ -172,7 +172,7 @@ def _check_semantics(cfg: dict[str, Any]) -> None:
             )
 
     if trainer["model_type"] != "unigram":
-        # DESIGN.md T1. Every downstream assumption (byte_fallback semantics,
+        # the tokenizer design spec T1. Every downstream assumption (byte_fallback semantics,
         # fertility targets, the freeze contract) is written against Unigram.
         raise ConfigError(
             f"trainer.model_type must be 'unigram' (DESIGN.md T1), got '{trainer['model_type']}'"

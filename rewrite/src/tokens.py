@@ -3,7 +3,7 @@ The token IDs the rewrite frame is built from, resolved by name.
 
 Same boundary `UL2/src/special_tokens.py` draws: this module is the whole
 dependency the task has on the tokenizer. IDs are looked up by name in
-`token_map.json` (architecture.md 6.4 forbids hardcoding them), and every
+`token_map.json`, and every
 token used here was reserved in the frozen vocabulary at tokenizer-training
 time (`tokenizer/training/specials.py`: `STYLE_TOKENS`, `STRUCTURAL_TOKENS`)
 -- which is what lets this task be added to pretraining without an embedding
@@ -71,7 +71,7 @@ class RewriteTokens:
         style_token: str = DEFAULT_STYLE_TOKEN,
     ) -> "RewriteTokens":
         """
-        Resolve the frame by name. `decoder_start_id` is `<pad>`, the T5
+        Resolve the frame by name. `decoder_start_id` is `<pad>`, the
         convention `SpecialTokens.from_token_map` also follows (no BOS token).
         """
         mapping = _load_token_map(token_map)

@@ -53,7 +53,7 @@ adapter:
     decoder_self_attention: [q_proj, k_proj, v_proj, o_proj]
     decoder_cross_attention: [q_proj, k_proj, v_proj, o_proj]
     decoder_ffn: [gate_proj, up_proj, down_proj]
-  # Per-projection learning-rate multipliers, e.g. {q_proj: 0.5}. T5's query
+  # Per-projection learning-rate multipliers, e.g. {q_proj: 0.5}. The query
   # weights are ~8x smaller than k/v (no 1/sqrt(d) in the scores), so the same
   # LoRA delta moves q 8x more in relative terms. TensorBoard's
   # adapter/relative_delta/* shows whether that needs damping; leave empty
@@ -92,7 +92,7 @@ data:
   eval_examples: 10000
   split_salt: rephrase-v1
   # Examples longer than this are DROPPED and counted, never truncated -- a
-  # rewrite of a cut-off input looks valid and is not (architecture.md §4.5).
+  # rewrite of a cut-off input looks valid and is not.
   # Budgets include the frame tokens. p99 of the data is ~510 / 320 tokens.
   max_source_tokens: 512
   max_target_tokens: 384

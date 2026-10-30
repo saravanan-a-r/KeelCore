@@ -1,6 +1,6 @@
 """
 `BlendedCorpus` — one resumable stream drawn from several sources in
-configured proportions (architecture_improvements.md item 2).
+configured proportions.
 
 Why this exists
 ---------------

@@ -9,7 +9,7 @@ Every failure mode in this module raises a *specific* type, never a bare
    configuration is impossible, stop the run" (ConfigError). A caller
    cannot make that distinction against a generic exception.
 2. `assert` statements vanish under `python -O`. The sentinel-budget check
-   in architecture.md 7.4 is required to "fail loudly at data-generation
+   in the design spec 7.4 is required to "fail loudly at data-generation
    time" -- it must not be something an optimization flag can silently
    disable.
 """
@@ -48,7 +48,7 @@ class SourceTooLongError(UL2Error):
     """
     The input token sequence exceeds `max_source_length`.
 
-    Raised only when `on_overlong_source="error"` (the default). architecture.md
+    Raised only when `on_overlong_source="error"` (the default). the design spec
     4.5 forbids *silent* truncation; truncation is available but must be
     opted into explicitly, and is counted in telemetry when it happens.
     """
@@ -58,7 +58,7 @@ class SentinelBudgetExceededError(UL2Error):
     """
     An example needs more spans than there are sentinel tokens.
 
-    architecture.md 7.4: "Hard assert that no single example requires more
+    "Hard assert that no single example requires more
     than 256 spans. Fail loudly at data-generation time; never wrap around
     or silently drop a span." Wrapping would reuse `<extra_id_0>` twice in
     one example, making the target ambiguous and quietly poisoning training.
@@ -69,7 +69,7 @@ class TargetTooLongError(UL2Error):
     """
     The decoder target exceeds `max_target_length`.
 
-    This is the failure architecture.md 4.4 exists to prevent: a target that
+    This is the failure the design spec 4.4 exists to prevent: a target that
     overflows the decoder gets truncated, training the model to produce
     *incomplete* reconstructions -- the opposite of the objective's purpose.
     Better to stop than to train on it.

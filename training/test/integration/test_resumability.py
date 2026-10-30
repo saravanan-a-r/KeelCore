@@ -1,5 +1,5 @@
 """
-Resumption (architecture.md §7.9).
+Resumption.
 
 A 50–100B token run is multi-week and *will* be interrupted. The property
 these tests establish is the strong one: a run stopped and resumed must
@@ -40,7 +40,7 @@ def test_a_resumed_run_is_identical_to_an_uninterrupted_one(
     tmp_path, model_config, training_config
 ):
     """
-    The load-bearing test of §7.9.
+    The key test of §7.9.
 
     Six steps straight through, against three steps + a crash + three more
     from the checkpoint. Every weight must match exactly. If the data

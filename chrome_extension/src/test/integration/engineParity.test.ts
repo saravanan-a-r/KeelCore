@@ -1,7 +1,7 @@
 /**
  * The whole rewrite path -- prompt assembly, onnxruntime-web with a LoRA
  * adapter active, the KV-cached greedy loop, logits processors, decoding --
- * against native onnxruntime on the same files: a tiny random T5 in
+ * against native onnxruntime on the same files: a tiny random encoder-decoder in
  * KeelCore's package format (LoRA-ready base graphs, a professional and a
  * grammar adapter, the other styles falling back to professional), with
  * repetition penalty and no-repeat n-gram switched on. Without an adapter the

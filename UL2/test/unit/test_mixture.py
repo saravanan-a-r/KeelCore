@@ -5,7 +5,7 @@ Two distinct mechanisms live here, for two different jobs:
 
   - `ModeSampler` -- random draws for *training*, where variety is the point.
   - `deterministic_schedule` -- exact apportionment for *frozen evaluation*,
-    where architecture.md 7.6 requires the mixture to be identical in every
+    where the design spec 7.6 requires the mixture to be identical in every
     run so per-mode losses are computed over identical example counts.
 
 Confusing the two would make validation losses jitter between runs for

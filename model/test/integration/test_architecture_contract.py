@@ -1,5 +1,5 @@
 """
-Regression lock on the frozen decisions in architecture.md §4.
+Regression lock on the frozen decisions in the design spec §4.
 
 This file tests agreement between the code, `model_config.yml`, and the
 design document — not behaviour. A failure means someone is about to change
@@ -37,7 +37,7 @@ def base():
 
 
 def test_large_dimensions(large):
-    """architecture.md §4.2, decision D2 (FROZEN)."""
+    """The design spec §4.2, decision D2 (FROZEN)."""
     assert large.d_model == 1024
     assert large.d_ff == 2816
     assert large.num_layers == 24
@@ -58,7 +58,7 @@ def test_base_dimensions(base):
 
 def test_encoder_and_decoder_depth_are_equal(large, base):
     """
-    architecture.md §4.7: a transformation task needs balanced understanding
+    a transformation task needs balanced understanding
     and generation. (Summarization can use a deep encoder and shallow decoder
     because output is much shorter than input; for rephrase, output ≈ input.)
     """
@@ -72,13 +72,13 @@ def test_attention_width_equals_the_model_width(large, base):
 
 
 def test_d_kv_is_64(large, base):
-    """architecture.md §4.7: the stability/quality sweet spot across scales."""
+    """the stability/quality sweet spot across scales."""
     assert large.d_kv == base.d_kv == 64
 
 
 def test_d_ff_is_about_2_75_times_d_model(large, base):
     """
-    architecture.md §4.7: a GeGLU FFN has 3 matrices where a ReLU FFN has 2,
+    a GeGLU FFN has 3 matrices where a ReLU FFN has 2,
     so 2.75x matches the parameter count of a conventional 4x ReLU FFN.
     """
     for config in (large, base):
@@ -91,7 +91,7 @@ def test_d_ff_is_about_2_75_times_d_model(large, base):
 
 def test_the_documented_total(large):
     """
-    architecture.md §4.3 put this at 750,971,904. It grew by 917,504 — one
+    The design spec §4.3 put this at 750,971,904. It grew by 917,504 — one
     tied embedding row per CLI vocabulary piece, 896 x 1,024 — when the
     vocabulary went from 32,832 to 33,728. See CLI_VOCABULARY.md.
     """
@@ -107,7 +107,7 @@ def test_the_documented_base_total(base):
 
 
 def test_bf16_serving_size_is_about_1_5_gb(large):
-    """architecture.md §4.3: ~1,504 MB in bf16, the default serving format."""
+    """~1,504 MB in bf16, the default serving format."""
     assert round(large.parameter_count() * 2 / 1_000_000) == 1504
 
 
@@ -115,7 +115,7 @@ def test_bf16_serving_size_is_about_1_5_gb(large):
 
 
 def test_embeddings_are_tied(large):
-    """architecture.md §4.1: saves 34.5M params at zero quality cost."""
+    """saves 34.5M params at zero quality cost."""
     assert large.tie_word_embeddings is True
 
 
@@ -154,7 +154,7 @@ def test_no_projection_anywhere_carries_a_bias(tiny_config):
 
 def test_layers_are_pre_norm(tiny_config):
     """
-    architecture.md §4.1. Zeroing every sub-layer output must leave a layer
+    The design spec §4.1. Zeroing every sub-layer output must leave a layer
     as the exact identity, which is only true if the residual path bypasses
     normalization entirely.
     """
@@ -168,7 +168,7 @@ def test_layers_are_pre_norm(tiny_config):
 
 def test_dropout_defaults_to_zero_for_pretraining(large):
     """
-    architecture.md §4.1: pretraining data is effectively unlimited, so
+    pretraining data is effectively unlimited, so
     dropout would only slow learning. Stage 2 (SFT) raises it to 0.1.
     """
     assert large.dropout_rate == 0.0
@@ -179,7 +179,7 @@ def test_dropout_defaults_to_zero_for_pretraining(large):
 
 def test_encoder_and_decoder_contexts_are_both_2048(large):
     """
-    architecture.md §4.4 (FROZEN). The decoder was raised from 1024 for two
+    The design spec §4.4 (FROZEN). The decoder was raised from 1024 for two
     independent reasons: <style:elaborate> needs to exceed its input, and
     X-denoising targets (~1,057 tokens) overflow a 1024 decoder — which
     would corrupt the pretraining objective itself.
@@ -200,7 +200,7 @@ def test_a_1024_decoder_could_not_hold_an_x_denoising_target(large):
 
 def test_context_length_costs_no_parameters(large):
     """
-    architecture.md §4.4's key claim: relative position bias has no
+    The design spec §4.4's key claim: relative position bias has no
     per-position parameters, so 2048 and 4096 produce byte-identical model
     files. The entire cost of a longer context is memory and time.
     """
@@ -215,7 +215,7 @@ def test_context_length_costs_no_parameters(large):
 
 def test_over_length_input_is_rejected_never_truncated(tiny_model, tiny_config):
     """
-    architecture.md §4.5 (FROZEN): "Silent truncation is forbidden." A
+    The design spec §4.5 (FROZEN): "Silent truncation is forbidden." A
     rephrase of a truncated input looks valid and is not.
     """
     from src.errors import ShapeError
@@ -230,7 +230,7 @@ def test_over_length_input_is_rejected_never_truncated(tiny_model, tiny_config):
 
 def test_position_bias_uses_the_t5_defaults(large):
     """
-    architecture.md §4.6: keep the proven defaults rather than scaling them
+    keep the proven defaults rather than scaling them
     with context on speculation. Evaluation is bucketed by input length
     (§7.7) so length-dependent degradation would be visible if it appeared.
     """
@@ -240,7 +240,7 @@ def test_position_bias_uses_the_t5_defaults(large):
 
 def test_one_position_bias_table_per_stack(tiny_config):
     """
-    architecture.md §4.3 counts `(32 x 16) x 2 stacks`, not per layer. One
+    The design spec §4.3 counts `(32 x 16) x 2 stacks`, not per layer. One
     table per layer would multiply that by 24.
     """
     model = RephraseSeq2Seq(tiny_config)
@@ -293,7 +293,7 @@ def test_cross_attention_carries_no_position_bias(tiny_config, monkeypatch):
 
 def test_vocab_size_matches_the_tokenizer(large, base):
     """
-    architecture.md §6.1 (FROZEN): 33,728. Must equal the trained
+    The design spec §6.1 (FROZEN): 33,728. Must equal the trained
     tokenizer's vocabulary or every embedding row is misaligned.
 
     Was 32,832 until the 896-piece CLI vocabulary was reserved
@@ -305,7 +305,7 @@ def test_vocab_size_matches_the_tokenizer(large, base):
 
 def test_there_is_no_bos_token(large):
     """
-    architecture.md §6.1: bos_id = -1, so T5's convention of starting the
+    bos_id = -1, so the convention of starting the
     decoder with <pad> applies.
     """
     assert large.decoder_start_token_id == large.pad_token_id

@@ -5,15 +5,15 @@ This is the numerical core of [R] and [X] denoising, kept separate from the
 code that builds encoder/decoder sequences so its properties can be tested
 in isolation, without any token IDs involved.
 
-The algorithm (T5's `random_spans_noise_mask`)
-----------------------------------------------
+The algorithm (span-noise mask construction)
+-------------------------------------------
 A naive "flip a coin per token" mask produces spans of geometrically
 distributed length with no control over how many there are -- and, worse,
 adjacent masked spans. Two touching spans are indistinguishable from one
 longer span once they are replaced by sentinels, so the realized span-length
 distribution silently drifts away from the configured mean.
 
-T5's construction avoids both problems by deciding the counts first, then
+This construction avoids both problems by deciding the counts first, then
 the layout:
 
     1. num_corrupted = round(n * corruption_rate)
@@ -30,7 +30,7 @@ construction rather than by expectation.
 Determinism
 -----------
 Every function here takes an explicit `random.Random`. Nothing reads global
-RNG state. This is what makes frozen validation masks (architecture.md 7.6)
+RNG state. This is what makes frozen validation masks
 and a resumable data pipeline (7.9) possible: given the same seed and the
 same input length, the same spans come out, on any machine, in any order.
 """
@@ -128,7 +128,7 @@ def sample_spans(
     Returns half-open `(start, end)` pairs in ascending order.
 
     `max_spans` is the sentinel budget. Exceeding it raises rather than
-    truncating: architecture.md 7.4 requires that a span is never silently
+    truncating: the design spec 7.4 requires that a span is never silently
     dropped and a sentinel is never reused within one example.
     """
     num_corrupted, num_spans = plan_span_counts(length, corruption_rate, mean_span_length)

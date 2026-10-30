@@ -1,5 +1,5 @@
 """
-The per-mode measurements architecture.md 7.3 marks as a requirement.
+The per-mode measurements the design spec 7.3 marks as a requirement.
 
 Why this is not optional
 ------------------------
@@ -32,7 +32,7 @@ from typing import Any, Mapping
 from .denoise import Example
 from .special_tokens import MODES
 
-# Aligned with the input-length evaluation buckets in architecture.md 7.7, so
+# Aligned with the input-length evaluation buckets in the design spec 7.7, so
 # target-length telemetry and length-bucketed quality can be read together.
 TARGET_LENGTH_BUCKETS: tuple[int, ...] = (64, 128, 256, 512, 1024, 1536, 2048)
 
@@ -110,7 +110,7 @@ class MixtureTelemetry:
 
         The three `*_share` values per mode are the point of this module: the
         gap between `configured_probability` and `decoder_token_share` is
-        exactly what architecture.md 7.3 warns must never be assumed away.
+        exactly what the design spec 7.3 warns must never be assumed away.
         """
         total_examples = self.total_examples
         total_encoder = sum(c.encoder_tokens for c in self._modes.values())

@@ -15,7 +15,7 @@ The tiny config keeps the *shape relationships* of the real one —
 `num_heads x d_kv == d_model`, `d_ff ~= 2.75 x d_model` — so it is a
 scale model rather than an unrelated one.
 
-Field names follow `transformers.T5Config` wherever one exists; see
+Field names follow HuggingFace's config names wherever one exists; see
 `src/config.py`.
 """
 

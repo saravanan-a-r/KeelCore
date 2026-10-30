@@ -35,7 +35,7 @@ def test_every_source_records_its_license():
 
 
 def test_cli_tldr_is_registered_alongside_the_five_large_corpora():
-    """The CLI-helper corpus (architecture.md §9.1's later addition), kept
+    """The CLI-helper corpus, kept
     as its own test so a regression here doesn't get lost inside the
     full-set assertion above."""
     assert "cli_tldr" in SOURCES

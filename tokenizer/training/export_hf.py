@@ -7,8 +7,8 @@ Export the trained SentencePiece model as a HuggingFace `tokenizer.json`.
 Why this exists
 ---------------
 `transformers` 5.x **removed** the slow-to-fast SentencePiece conversion
-machinery (`convert_slow_tokenizer.SpmConverter` / `T5Converter` are gone).
-Constructing `T5TokenizerFast(vocab_file="spm.model")` there does not raise --
+machinery (`convert_slow_tokenizer.SpmConverter` and its converters are gone).
+Constructing a fast tokenizer directly from `spm.model` there does not raise --
 it silently yields a 4-token vocabulary that encodes everything to `<unk>`.
 Discovering that after the tokenizer is frozen and pretraining has started
 would be expensive, so the export is built here, explicitly, and validated
@@ -20,7 +20,7 @@ converter did internally. The result is verified to produce **identical token
 IDs** to `spm.model` -- not merely "similar" output, since a model trained on
 one ID space cannot be served by a tokenizer that assigns different IDs.
 
-Component choices mirror the training config (DESIGN.md 6):
+Component choices mirror the training config:
   * `Metaspace(prepend_scheme="never")`  <- add_dummy_prefix=False
   * no normalizer                        <- normalization_rule_name="identity"
   * `ByteFallback` decoder               <- byte_fallback=True

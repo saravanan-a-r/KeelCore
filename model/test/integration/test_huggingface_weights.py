@@ -7,9 +7,9 @@ incompatible state dict produces a checkpoint that fails to load, and — worse
 — a state dict with correct *names* but a swapped pair of tensors produces one
 that loads cleanly and is quietly wrong.
 
-So the load-bearing test here is not a name comparison. It is
+So the essential test here is not a name comparison. It is
 `test_huggingface_reproduces_our_logits`: export the model, build a real
-`T5ForConditionalGeneration` from the exported files, and require the same
+HuggingFace's seq2seq model class from the exported files, and require the same
 logits for the same input. That single assertion covers the naming, the
 `wi_0`/`wi_1` gate ordering, the relative-position bucketing, the tied-output
 scaling and the activation simultaneously — every one of which is invisible to
@@ -76,7 +76,7 @@ def deeper_model(deeper_config: ModelConfig):
 
 
 def huggingface_twin(config: ModelConfig):
-    """An empty `T5ForConditionalGeneration` of the same shape."""
+    """An empty HuggingFace's seq2seq model class of the same shape."""
     document = dict(config.to_huggingface_config())
     document.pop("architectures", None)
     document.pop("max_encoder_length", None)
@@ -159,7 +159,7 @@ def test_the_gate_branch_maps_to_wi_zero():
     """
     The mapping most worth pinning explicitly. `wi_0` is the branch
     HuggingFace passes through the activation and `wi_1` the one it does not
-    (`T5DenseGatedActDense.forward`). The two have identical shapes, so
+    (HuggingFace's gated feed-forward `forward`). The two have identical shapes, so
     swapping them loads without complaint and changes what the network
     computes — the kind of defect that surfaces as "fine-tuning mysteriously
     starts from a worse loss than the released eval reported".
@@ -221,7 +221,7 @@ def test_an_unknown_parameter_is_refused_not_passed_through(name):
 
 def test_a_second_position_bias_table_is_refused():
     """
-    T5 has exactly one table per stack, on block 0, shared by every layer. A
+    HuggingFace keeps exactly one table per stack, on block 0, shared by every layer. A
     checkpoint with a table on block 3 is a different architecture, not a
     naming variant, and importing it by ignoring the block index would throw
     away weights.
@@ -305,7 +305,7 @@ def test_a_local_round_trip_is_exact(deeper_model):
 @pytest.mark.parametrize("tie_word_embeddings", [True, False])
 def test_huggingface_reproduces_our_logits(tmp_path, tie_word_embeddings):
     """
-    The load-bearing test of this module.
+    The key test of this module.
 
     Save a checkpoint, hand the directory to `from_pretrained`, and require
     HuggingFace to compute the same logits we do. Two independently written
@@ -502,9 +502,9 @@ def test_reading_a_config_missing_a_shape_field_is_refused(deeper_config):
 
 def test_a_foreign_t5_config_is_readable():
     """
-    A stock `google/t5-v1_1-base` config.json, transcribed. Nothing in this
+    A stock third-party encoder-decoder config.json, transcribed. Nothing in this
     project produced it, so it exercises the defaults for the fields
-    HuggingFace's T5 simply does not have (the context limits).
+    HuggingFace's seq2seq model simply does not have (the context limits).
     """
     document = {
         "architectures": ["T5ForConditionalGeneration"],
@@ -532,7 +532,7 @@ def test_a_foreign_t5_config_is_readable():
     config = model_config_from_huggingface(document)
     assert config.d_model == 768
     assert config.tie_word_embeddings is False
-    assert config.max_encoder_length == 2048  # ours; T5 declares no limit
+    assert config.max_encoder_length == 2048  # ours; HuggingFace's config declares no limit
     assert config.dense_act_fn == "gelu_new"
 
 

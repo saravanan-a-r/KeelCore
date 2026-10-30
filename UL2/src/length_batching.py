@@ -104,7 +104,7 @@ Why the pool is checkpointed
 The pool holds examples already read from the corpus but not yet emitted.
 Dropping it on resume would silently lose them -- the same failure
 `PretrainBatchSource._buffer` is serialized to avoid, and the same one
-architecture.md §7.9 calls out as having no signal: the loss curve looks
+The design spec §7.9 calls out as having no signal: the loss curve looks
 fine, the token budget is quietly wrong. It cannot be reconstructed by
 replaying the corpus instead, because the three per-mode pools were filled at
 three different corpus positions and a single sequential stream cannot be

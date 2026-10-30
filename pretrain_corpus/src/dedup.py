@@ -1,7 +1,7 @@
 """
 Corpus-wide deduplication that survives parallelism and restarts.
 
-architecture.md §9.1 asks for "Deduplicate (exact + MinHash)". The tokenizer
+The design spec §9.1 asks for "Deduplicate (exact + MinHash)". The tokenizer
 downloader shipped a Python `set` of hex digests, scoped to one script
 invocation — fine for an 8GB single-process run, and wrong here in three ways
 at once: it does not see across sources, it does not see across a resumed

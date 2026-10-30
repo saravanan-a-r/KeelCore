@@ -133,7 +133,7 @@ def test_our_schedule_names_are_huggingfaces():
 @needs_transformers
 def test_the_export_builds_real_training_arguments(tmp_path):
     """
-    The load-bearing test: a real `TrainingArguments` is constructed from the
+    The key test: a real `TrainingArguments` is constructed from the
     export and the values are read back. Asserting on the dict alone would
     keep passing after `transformers` renamed a field.
     """

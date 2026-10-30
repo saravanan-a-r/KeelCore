@@ -1,5 +1,5 @@
 """
-Building the optimizer (architecture.md §13: AdamW, β 0.9/0.95, wd 0.1).
+Building the optimizer.
 
 The two real decisions here are **which parameters weight decay applies to**
 and **which tensors need a learning rate of their own** (see the last section),
@@ -10,7 +10,7 @@ RMSNorm weight is a per-channel gain initialized to exactly 1.0; decaying it
 pulls it towards 0, which scales that layer's entire output down. Nothing
 crashes and no shape changes — the model simply trains to a worse place, and
 the cause is not visible in any curve. The same argument applies to biases,
-which this model does not have at all (T5 convention), so the rule below
+which this model does not have at all, so the rule below
 reduces to "norms are exempt, everything else decays" — apart from the
 position-bias tables and query projections, exempt for the reason given at
 the end.
@@ -35,7 +35,7 @@ is the lock.
 Position-bias tables and query projections
 ------------------------------------------
 AdamW moves every element by about `lr` per step whatever the tensor's size.
-T5's parametrization was designed for Adafactor, whose steps are relative to
+This parametrization suits Adafactor, whose steps are relative to
 each tensor's scale, and two tensor families sit far from the ~0.03 scale of
 every other matrix:
 
@@ -49,7 +49,7 @@ every other matrix:
 Under plain AdamW the first pretraining run's encoder was position-blind at
 step 5,000 for exactly this reason: q had grown 4.2x while the bias tables
 stayed near 1, so the bias moved encoder attention by a KL of ~0.03 against
-~2 in a healthy T5. Each family therefore gets its own group and its own lr
+~2 in a healthy encoder. Each family therefore gets its own group and its own lr
 multiplier, and neither is decayed: decay drags the bias tables back towards
 zero while they must grow, and on a query projection held at a small lr it
 would shrink the tensor instead of holding it in place.
@@ -166,7 +166,7 @@ def build_optimizer(model: nn.Module, config: TrainingConfig) -> torch.optim.Ada
     """
     AdamW, configured from the run's settings.
 
-    `β2 = 0.95` rather than PyTorch's 0.999 (architecture.md §13). The shorter
+    `β2 = 0.95` rather than PyTorch's 0.999. The shorter
     second-moment window adapts faster to the loss-scale changes a long
     pretraining run goes through; 0.999 is tuned for shorter fine-tuning runs
     and is slow to recover after a loss spike.

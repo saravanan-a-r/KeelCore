@@ -2,8 +2,9 @@
  * `model.json`: everything model-specific, as data.
  *
  * KeelCore is a base model plus one LoRA adapter per writing style. The
- * extension's code knows how to run a T5-family encoder-decoder that honours
- * the "t5-cross-kv/1" I/O contract (see onnx/t5Runner.ts) with an adapter
+ * extension's code knows how to run an encoder-decoder that honours
+ * the model's cached-attention I/O contract (`ioContract`, see the runner in
+ * onnx/) with an adapter
  * active. Which files make up the base and each style's adapter, the prompt
  * frame, the special tokens and the length limits all come from this file,
  * served next to the model files.

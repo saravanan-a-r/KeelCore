@@ -71,7 +71,7 @@ def test_packing_honours_the_document_cap():
 def test_a_single_oversized_document_is_handed_on_rather_than_dropped():
     """
     The length policy belongs to `UL2Objective._admit`, which counts the skip
-    in telemetry (architecture.md 4.5's no-silent-loss rule). If the packer
+    in telemetry. If the packer
     dropped it here instead, the record would vanish with nothing recording
     that it had.
     """
@@ -211,7 +211,7 @@ def test_the_sentinel_budget_is_shared_across_the_window(specials):
     """
     A window that needs more sentinels than exist must raise, never wrap:
     a wrapped index silently reuses a marker and makes the target ambiguous
-    (architecture.md 7.4).
+.
     """
     tiny = SpecialTokens(
         sentinel_ids=[1000, 1001],

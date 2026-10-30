@@ -6,10 +6,10 @@ cross-attention, because they differ only in where keys/values come from and
 what mask is applied — not in their arithmetic. Three near-identical classes
 would be three places for a mask bug to hide.
 
-The T5 scaling convention
--------------------------
-There is **no division by sqrt(d_kv)** here. That is not an omission: T5
-folds the scaling into its query initializer, which uses
+The attention scaling convention
+--------------------------------
+There is **no division by sqrt(d_kv)** here. That is not an omission: the
+scaling is folded into the query initializer, which uses
 `(d_model * d_kv)^-0.5` instead of the usual `d_model^-0.5`. The two
 choices are coupled, and `model_config.yml` says so at the
 `scale_attention_scores` setting. Enabling the scaling without also changing
@@ -39,7 +39,7 @@ arithmetic one. It is given:
     present, summed — the same value the manual version added to the scores
     before its softmax, just computed once instead of via two `+=`);
   - `scale=self.scale`, so SDPA's own default `1/sqrt(head_dim)` scaling is
-    replaced with T5's convention (see above): `1.0` normally, or
+    replaced with this model's convention (see above): `1.0` normally, or
     `d_kv^-0.5` when `scale_attention_scores` is on;
   - `dropout_p=self.dropout.p if self.training else 0.0`, which is SDPA's own
     dropout applied to the post-softmax weights — the same place
@@ -106,7 +106,7 @@ class MultiHeadAttention(nn.Module):
     """
     Multi-head attention with optional cross-attention and KV caching.
 
-    No biases on any projection (T5 convention) — see `layers.py` for why
+    No biases on any projection (by design) — see `layers.py` for why
     that matters to the parameter budget.
     """
 

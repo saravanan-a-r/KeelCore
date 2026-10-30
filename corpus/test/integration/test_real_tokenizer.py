@@ -41,7 +41,7 @@ def test_real_tokenizer_produces_nonempty_token_ids(corpus_dir, sp):
 
 def test_a_literal_spiece_underline_survives_through_escaping(corpus_dir, sp):
     """
-    architecture.md §6.4: every encode of arbitrary text must route through
+    every encode of arbitrary text must route through
     the marker escaper, or a literal '▁' in real text (ASCII block-shading)
     is silently eaten by SentencePiece's decoder. This is the one thing that
     would go unnoticed by a fake-processor unit test.

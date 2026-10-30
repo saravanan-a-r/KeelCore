@@ -101,7 +101,7 @@ def huggingface_multipliers(schedule: str, decay_type: str = "cosine") -> list[f
 @pytest.mark.parametrize("schedule", SCHEDULES)
 def test_every_schedule_agrees_with_transformers(schedule):
     """
-    The load-bearing test of this module.
+    The key test of this module.
 
     A run pretrained here and continued under HuggingFace's `Trainer` with the
     same `lr_scheduler_type` must not see the learning rate jump at the
@@ -215,7 +215,7 @@ def test_cosine_can_hold_a_floor():
     assert end == pytest.approx(0.1, abs=1e-12)
 
 
-# -- warmup_stable_decay (architecture_improvements.md item 2) -------------
+# -- warmup_stable_decay -------------
 
 
 def wsd(step, **overrides):

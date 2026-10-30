@@ -10,7 +10,7 @@ the facade that composes them into the contract the pretraining loop calls:
 Responsibilities kept here, deliberately, rather than pushed outward:
 
   - length admission (too short / too long) and the no-silent-truncation
-    policy of architecture.md 4.5
+    policy of the design spec 4.5
   - mode selection, via `ModeSampler`
   - post-conditions: nothing leaves this class exceeding the encoder or
     decoder budget, so the trainer never has to defend against it
@@ -21,7 +21,7 @@ Determinism contract
 --------------------
 `corrupt(tokens, rng)` is a pure function of `(tokens, rng state, config)`.
 The same seed replays the same examples in the same order, which is what
-architecture.md 7.6 (frozen validation masks) and 7.9 (resumable data
+The design spec 7.6 (frozen validation masks) and 7.9 (resumable data
 iterator) both rest on. Nothing in this class touches global RNG state or
 wall-clock time.
 """
@@ -312,7 +312,7 @@ class UL2Objective:
         Post-condition. `validate_capacity` should have made these
         unreachable; they stay because the cost of an overflowing target
         reaching the trainer is training on truncated reconstructions
-        (architecture.md 4.4), and the cost of this check is one comparison.
+, and the cost of this check is one comparison.
         """
         if example.target_length > self.config.max_target_length:
             raise TargetTooLongError(

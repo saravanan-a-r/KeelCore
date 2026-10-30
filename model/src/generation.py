@@ -1,5 +1,5 @@
 """
-Decoding, for checkpoint diagnostics (architecture.md §7.7).
+Decoding, for checkpoint diagnostics.
 
 Scope: enough to look at what a checkpoint actually produces — greedy for
 reproducible comparison between checkpoints, sampling for seeing whether the

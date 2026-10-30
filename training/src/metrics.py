@@ -1,5 +1,5 @@
 """
-Loss accounting, per UL2 mode (architecture.md §7.6, §7.7).
+Loss accounting, per UL2 mode.
 
 Why per-mode, and why it is not optional
 ----------------------------------------
@@ -40,7 +40,7 @@ from typing import Iterable, Mapping, Sequence
 import torch
 import torch.nn.functional as F
 
-# The three UL2 denoisers (architecture.md §7.2). Fixed order so a log line
+# The three UL2 denoisers. Fixed order so a log line
 # has stable columns across steps and runs.
 MODES = ("R", "X", "S")
 

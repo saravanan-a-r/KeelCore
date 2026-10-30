@@ -1,7 +1,7 @@
 """
 The parameter budget, checked three independent ways.
 
-architecture.md §4.3 works out 750,971,904 parameters by hand. This file
+The design spec §4.3 works out 750,971,904 parameters by hand. This file
 verifies that number against:
 
   1. `ModelConfig.parameter_count()` — a closed-form formula
@@ -20,7 +20,7 @@ import torch
 
 from src.seq2seq import RephraseSeq2Seq
 
-# architecture.md §4.3, computed by hand in the document, then re-derived when
+# The design spec §4.3, computed by hand in the document, then re-derived when
 # the vocabulary went 32,832 -> 33,728 for the 896-piece CLI vocabulary
 # (CLI_VOCABULARY.md). Only the tied embedding row count changed: every other
 # component below is untouched, which is the point of checking them separately.
@@ -35,7 +35,7 @@ LARGE_COMPONENTS = {
     "final_norms": 2_048,
 }
 
-# architecture.md §4.2's table.
+# The design spec §4.2's table.
 BASE_TOTAL = 224_132_352
 
 
@@ -60,7 +60,7 @@ def test_base_matches_the_declared_expectation(base_config):
 
 @pytest.mark.parametrize("component,expected", sorted(LARGE_COMPONENTS.items()))
 def test_each_component_matches_the_documented_table(large_config, component, expected):
-    """Every row of architecture.md §4.3, individually."""
+    """Every row of the design spec §4.3, individually."""
     assert large_config.parameter_breakdown()[component] == expected
 
 
@@ -72,7 +72,7 @@ def test_the_components_sum_to_the_total(large_config):
     assert breakdown["total"] == LARGE_TOTAL
 
 
-# -- serving footprint (architecture.md §4.3) ----------------------------
+# -- serving footprint ----------------------------
 
 
 @pytest.mark.parametrize(
@@ -136,7 +136,7 @@ def test_the_full_base_model_builds_at_the_documented_size(base_config):
 def test_the_full_large_model_builds_at_the_documented_size(large_config):
     """
     The real thing: ~751M parameters, ~3 GB in fp32. This is the test that
-    proves architecture.md §4.3 describes the model that actually gets built.
+    proves the design spec §4.3 describes the model that actually gets built.
     """
     model = RephraseSeq2Seq(large_config)
     try:
