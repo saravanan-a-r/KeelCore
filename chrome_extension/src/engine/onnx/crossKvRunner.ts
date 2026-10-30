@@ -26,7 +26,7 @@ export interface TensorFactory {
   new (type: 'float32', data: Float32Array, dims: readonly number[]): Tensor;
 }
 
-export interface T5Geometry {
+export interface CrossKvGeometry {
   readonly numDecoderLayers: number;
   readonly numHeads: number;
   readonly headDim: number;
@@ -47,7 +47,7 @@ export interface AdapterPair {
 
 export class ContractError extends Error {
   constructor(message: string) {
-    super(`model does not follow the t5-cross-kv/1 contract: ${message}`);
+    super(`model does not follow the cross-kv/1 contract: ${message}`);
     this.name = 'ContractError';
   }
 }
@@ -57,7 +57,7 @@ function requireNames(actual: readonly string[], expected: readonly string[], wh
   if (missing.length > 0) throw new ContractError(`${where} is missing ${missing.slice(0, 4).join(', ')}`);
 }
 
-export class T5Runner implements Seq2SeqRunner<EncoderMemory, DecoderCache> {
+export class CrossKvRunner implements Seq2SeqRunner<EncoderMemory, DecoderCache> {
   private readonly crossNames: string[] = [];
   private readonly pastNames: [string, string][] = [];
 
@@ -65,7 +65,7 @@ export class T5Runner implements Seq2SeqRunner<EncoderMemory, DecoderCache> {
     private readonly TensorCtor: TensorFactory,
     private readonly encoder: InferenceSession,
     private readonly decoder: InferenceSession,
-    private readonly geometry: T5Geometry,
+    private readonly geometry: CrossKvGeometry,
     private readonly adapter: AdapterPair | null = null,
   ) {
     for (let i = 0; i < geometry.numDecoderLayers; i++) {
@@ -83,8 +83,8 @@ export class T5Runner implements Seq2SeqRunner<EncoderMemory, DecoderCache> {
   }
 
   /** The same sessions, with `adapter` active on every run. */
-  withAdapter(adapter: AdapterPair): T5Runner {
-    return new T5Runner(this.TensorCtor, this.encoder, this.decoder, this.geometry, adapter);
+  withAdapter(adapter: AdapterPair): CrossKvRunner {
+    return new CrossKvRunner(this.TensorCtor, this.encoder, this.decoder, this.geometry, adapter);
   }
 
   private runOptions(adapter: LoraAdapter | undefined): InferenceSession.RunOptions {

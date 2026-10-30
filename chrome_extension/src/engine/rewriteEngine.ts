@@ -14,7 +14,7 @@ import { EchoError } from '../shared/errors';
 import type { StyleId } from '../shared/styles';
 import { greedyGenerate, type GreedyResult } from './generation/greedyDecoder';
 import type { ModelManifest } from './manifest';
-import { T5Runner, type AdapterPair, type T5Geometry, type TensorFactory } from './onnx/t5Runner';
+import { CrossKvRunner, type AdapterPair, type CrossKvGeometry, type TensorFactory } from './onnx/crossKvRunner';
 import { PromptBuilder } from './prompt/promptBuilder';
 import { applyInputTransforms, undoInputTransforms } from './prompt/textTransforms';
 import { Tokenizer } from './tokenizer/tokenizer';
@@ -71,7 +71,7 @@ export interface RewriteRequest {
 }
 
 export interface EngineParts {
-  readonly geometry: T5Geometry;
+  readonly geometry: CrossKvGeometry;
   readonly tokenizerJson: unknown;
   readonly encoder: InferenceSession;
   readonly decoder: InferenceSession;
@@ -80,14 +80,14 @@ export interface EngineParts {
 
 export class RewriteEngine {
   private readonly tokenizer: Tokenizer;
-  private readonly runner: T5Runner;
+  private readonly runner: CrossKvRunner;
   private readonly sessions: readonly InferenceSession[];
   private readonly prompts = new WeakMap<ModelManifest, PromptBuilder>();
 
   constructor(parts: EngineParts) {
     this.sessions = [parts.encoder, parts.decoder];
     this.tokenizer = Tokenizer.fromJson(parts.tokenizerJson);
-    this.runner = new T5Runner(parts.TensorCtor, parts.encoder, parts.decoder, parts.geometry);
+    this.runner = new CrossKvRunner(parts.TensorCtor, parts.encoder, parts.decoder, parts.geometry);
   }
 
   /** Encoder input IDs for a request; exposed so tests can check them against the reference. */

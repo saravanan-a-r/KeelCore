@@ -60,6 +60,16 @@ describe('ModelStore', () => {
     expect(await store.installed()).toEqual(model(['professional']));
   });
 
+  test('a record saved under an earlier contract label still counts as installed', async () => {
+    const { store, folder } = await storeWith([...baseFiles(manifest), ...professional]);
+    const record = await folder.getFileHandle('installed.json', { create: true });
+    const handle = await record.createSyncAccessHandle();
+    const saved = { sourceUrl: SOURCE, manifest: { ...manifest, ioContract: 'earlier-label/1' }, adapters: ['professional'] };
+    handle.write(new TextEncoder().encode(JSON.stringify(saved)), { at: 0 });
+    handle.close();
+    expect(await store.installed()).toEqual(model());
+  });
+
   test('an unreadable record does not count as installed', async () => {
     const { store, folder } = await storeWith(baseFiles(manifest));
     const record = await folder.getFileHandle('installed.json', { create: true });

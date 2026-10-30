@@ -22,7 +22,22 @@ import type { ModelSummary } from '../shared/status';
 import { isStyleId, type StyleId } from '../shared/styles';
 
 export const SUPPORTED_SCHEMA_VERSION = 2;
-export const SUPPORTED_IO_CONTRACT = 't5-cross-kv/1';
+export const SUPPORTED_IO_CONTRACT = 'cross-kv/1';
+
+/** The `/N` at the end of a contract label: the revision of the interface, which a rename keeps. */
+const revisionOf = (label: unknown): string | null => (typeof label === 'string' ? /\/(\d+)$/.exec(label)?.[1] ?? null : null);
+
+/**
+ * A manifest saved by an earlier version, which may name the same revision of
+ * the interface under another label, relabelled with the current one. Any
+ * other revision is left as it is, so `parseModelManifest` rejects it.
+ */
+export function relabelSavedManifest(raw: unknown): unknown {
+  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return raw;
+  const saved = raw as Record<string, unknown>;
+  if (revisionOf(saved.ioContract) !== revisionOf(SUPPORTED_IO_CONTRACT)) return raw;
+  return { ...saved, ioContract: SUPPORTED_IO_CONTRACT };
+}
 export const TEXT_TRANSFORMS = ['escape-spiece-markers'] as const;
 
 export type TextTransformName = (typeof TEXT_TRANSFORMS)[number];

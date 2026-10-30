@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "ioContract": "t5-cross-kv/1",
+  "ioContract": "cross-kv/1",
   "id": "tiny-echo-int8",
   "displayName": "Tiny Echo (test fixture)",
   "precision": "int8",

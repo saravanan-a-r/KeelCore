@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import * as ort from 'onnxruntime-web';
 import { parseModelManifest, type ModelManifest } from '../../engine/manifest';
-import type { TensorFactory } from '../../engine/onnx/t5Runner';
+import type { TensorFactory } from '../../engine/onnx/crossKvRunner';
 import { RewriteEngine } from '../../engine/rewriteEngine';
 import type { StyleId } from '../../shared/styles';
 import type { LoadedAdapter } from '../../worker/modelLoader';

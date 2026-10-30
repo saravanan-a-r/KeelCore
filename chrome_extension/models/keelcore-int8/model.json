@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "ioContract": "t5-cross-kv/1",
+  "ioContract": "cross-kv/1",
   "id": "keelcore-int8",
   "displayName": "KeelCore",
   "precision": "int8",

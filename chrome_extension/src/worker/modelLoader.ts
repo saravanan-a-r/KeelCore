@@ -21,7 +21,7 @@
  */
 import type * as Ort from 'onnxruntime-web';
 import { baseFiles, bytesOf, catalogOf, type AdapterManifest, type ModelManifest } from '../engine/manifest';
-import type { AdapterPair, TensorFactory } from '../engine/onnx/t5Runner';
+import type { AdapterPair, TensorFactory } from '../engine/onnx/crossKvRunner';
 import { RewriteEngine } from '../engine/rewriteEngine';
 import type { GpuProblem } from '../shared/compute';
 import { EchoError } from '../shared/errors';
