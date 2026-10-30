@@ -8,11 +8,9 @@ Transformer, pretrained once from scratch on English prose, source code and
 command-line text. Each capability is then added on top as a small **LoRA
 adapter**, so a new task is a small download rather than a new model.
 
-The **EchoMeBetter** browser extension runs KeelCore and its adapters on your
-device.
-
-> **Results below are from the first pretraining run.** A new pretraining run
-> is in progress; the evaluation sections will be updated with its results.
+The **EchoMeBetter** browser extension runs KeelCore with its text-rewriting
+adapters on your device. KeelCore itself is not tied to that task: more
+adapters, for different use cases, are in progress.
 
 ---
 
@@ -28,7 +26,7 @@ device.
       └───────────────┘      └───────────────┘      └───────────────┘   the user
 ```
 
-- **Install the base once, then pick the adapters you need.** The extension
+- **Install the base once, then pick the adapters you need.** EchoMeBetter
   reads a catalogue (`model.json`) that lists the base and the adapters on
   offer, with each file's size and SHA-256 checksum. The base comes first;
   any set of adapters can then be added to it or removed again, each
@@ -47,8 +45,9 @@ device.
 
 ### Planned
 
-- Adapters for different needs, such as legal or marketing writing, published
-  as a list that users choose from. None of these are released yet.
+- More adapters for different use cases, such as legal or marketing writing,
+  are in progress. Each will be added to the same base and offered in a list
+  that users choose from.
 - One repository per adapter in the KeelCore organization, with each adapter
   offered at more than one LoRA rank where there is time to train them.
 
@@ -57,6 +56,7 @@ device.
 ## Runs in the browser
 
 KeelCore is meant to run inside a web browser together with its adapters.
+EchoMeBetter, the browser extension, runs the text-rewriting adapters.
 Inference happens on your device, in a worker, through ONNX Runtime Web:
 
 - **WebGPU** is the default wherever the browser offers a working GPU, with a
@@ -440,7 +440,8 @@ monitoring/          the TensorBoard dashboard, per-checkpoint probes, GPU and
                      optimizer statistics
 ownership/           checkpoint hash chain, fingerprint and embedding signature
 chrome_extension/    the EchoMeBetter browser extension: downloads the base and
-                     adapters, and runs them on-device with ONNX Runtime Web
+                     the text-rewriting adapters, and runs them on-device
+                     with ONNX Runtime Web
 github_site/         the technical report, published with GitHub Pages
 test/                end-to-end pipeline tests across the packages
 model_config.yml     the model's shape: one place to change it
@@ -506,11 +507,10 @@ downloads them from the folder named in `chrome_extension/model.source.json`.
   real corpus is downloaded.
 - **First pretraining run: complete.** 90,000 steps; the final checkpoint is the
   best of the run and exports to int8 ONNX with no measurable loss in quality.
-- **New pretraining run: in progress.** Results above will be replaced with its
-  results.
-- **Browser runtime:** the extension installs the base and adapters
-  independently and runs them with ONNX Runtime Web.
-- **Adapters:** in development. They will be added to the same base.
+- **Browser runtime:** the extension installs the base and the text-rewriting
+  adapters independently and runs them with ONNX Runtime Web.
+- **Adapters:** the text-rewriting adapters run in EchoMeBetter. More adapters
+  for different use cases are in progress and will be added to the same base.
 
 ---
 
