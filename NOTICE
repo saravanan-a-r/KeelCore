@@ -2,10 +2,11 @@ KeelCore
 Copyright (c) 2026 Saravanan A R. All rights reserved.
 https://github.com/saravanan-a-r/KeelCore
 
-KeelCore is the writing model that the EchoMeBetter browser extension runs
-on. Both are covered by the KeelCore License, Version 1.0 (Personal and
-Research Use), dated October 28, 2026. See LICENSE. That file controls; this
-notice is a summary.
+KeelCore is a base model for LoRA adapters. The EchoMeBetter browser
+extension runs it together with its adapters, on your device. Both are
+covered by the KeelCore License, Version 1.0 (Personal and Research Use),
+dated October 28, 2026. See LICENSE. That file controls; this notice is a
+summary.
 
 Individuals may use KeelCore, at no cost, for their own writing (including
 writing for their own job or studies) and for noncommercial research, only
@@ -36,7 +37,7 @@ Academic / BibTeX citation:
 
     @software{keelcore2026,
       author = {Saravanan A R},
-      title  = {KeelCore: A Small, Controllable Text Rewriting Model},
+      title  = {KeelCore: A 752M Encoder-Decoder Base Model for LoRA Adapters},
       year   = {2026},
       url    = {https://github.com/saravanan-a-r/KeelCore}
     }

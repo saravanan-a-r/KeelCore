@@ -159,7 +159,7 @@ In this license:
 
       @software{keelcore2026,
         author = {Saravanan A R},
-        title  = {KeelCore: A Small, Controllable Text Rewriting Model},
+        title  = {KeelCore: A 752M Encoder-Decoder Base Model for LoRA Adapters},
         year   = {2026},
         url    = {https://github.com/saravanan-a-r/KeelCore}
       }

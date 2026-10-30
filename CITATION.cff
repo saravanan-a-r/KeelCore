@@ -3,7 +3,7 @@ message: >-
   If you use this software, please cite it using the metadata below,
   or one of the credit forms in NOTICE.
 type: software
-title: "KeelCore: A Small, Controllable Text Rewriting Model"
+title: "KeelCore: A 752M Encoder-Decoder Base Model for LoRA Adapters"
 authors:
   - given-names: "Saravanan"
     family-names: "A R"
@@ -11,8 +11,10 @@ repository-code: "https://github.com/saravanan-a-r/KeelCore"
 url: "https://github.com/saravanan-a-r/KeelCore"
 license: LicenseRef-KeelCore-1.0
 keywords:
-  - text-rewriting
+  - base-model
+  - lora
+  - adapters
   - encoder-decoder
   - transformer
-  - controllable-generation
   - seq2seq
+  - on-device-inference
