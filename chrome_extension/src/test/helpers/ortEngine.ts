@@ -58,15 +58,3 @@ export async function modelFromFolder(folder: string): Promise<TestModel> {
   const manifest = await readManifest((path) => new Uint8Array(readFileSync(join(folder, path))));
   return modelFromFiles(manifest, (path) => new Uint8Array(readFileSync(join(folder, path))));
 }
-
-/** Fetch `path` from the model folder served at `baseUrl`. */
-export async function fetchModelFile(baseUrl: string, path: string): Promise<Uint8Array> {
-  const response = await fetch(new URL(path, baseUrl));
-  if (!response.ok) throw new Error(`${new URL(path, baseUrl).toString()}: HTTP ${response.status}`);
-  return new Uint8Array(await response.arrayBuffer());
-}
-
-export async function modelFromUrl(baseUrl: string): Promise<TestModel> {
-  const manifest = await readManifest((path) => fetchModelFile(baseUrl, path));
-  return modelFromFiles(manifest, (path) => fetchModelFile(baseUrl, path));
-}
