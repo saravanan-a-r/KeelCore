@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { KEELCORE_NAME, KEELCORE_URL } from '../../shared/keelcore';
 import type { EngineStatus } from '../../shared/status';
 import type { StyleId } from '../../shared/styles';
 import { Wordmark } from '../brand/Logo';
@@ -130,33 +131,40 @@ export function PopupView(props: PopupViewProps) {
           />
         ) : null}
 
-        {/* Centered under a hairline: the privacy line keeps the full width (it would not fit beside the links), the links sit beneath it. */}
-        <footer className="_echo_$_flex _echo_$_flex-col _echo_$_items-center _echo_$_gap-1.5 _echo_$_border-0 _echo_$_border-t _echo_$_border-solid _echo_$_border-line _echo_$_pt-3 _echo_$_text-xs _echo_$_text-fg-muted">
-          <span className="_echo_$_flex _echo_$_items-center _echo_$_gap-1.5 _echo_$_whitespace-nowrap">
+        {/* Under a hairline: the privacy line on its own row (it needs the popup's full width), then the model credit on the left and the pages on the right. */}
+        <footer className="_echo_$_flex _echo_$_flex-col _echo_$_gap-2 _echo_$_border-0 _echo_$_border-t _echo_$_border-solid _echo_$_border-line _echo_$_pt-3 _echo_$_text-xs _echo_$_text-fg-muted">
+          <span className="_echo_$_flex _echo_$_items-center _echo_$_justify-center _echo_$_gap-1.5 _echo_$_whitespace-nowrap">
             <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="_echo_$_shrink-0 _echo_$_text-better-500">
               <path d="M8 1.5 2.5 3.8v3.6c0 3.3 2.3 6.1 5.5 7.1 3.2-1 5.5-3.8 5.5-7.1V3.8L8 1.5Z" />
               <path d="m5.6 8 1.7 1.7 3.2-3.3" />
             </svg>
             On-device. Your text never leaves the browser.
           </span>
-          <span className="_echo_$_flex _echo_$_items-center _echo_$_gap-2">
-            {/* The model's own name, said once and quietly: EchoMeBetter is the product, KeelCore the model it runs. */}
-            <span>
-              Powered by <span className="_echo_$_font-semibold _echo_$_text-fg-secondary">KeelCore</span>
+          <div className="_echo_$_flex _echo_$_items-center _echo_$_justify-between _echo_$_gap-3">
+            <span className="_echo_$_whitespace-nowrap">
+              Powered by{' '}
+              <a
+                href={KEELCORE_URL}
+                target="_blank"
+                rel="noopener"
+                aria-label={`${KEELCORE_NAME} on Hugging Face (opens in a new tab)`}
+                className="_echo_$_inline-flex _echo_$_items-center _echo_$_gap-0.5 _echo_$_align-baseline _echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline"
+              >
+                {KEELCORE_NAME}
+                <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="_echo_$_shrink-0">
+                  <path d="M4.5 2.5h5v5M9.5 2.5l-7 7" />
+                </svg>
+              </a>
             </span>
-            <span aria-hidden="true" className="_echo_$_text-fg-subtle">
-              ·
+            <span className="_echo_$_flex _echo_$_items-center _echo_$_gap-3">
+              <button type="button" onClick={onOpenGuide} className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
+                Guide
+              </button>
+              <a href={LICENSE_HREF} target="_blank" rel="noopener" className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
+                License
+              </a>
             </span>
-            <button type="button" onClick={onOpenGuide} className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
-              Guide
-            </button>
-            <span aria-hidden="true" className="_echo_$_text-fg-subtle">
-              ·
-            </span>
-            <a href={LICENSE_HREF} target="_blank" rel="noopener" className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
-              License
-            </a>
-          </span>
+          </div>
         </footer>
       </div>
     </main>

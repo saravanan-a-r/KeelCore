@@ -87,6 +87,12 @@ describe('popup with the model downloaded', () => {
     renderPopup(ready);
     expect(screen.getByText('KeelCore · 790 MB · on-device GPU')).toBeInTheDocument();
     expect(screen.getByText('Powered by', { exact: false })).toHaveTextContent('Powered by KeelCore');
+    // KeelCore is the link to the model's page, opened in a tab of its own.
+    const model = screen.getByRole('link', { name: 'KeelCore on Hugging Face (opens in a new tab)' });
+    expect(model).toHaveTextContent('KeelCore');
+    expect(model).toHaveAttribute('href', 'https://huggingface.co/KeelCore');
+    expect(model).toHaveAttribute('target', '_blank');
+    expect(model).toHaveAttribute('rel', 'noopener');
     expect(screen.queryByRole('button', { name: 'Load now' })).not.toBeInTheDocument();
   });
 
