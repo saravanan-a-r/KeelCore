@@ -12,8 +12,8 @@
  *
  * Loaded through @babel/register (see babel.config.cjs).
  *
- * The model is not bundled: the extension downloads it when the user asks
- * (see model.source.json).
+ * The model is not bundled: the extension downloads it from Hugging Face when
+ * the user asks (see model.source.json).
  */
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';

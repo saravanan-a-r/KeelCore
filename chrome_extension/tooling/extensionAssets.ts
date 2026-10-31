@@ -3,7 +3,7 @@
  * tooling/manifest.ts so its paths always match the files the build emits.
  *
  * The model is not part of the package: the extension downloads it at the
- * user's request (see model.source.json).
+ * user's request, from Hugging Face (see model.source.json).
  */
 import type { Compiler } from 'webpack';
 import { createManifest } from './manifest';

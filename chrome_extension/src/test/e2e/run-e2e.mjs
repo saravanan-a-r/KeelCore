@@ -3,9 +3,9 @@
  *
  *   npm run build && npm run test:e2e
  *
- * The model must be served at the URL in model.source.json first (any
- * static server with CORS and HTTP range support); the run downloads it
- * from there exactly as a user would.
+ * The run downloads the model from the URL in model.source.json (Hugging Face)
+ * exactly as a user would, so it needs the network and about a gigabyte of
+ * free disk space.
  *
  * Loads dist/ as an unpacked extension in a fresh profile, then:
  *   1. a rewrite before the download is refused with "download the model first"
@@ -57,12 +57,12 @@ function check(condition, message) {
 }
 
 try {
-  const response = await fetch(new URL('model.json', modelUrl), { signal: AbortSignal.timeout(5000) });
+  const response = await fetch(new URL('model.json', modelUrl), { signal: AbortSignal.timeout(15000) });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   await response.body?.cancel();
 } catch (error) {
-  console.error(`The model is not being served at ${modelUrl} (${error.message}).`);
-  console.error('Host the model folder there first (see model.source.json), then run the e2e again.');
+  console.error(`The model could not be reached at ${modelUrl} (${error.message}).`);
+  console.error('Check the network and the URL in model.source.json, then run the e2e again.');
   process.exit(1);
 }
 
@@ -733,12 +733,12 @@ try {
   console.log('remove:');
   await popup.getByRole('button', { name: 'Settings' }).click();
   await popup.getByRole('button', { name: 'Remove professional style' }).click();
-  await popup.getByRole('button', { name: 'Remove', exact: true }).click();
-  await popup.getByRole('button', { name: 'Remove professional style' }).waitFor({ state: 'detached', timeout: 30_000 });
-  // Concise and Grammar were added above (two files each), so they stay: record, three base files and four adapter files.
-  check((await storedModelFiles(popup)).length === (toAdd > 0 ? 8 : 4), 'removing the style deleted only its files');
-  check((await badge()) === (toAdd > 0 ? '' : '!'), 'toolbar icon is flagged only when no style is left');
   if (toAdd > 0) {
+    await popup.getByRole('button', { name: 'Remove', exact: true }).click();
+    await popup.getByRole('button', { name: 'Remove professional style' }).waitFor({ state: 'detached', timeout: 30_000 });
+    // Concise and Grammar were added above (two files each), so they stay: record, three base files and four adapter files.
+    check((await storedModelFiles(popup)).length === 8, 'removing the style deleted only its files');
+    check((await badge()) === '', 'toolbar icon is flagged only when no style is left');
     // Concise goes alone; Grammar is the last style, so the writing model goes with it.
     await popup.getByRole('button', { name: 'Remove concise style' }).click();
     await popup.getByRole('button', { name: 'Remove', exact: true }).click();
@@ -748,7 +748,8 @@ try {
     check((await popup.getByText('Remove the Grammar style and the writing model?').count()) === 1, 'removing the last style asks to remove the writing model with it');
     await popup.getByRole('button', { name: 'Remove', exact: true }).click();
   } else {
-    await popup.getByRole('button', { name: 'Remove writing model' }).click();
+    // Professional is the only style, so it is the last one: the writing model goes with it.
+    check((await popup.getByText('Remove the Professional style and the writing model?').count()) === 1, 'removing the last style asks to remove the writing model with it');
     await popup.getByRole('button', { name: 'Remove', exact: true }).click();
   }
   await popup.getByText('Nothing downloaded yet.').waitFor({ timeout: 30_000 });

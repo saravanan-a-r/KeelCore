@@ -5,7 +5,7 @@ import { IDLE_DOWNLOAD, type DownloadState, type InstalledModelRecord } from '..
 import type { StyleId } from '../../../shared/styles';
 import { installedRecord, TINY_CATALOG } from '../../helpers/fixtures';
 
-const SOURCE = 'http://localhost:47615/keelcore/';
+const SOURCE = 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/';
 const BASE = TINY_CATALOG.model.sizeBytes;
 const PROFESSIONAL = TINY_CATALOG.adapters.find((adapter) => adapter.style === 'professional')!.sizeBytes;
 

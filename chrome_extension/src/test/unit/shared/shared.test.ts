@@ -144,22 +144,31 @@ test('engine status guard', () => {
 });
 
 describe('model source', () => {
-  test('the configured URL is valid', () => {
+  const COMMIT = '8b23ea682a8d2feb6c31f89518b5139067c9a95f';
+
+  test('the configured URL is valid, and is the published KeelCore model', () => {
     expect(parseModelSourceUrl(MODEL_SOURCE_URL)).toBe(MODEL_SOURCE_URL);
+    expect(MODEL_SOURCE_URL).toBe('https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/');
   });
 
   test.each([
-    ['https://cdn.example.com/models/keelcore-v1/', 'https://cdn.example.com/models/keelcore-v1/'],
-    ['http://localhost:47615/keelcore/', 'http://localhost:47615/keelcore/'],
-    ['http://127.0.0.1:8080/m/', 'http://127.0.0.1:8080/m/'],
-  ])('accepts %s', (raw, expected) => {
-    expect(parseModelSourceUrl(raw)).toBe(expected);
+    ['a folder that follows the repository', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/'],
+    ['a folder pinned to one commit', `https://huggingface.co/KeelCore/KeelCore-750M/resolve/${COMMIT}/onnx/int8/`],
+    ['the top of a repository', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/'],
+  ])('accepts %s', (_label, raw) => {
+    expect(parseModelSourceUrl(raw)).toBe(raw);
   });
 
   test.each([
-    ['plain http from another host', 'http://cdn.example.com/m/', /https/],
-    ['a file rather than a folder', 'https://cdn.example.com/m/model.json', /end with "\/"/],
-    ['a query string', 'https://cdn.example.com/m/?token=1', /query/],
+    ['plain http', 'http://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/', /https/],
+    ['a local server', 'http://localhost:47615/keelcore-int8/', /https/],
+    ['another host', 'https://cdn.example.com/models/keelcore-v1/', /KeelCore repository on Hugging Face/],
+    ['another organization', 'https://huggingface.co/Other/KeelCore-750M/resolve/main/onnx/int8/', /KeelCore repository on Hugging Face/],
+    ['a branch that is not main', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/dev/onnx/int8/', /KeelCore repository on Hugging Face/],
+    ['a short commit', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/8b23ea6/onnx/int8/', /KeelCore repository on Hugging Face/],
+    ['a path that climbs out of the folder', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/../../', /KeelCore repository on Hugging Face/],
+    ['a file rather than a folder', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/model.json', /end with "\/"/],
+    ['a query string', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/?download=true', /query/],
     ['not a URL', 'models/keelcore/', /not a valid URL/],
     ['not a string', 42, /non-empty string/],
   ])('rejects %s', (_label, raw, message) => {
