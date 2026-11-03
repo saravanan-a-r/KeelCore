@@ -75,3 +75,38 @@ describe('greedyGenerate with exempt tokens', () => {
     expect(exempt).toEqual({ ids: [7, 7, 7, 7, 7], finished: true });
   });
 });
+
+describe('greedyGenerate inside URLs', () => {
+  // 3 "▁https"  4 "://"  5 "ex"  6 ".com"  7 "/a"  8 "▁and"
+  const PIECES: Record<number, string> = { 3: '\u2581https', 4: '://', 5: 'ex', 6: '.com', 7: '/a', 8: '\u2581and' };
+  const ban3 = { ...options, maxNewTokens: 14, noRepeatNgramSize: 3, piece: (token: number) => PIECES[token] };
+  const twice = [3, 4, 5, 6, 7, 8, 3, 4, 5, 6, 7, EOS];
+
+  test('a second link may repeat the first one\'s pieces when URLs are exempt', async () => {
+    const input = twice.slice(0, -1); // the input holds both links
+    const plain = await greedyGenerate(scriptedRunner(twice).runner, input, ban3);
+    expect(plain.ids).not.toEqual(twice.slice(0, -1));
+    const exempt = await greedyGenerate(scriptedRunner(twice).runner, input, { ...ban3, noRepeatExemptUrls: true });
+    expect(exempt).toEqual({ ids: twice.slice(0, -1), finished: true });
+  });
+
+  test('a link repeats only as often as the input has it', async () => {
+    const once = [3, 4, 5, 6, 7];
+    const runaway = [...once, 6, 7, 6, 7, 6, 7, 6, 7, EOS];
+    const result = await greedyGenerate(scriptedRunner(runaway).runner, once, { ...ban3, noRepeatExemptUrls: true });
+    expect(result.ids).not.toEqual(runaway.slice(0, -1));
+    expect(result.ids.slice(0, 5)).toEqual(once);
+  });
+
+  test('a link the input does not have gets no allowance', async () => {
+    const result = await greedyGenerate(scriptedRunner(twice).runner, [9], { ...ban3, noRepeatExemptUrls: true });
+    expect(result.ids).not.toEqual(twice.slice(0, -1));
+  });
+
+  test('plain text is still protected from loops when URLs are exempt', async () => {
+    const loop = [8, 9, 8, 9, 8, 9, 8, 9, EOS];
+    const a = await greedyGenerate(scriptedRunner(loop).runner, loop, { ...ban3, noRepeatExemptUrls: true });
+    const b = await greedyGenerate(scriptedRunner(loop).runner, loop, ban3);
+    expect(a).toEqual(b);
+  });
+});

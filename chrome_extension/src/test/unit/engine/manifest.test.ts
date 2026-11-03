@@ -35,6 +35,15 @@ describe('parseModelManifest', () => {
     expect(parseModelManifest(JSON.parse(JSON.stringify(manifest)))).toEqual(manifest);
   });
 
+  test('lifting the ban inside URLs is off unless model.json asks for it', () => {
+    expect(parseModelManifest(valid).generation.noRepeatExemptUrls).toBe(false);
+    const generation = { ...(valid.generation as object), noRepeatExemptUrls: true };
+    const manifest = parseModelManifest({ ...valid, generation });
+    expect(manifest.generation.noRepeatExemptUrls).toBe(true);
+    expect(parseModelManifest(JSON.parse(JSON.stringify(manifest)))).toEqual(manifest);
+    expect(() => parseModelManifest({ ...valid, generation: { ...(valid.generation as object), noRepeatExemptUrls: 'yes' } })).toThrow(/noRepeatExemptUrls/);
+  });
+
   test.each([
     ['an exempt id outside the vocabulary', { noRepeatExemptTokenIds: [400] }, /noRepeatExemptTokenIds/],
     ['a negative exempt id', { noRepeatExemptTokenIds: [-1] }, /noRepeatExemptTokenIds/],

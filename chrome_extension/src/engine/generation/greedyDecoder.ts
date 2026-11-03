@@ -27,6 +27,8 @@ export interface GreedyOptions extends GenerationSettings {
   readonly decoderStartId: number;
   readonly eosId: number;
   readonly maxNewTokens: number;
+  /** Token id -> vocabulary piece; lets the decoder recognise a URL while it is written (see `noRepeatExemptUrls`). */
+  readonly piece?: (token: number) => string | undefined;
   readonly signal?: AbortSignal;
   /** After each generated token (EOS excluded), with every token generated so far; `generated` is the decoder's own array, to read only. */
   readonly onToken?: (generatedCount: number, generated: readonly number[]) => void;
@@ -53,7 +55,7 @@ export async function greedyGenerate<Memory, Cache>(
   let cache = runner.initialCache();
   const sequence = [options.decoderStartId];
   const generated: number[] = [];
-  const allowance = ngramAllowance(options);
+  const allowance = ngramAllowance(options, options.piece, inputIds);
   try {
     for (let step = 0; step < options.maxNewTokens; step++) {
       throwIfAborted(options.signal);
@@ -63,6 +65,7 @@ export async function greedyGenerate<Memory, Cache>(
       sequence.push(next);
       if (next === options.eosId) return { ids: generated, finished: true };
       generated.push(next);
+      allowance.urls?.observe(next);
       options.onToken?.(generated.length, generated);
     }
     return { ids: generated, finished: false };

@@ -55,9 +55,11 @@ class TextCodec:
         decode: Callable[[Sequence[int]], str],
         token_map: Mapping[str, int],
         style_token: str,
+        piece: Callable[[int], str] | None = None,
     ) -> None:
         self._encode = encode
         self._decode = decode
+        self._piece = piece
         self.token_map = dict(token_map)
         if style_token not in self.token_map:
             raise SFTConfigError(f"style token {style_token!r} is not in the tokenizer's token map")
@@ -91,7 +93,7 @@ class TextCodec:
         def decode(ids: Sequence[int]) -> str:
             return tokenizer_interop.unescape_markers(processor.decode(list(ids)))
 
-        return cls(encode, decode, token_map, style_token)
+        return cls(encode, decode, token_map, style_token, piece=processor.id_to_piece)
 
     def encode(self, text: str) -> list[int]:
         return self._encode(text)
@@ -106,6 +108,11 @@ class TextCodec:
             if token_id != self.frame.pad_id:
                 kept.append(token_id)
         return self._decode(kept)
+
+    @property
+    def piece(self) -> Callable[[int], str] | None:
+        """Token id -> its vocabulary piece, when the tokenizer exposes it."""
+        return self._piece
 
     def contains_control(self, ids: Sequence[int]) -> bool:
         return any(token_id in self.control_ids for token_id in ids)

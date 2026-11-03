@@ -180,6 +180,8 @@ class DecodingConfig:
     # Token IDs the n-gram ban never applies to (greedy only), e.g. the digits;
     # empty keeps the plain ban.
     no_repeat_exempt_tokens: tuple[int, ...] = ()
+    # Lift the ban while a URL is being written (greedy only); needs the tokenizer's pieces.
+    no_repeat_exempt_urls: bool = False
 
 
 @dataclass(frozen=True)

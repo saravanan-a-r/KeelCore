@@ -108,6 +108,7 @@ export class RewriteEngine {
       decoderStartId: tokens.decoderStartId,
       eosId: tokens.eosId,
       maxNewTokens: limits.maxNewTokens,
+      piece: (id) => this.tokenizer.piece(id),
       signal: options.signal,
       onToken: (count, generated) => {
         options.onProgress?.(count);

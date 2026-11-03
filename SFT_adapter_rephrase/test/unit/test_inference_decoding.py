@@ -45,3 +45,23 @@ def test_real_tokenizer_digit_ids_are_the_ones_in_model_json():
         pytest.skip("tokenizer artifacts not built")
     adapter = _adapter(TextCodec.from_tokenizer_dir(DEFAULT_TOKENIZER_DIR, "<style:professional>"))
     assert adapter.digit_token_ids == tuple(sorted(SHIPPED_DIGIT_IDS))
+
+
+def _codec(**kwargs):
+    token_map = {"<pad>": 0, "</s>": 1, "<style:concise>": 7, "<text_to_rewrite>": 8, "</text_to_rewrite>": 9}
+    return TextCodec(lambda text: [4, 100 + int(text)] if text.isdigit() else [4], lambda ids: "", token_map, "<style:concise>", **kwargs)
+
+
+def test_default_decoding_lifts_the_ban_inside_urls_when_the_tokenizer_can_name_its_pieces():
+    assert _adapter(_codec(piece=lambda token: "x")).default_decoding().no_repeat_exempt_urls is True
+    assert _adapter(_codec()).default_decoding().no_repeat_exempt_urls is False
+    assert DEFAULT_DECODING.no_repeat_exempt_urls is False
+
+
+@pytest.mark.real_tokenizer
+def test_real_tokenizer_names_its_pieces():
+    if not (DEFAULT_TOKENIZER_DIR / "spm.model").is_file():
+        pytest.skip("tokenizer artifacts not built")
+    codec = TextCodec.from_tokenizer_dir(DEFAULT_TOKENIZER_DIR, "<style:professional>")
+    ids = codec.encode("see https://example.com/a")
+    assert "".join(codec.piece(i) for i in ids).replace("▁", " ") == "see https://example.com/a"

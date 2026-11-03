@@ -44,10 +44,16 @@ class RephraseAdapter:
         self.digit_token_ids = tuple(sorted({codec.encode(str(digit))[-1] for digit in range(10)}))
 
     def default_decoding(self, decoding: DecodingConfig = DEFAULT_DECODING) -> DecodingConfig:
-        """`decoding` with the digit tokens exempt from the n-gram ban, unless it already lists exempt tokens."""
-        if decoding.no_repeat_exempt_tokens:
-            return decoding
-        return replace(decoding, no_repeat_exempt_tokens=self.digit_token_ids)
+        """
+        `decoding` as the extension runs it: the digit tokens exempt from the n-gram ban
+        (unless it already lists exempt tokens) and the ban lifted inside URLs. A tokenizer
+        that cannot name its pieces keeps the URL ban.
+        """
+        return replace(
+            decoding,
+            no_repeat_exempt_tokens=decoding.no_repeat_exempt_tokens or self.digit_token_ids,
+            no_repeat_exempt_urls=self.codec.piece is not None,
+        )
 
     @classmethod
     def load(
@@ -88,6 +94,8 @@ class RephraseAdapter:
                 for text in chunk
             ]
             batch = collate(examples, self.codec.frame).to(self.device)
-            result = decode_batch(self.model, batch.encoder_input_ids, batch.encoder_attention_mask, decoding)
+            result = decode_batch(
+                self.model, batch.encoder_input_ids, batch.encoder_attention_mask, decoding, url_piece=self.codec.piece
+            )
             outputs.extend(self.codec.decode(ids).strip() for ids in result.sequences)
         return outputs

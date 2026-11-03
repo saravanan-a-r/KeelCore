@@ -85,6 +85,8 @@ export interface ModelManifest {
     readonly noRepeatNgramSize: number;
     /** Token IDs the n-gram ban never applies to (the digits). */
     readonly noRepeatExemptTokenIds: readonly number[];
+    /** Lift the n-gram ban while a URL is being written; absent in an older model.json = off. */
+    readonly noRepeatExemptUrls: boolean;
   };
   readonly inputTransforms: readonly TextTransformName[];
   readonly reservedInputTokens: readonly string[];
@@ -288,6 +290,9 @@ function parseBase(json: Json): Omit<ModelManifest, 'adapters' | 'fallbackAdapte
     throw new ManifestError('generation.noRepeatExemptTokenIds must be a list of token IDs inside the vocabulary');
   }
 
+  const exemptUrls = generation.noRepeatExemptUrls ?? false;
+  if (typeof exemptUrls !== 'boolean') throw new ManifestError('generation.noRepeatExemptUrls must be true or false');
+
   return {
     schemaVersion: SUPPORTED_SCHEMA_VERSION,
     ioContract: SUPPORTED_IO_CONTRACT,
@@ -318,6 +323,7 @@ function parseBase(json: Json): Omit<ModelManifest, 'adapters' | 'fallbackAdapte
       repetitionPenalty,
       noRepeatNgramSize: integer(generation.noRepeatNgramSize ?? 0, 'generation.noRepeatNgramSize', 0),
       noRepeatExemptTokenIds: exemptIds as number[],
+      noRepeatExemptUrls: exemptUrls,
     },
     inputTransforms: inputTransforms as TextTransformName[],
     reservedInputTokens: reserved as string[],

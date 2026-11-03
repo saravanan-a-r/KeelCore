@@ -48,6 +48,11 @@ export class Tokenizer {
     return this.model.tokenToId(token);
   }
 
+  /** The vocabulary piece of an id (`\u2581` marks a space), or undefined. */
+  piece(id: number): string | undefined {
+    return this.model.idToToken(id);
+  }
+
   encode(text: string): number[] {
     return this.model.tokenize(text.replaceAll(' ', this.replacement));
   }
