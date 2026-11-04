@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EchoMeBetter Privacy Policy</title>
+<meta name="description" content="How the EchoMeBetter Chrome extension handles your information. The writing model runs on your device: your text is never sent to us, and there are no accounts, analytics or ads.">
+<link rel="canonical" href="https://saravanan-a-r.github.io/KeelCore/privacy.html">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F7F6FB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E0B1A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EchoMeBetter Privacy Policy">
+<meta property="og:description" content="Your text stays on your device. No accounts, no analytics, no ads.">
+<link rel="icon" href="assets/echomebetter.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/Inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ==========================================================================
+   EchoMeBetter privacy policy.
+   One file, no scripts. Colours are the extension's design tokens
+   (chrome_extension/src/design/tokens.json): light and dark follow the
+   system setting, as the extension's own pages do.
+   ========================================================================== */
+
+/* ---- Font: the Latin subset of Inter the extension bundles ---------------- */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("assets/fonts/Inter-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ---- Tokens ----------------------------------------------------------------- */
+:root {
+  --canvas: #F7F6FB;
+  --surface: #FFFFFF;
+  --muted: #EEECF5;
+  --line: #EEECF5;
+  --line-strong: #D9D5E8;
+  --fg: #17122B;
+  --fg-body: #342B57;
+  --fg-muted: #6A6290;
+  --accent: #6236F5;
+  --accent-fg: #5128D6;
+  --accent-subtle: #F4F1FF;
+  --accent-line: #D6CBFF;
+  --ok: #14B8A6;
+  --ok-subtle: #E6FFFA;
+  --ok-fg: #0B5F57;
+  --focus: #7650FF;
+  --glow: rgba(118, 80, 255, 0.18);
+  --shadow: 0 1px 2px rgba(23, 18, 43, 0.05), 0 8px 24px -12px rgba(23, 18, 43, 0.12);
+
+  --brand-gradient: linear-gradient(135deg, #7650FF 0%, #5B6CFF 45%, #2DD4BF 100%);
+  --font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --radius: 16px;
+  --gutter: max(16px, env(safe-area-inset-left));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0E0B1A;
+    --surface: #17122B;
+    --muted: #231C3D;
+    --line: #231C3D;
+    --line-strong: #342B57;
+    --fg: #FFFFFF;
+    --fg-body: #D9D5E8;
+    --fg-muted: #B6AFCF;
+    --accent: #7650FF;
+    --accent-fg: #B8A5FF;
+    --accent-subtle: #1F1150;
+    --accent-line: #4322AD;
+    --ok-subtle: rgba(13, 148, 136, 0.2);
+    --ok-fg: #A7F3E4;
+    --glow: rgba(118, 80, 255, 0.3);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ---- Base ------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--fg-body);
+  font: 400 1rem/1.7 var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  position: relative;
+  isolation: isolate;
+}
+/* The brand glow behind the top of the page, edge to edge. */
+body::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: 30rem; z-index: -1; pointer-events: none;
+  background: radial-gradient(60% 70% at 50% 0%, var(--glow) 0%, transparent 100%);
+}
+
+h1, h2, h3, p, ul, ol, table { margin: 0; }
+a { color: var(--accent-fg); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+strong { color: var(--fg); font-weight: 600; }
+code { font: 500 0.85em var(--mono); background: var(--muted); padding: 0.1em 0.4em; border-radius: 6px; color: var(--fg); }
+svg { display: block; }
+.icon { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+.wrap { width: min(72rem, 100% - 2 * var(--gutter)); margin-inline: auto; }
+
+.skip {
+  position: absolute; left: var(--gutter); top: -4rem; z-index: 10;
+  background: var(--surface); color: var(--fg); padding: 0.6rem 1rem; border-radius: 8px; box-shadow: var(--shadow);
+}
+.skip:focus { top: 0.75rem; }
+
+/* ---- Header ----------------------------------------------------------------- */
+.masthead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; }
+.brand { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--fg); text-decoration: none; font-weight: 600; letter-spacing: -0.01em; }
+.brand img { width: 30px; height: 30px; }
+.brand b { font-weight: 600; color: var(--accent-fg); }
+.masthead nav { display: flex; gap: 1.25rem; font-size: 0.875rem; font-weight: 500; }
+.masthead nav a { color: var(--fg-muted); text-decoration: none; }
+.masthead nav a:hover { color: var(--accent-fg); }
+
+/* ---- Hero ------------------------------------------------------------------- */
+.hero { padding-block: 2.5rem 3rem; }
+.eyebrow { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-fg); }
+h1 { margin-top: 0.75rem; max-width: 22ch; font-size: clamp(2.25rem, 6vw, 3.75rem); line-height: 1.05; font-weight: 700; letter-spacing: -0.03em; color: var(--fg); text-wrap: balance; }
+h1 span { background: var(--brand-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lede { margin-top: 1.25rem; max-width: 40rem; font-size: clamp(1.0625rem, 2vw, 1.25rem); line-height: 1.6; }
+.facts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.75rem 0 0; padding: 0; list-style: none; }
+.facts li {
+  padding: 0.3rem 0.8rem; font-size: 0.8125rem; font-weight: 500; color: var(--fg-muted);
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: 999px;
+}
+
+/* ---- At a glance ------------------------------------------------------------ */
+.glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; margin: 0 0 3.5rem; padding: 0; list-style: none; }
+.glance li { padding: 1.4rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.glance .icon { width: 40px; height: 40px; padding: 9px; margin-bottom: 1rem; color: var(--accent-fg); background: var(--accent-subtle); border: 1px solid var(--accent-line); border-radius: 12px; }
+.glance h2 { font-size: 1rem; line-height: 1.35; font-weight: 600; color: var(--fg); letter-spacing: -0.01em; }
+.glance p { margin-top: 0.4rem; font-size: 0.9375rem; line-height: 1.6; }
+
+/* ---- Layout: contents + policy ---------------------------------------------- */
+.layout { display: grid; gap: 2rem; padding-bottom: 5rem; }
+@media (min-width: 64rem) {
+  .layout { grid-template-columns: 15rem minmax(0, 1fr); gap: 4rem; }
+  .toc { position: sticky; top: 1.5rem; align-self: start; max-height: calc(100vh - 3rem); overflow: auto; }
+}
+
+.toc { font-size: 0.875rem; }
+.toc h2 { margin-bottom: 0.75rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-muted); }
+.toc ol { display: grid; gap: 0.15rem; margin: 0; padding: 0; list-style: none; }
+.toc a { display: flex; gap: 0.6rem; padding: 0.3rem 0.6rem; margin-inline: -0.6rem; color: var(--fg-body); text-decoration: none; border-radius: 8px; }
+.toc a:hover { background: var(--accent-subtle); color: var(--accent-fg); }
+.toc a span { min-width: 1.4em; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 63.99rem) {
+  .toc { padding: 1.25rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  .toc ol { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); column-gap: 1.5rem; }
+}
+
+/* ---- Policy text ------------------------------------------------------------ */
+.policy { max-width: 46rem; }
+.policy section { padding-top: 2.5rem; margin-top: 2.5rem; border-top: 1px solid var(--line-strong); scroll-margin-top: 1rem; }
+.policy section:first-child { padding-top: 0; margin-top: 0; border-top: 0; }
+.policy h2 { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 1.25rem; font-size: clamp(1.4rem, 3vw, 1.75rem); line-height: 1.25; font-weight: 650; letter-spacing: -0.02em; color: var(--fg); }
+.policy h2 .num { flex: none; min-width: 2.1rem; padding: 0.1rem 0.45rem; font-size: 0.875rem; font-weight: 600; text-align: center; letter-spacing: 0; color: var(--accent-fg); background: var(--accent-subtle); border: 1px solid var(--accent-line); border-radius: 8px; font-variant-numeric: tabular-nums; }
+.policy h3 { margin: 2rem 0 0.6rem; font-size: 1.0625rem; line-height: 1.4; font-weight: 600; letter-spacing: -0.01em; color: var(--fg); }
+.policy h3 .num { margin-right: 0.5rem; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+.policy p + p, .policy p + ul, .policy ul + p, .policy p + .scroll, .policy ul + .note, .policy p + .note, .policy .scroll + p, .policy .note + p { margin-top: 1rem; }
+.policy ul { padding-left: 1.25rem; }
+.policy li { margin-top: 0.45rem; padding-left: 0.2rem; }
+.policy li::marker { color: var(--accent); }
+
+.note { padding: 1rem 1.25rem; background: var(--accent-subtle); border: 1px solid var(--accent-line); border-radius: 12px; }
+.note--ok { background: var(--ok-subtle); border-color: var(--ok); color: var(--ok-fg); }
+.note--ok strong { color: inherit; }
+
+/* ---- Tables: a card on wide screens, stacked rows on narrow ----------------- */
+.scroll { overflow: hidden; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.55; }
+th, td { padding: 0.8rem 1rem; text-align: left; vertical-align: top; }
+thead th { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted); background: var(--muted); }
+tbody tr + tr { border-top: 1px solid var(--line); }
+tbody th { width: 28%; font-weight: 600; color: var(--fg); }
+@media (max-width: 40rem) {
+  thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  table, tbody, tr, th, td { display: block; }
+  tbody th { width: auto; padding-bottom: 0; }
+  td { padding-top: 0.5rem; }
+  td[data-label]::before { content: attr(data-label); display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted); }
+  tbody tr { padding-block: 0.6rem; }
+}
+
+/* ---- Footer ----------------------------------------------------------------- */
+.footer { padding-block: 2rem 3rem; border-top: 1px solid var(--line-strong); font-size: 0.875rem; color: var(--fg-muted); }
+.footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; }
+.footer ul { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 0; padding: 0; list-style: none; }
+.footer a { color: var(--fg-muted); }
+.footer a:hover { color: var(--accent-fg); }
+
+/* ---- Print ------------------------------------------------------------------ */
+@media print {
+  :root { --canvas: #fff; --surface: #fff; --fg: #000; --fg-body: #000; --glow: transparent; --shadow: none; }
+  .masthead nav, .toc, .skip { display: none; }
+  .layout { display: block; }
+  .glance li, .scroll, .note { break-inside: avoid; }
+  h1 span { color: #000; background: none; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip" href="#policy">Skip to the policy</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-device" viewBox="0 0 24 24"><path d="M5 5.5A1.5 1.5 0 0 1 6.5 4h11A1.5 1.5 0 0 1 19 5.5V15H5V5.5zM3 19h18"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.2c0 4.3-2.9 7.7-7 9.8-4.1-2.1-7-5.5-7-9.8V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14"/></symbol>
+  <symbol id="i-switch" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="4"/><circle cx="16" cy="12" r="2"/></symbol>
+</svg>
+
+<header class="wrap masthead">
+  <a class="brand" href="privacy.html" aria-label="EchoMeBetter">
+    <img src="assets/echomebetter.svg" width="30" height="30" alt="">
+    <span>Echo<b>Me</b>Better</span>
+  </a>
+  <nav aria-label="Related">
+    <a href="https://github.com/saravanan-a-r/KeelCore/blob/main/LICENSE">License</a>
+    <a href="./">KeelCore report</a>
+  </nav>
+</header>
+
+<main>
+<section class="wrap hero" aria-labelledby="title">
+  <p class="eyebrow">Privacy Policy</p>
+  <h1 id="title">Your words <span>stay on your device.</span></h1>
+  <p class="lede">EchoMeBetter rewrites the text you select, using a writing model that runs inside your browser. We have no servers that receive your writing, and no accounts, analytics or ads. This policy explains exactly what the extension does and does not do with information.</p>
+  <ul class="facts">
+    <li>Effective November 4, 2026</li>
+    <li>Version 1.0</li>
+    <li>Applies to the EchoMeBetter Chrome extension</li>
+  </ul>
+</section>
+
+<div class="wrap">
+  <ul class="glance" aria-label="Summary">
+    <li>
+      <svg class="icon"><use href="#i-device"/></svg>
+      <h2>Your text stays on your device</h2>
+      <p>The model runs in your browser. The text you rewrite is never sent to us or to anyone else.</p>
+    </li>
+    <li>
+      <svg class="icon"><use href="#i-shield"/></svg>
+      <h2>No accounts, no tracking</h2>
+      <p>No sign-in, analytics, advertising, crash reporting or tracking identifiers of any kind.</p>
+    </li>
+    <li>
+      <svg class="icon"><use href="#i-download"/></svg>
+      <h2>One network connection</h2>
+      <p>The extension talks only to Hugging Face, to read the model catalog and download the model. Nothing about your writing is sent.</p>
+    </li>
+    <li>
+      <svg class="icon"><use href="#i-switch"/></svg>
+      <h2>Website access is your choice</h2>
+      <p>Access to all websites is optional, off until you allow it, and you can take it back at any time.</p>
+    </li>
+  </ul>
+
+  <div class="layout">
+    <nav class="toc" aria-labelledby="toc-title">
+      <h2 id="toc-title">Contents</h2>
+      <ol>
+        <li><a href="#about"><span>1</span>About this policy</a></li>
+        <li><a href="#handled"><span>2</span>What the extension handles</a></li>
+        <li><a href="#permissions"><span>3</span>Browser permissions</a></li>
+        <li><a href="#use"><span>4</span>How information is used</a></li>
+        <li><a href="#sharing"><span>5</span>Sharing and disclosure</a></li>
+        <li><a href="#third-parties"><span>6</span>Third-party services</a></li>
+        <li><a href="#security"><span>7</span>Security</a></li>
+        <li><a href="#retention"><span>8</span>Retention and deletion</a></li>
+        <li><a href="#rights"><span>9</span>Your choices and rights</a></li>
+        <li><a href="#children"><span>10</span>Children</a></li>
+        <li><a href="#international"><span>11</span>International use</a></li>
+        <li><a href="#output"><span>12</span>AI-generated output</a></li>
+        <li><a href="#cws"><span>13</span>Chrome Web Store User Data Policy</a></li>
+        <li><a href="#changes"><span>14</span>Changes to this policy</a></li>
+        <li><a href="#contact"><span>15</span>Contact</a></li>
+      </ol>
+    </nav>
+
+    <article class="policy" id="policy">
+
+      <section id="about">
+        <h2><span class="num">1</span>About this policy</h2>
+        <p>This policy describes how the <strong>EchoMeBetter</strong> browser extension for Google Chrome (the “extension”) handles information. It is provided by Saravanan A R (“we”, “us”), the developer of EchoMeBetter and of the KeelCore writing model that the extension runs.</p>
+        <p>It covers the extension and its own pages (the toolbar popup, the welcome page and the license page). It does not cover the websites you use the extension on, or the services named in Section 6, which have their own policies.</p>
+        <p>Using the extension is also subject to the <a href="https://github.com/saravanan-a-r/KeelCore/blob/main/LICENSE">KeelCore License</a>, which you accept in the extension before the model is downloaded. This policy does not change the license, and the license does not change this policy.</p>
+        <p class="note note--ok"><strong>In short:</strong> we do not collect, receive, store or sell personal information. Everything the extension needs lives on your device, and the only network connection it makes is to Hugging Face.</p>
+      </section>
+
+      <section id="handled">
+        <h2><span class="num">2</span>What the extension handles</h2>
+
+        <h3><span class="num">2.1</span>Text you choose to rewrite</h3>
+        <p>The extension reads text only when you ask it to: you select text in an editable field (a text box, text area or rich-text editor) and then use the right-click menu, a keyboard shortcut, or press and hold on the selection. It does not read, scan or monitor the rest of the page, and it refuses to work in password fields.</p>
+        <p>The selected text is passed to the writing model, which runs on your device in a hidden extension page, away from the website. The text is not sent over the network, and we never see it. It is kept in memory only while the rewrite is in progress or on screen, and it is not saved to storage or written to any log.</p>
+        <p>When you choose Replace, the rewrite is inserted into the page you are on. That website can then see the new text as it can see anything else typed into its page. What the website does with it is governed by that website’s own policy.</p>
+
+        <h3><span class="num">2.2</span>Connections to Hugging Face</h3>
+        <p>The model is not bundled with the extension. It is published on Hugging Face (<code>huggingface.co/KeelCore</code>) and downloaded to your device. The extension makes these requests:</p>
+        <ul>
+          <li><strong>The model catalog.</strong> A small file, <code>model.json</code>, listing which writing styles exist. The extension reads it when you open the popup or the welcome page, and when a setup prompt is shown. A copy is reused for a few minutes.</li>
+          <li><strong>The model files.</strong> The base model and the writing styles you choose, downloaded only after you accept the license and click Download. An interrupted download resumes where it stopped.</li>
+        </ul>
+        <p>Hugging Face receives what any website receives when you open a file from it: your IP address, your browser and operating system type, the address of the file requested, and the time. The extension does not send cookies, sign-in details, identifiers, settings, usage information or any of your text. Hugging Face and the content delivery networks it uses handle those request details under <a href="https://huggingface.co/privacy">their own privacy policy</a>.</p>
+        <p>Once the model is on your device, rewriting works without an internet connection. If the catalog cannot be reached, the extension carries on with what is installed.</p>
+
+        <h3><span class="num">2.3</span>Data saved on your device</h3>
+        <p>The extension saves the following in your browser. It stays on your device, is not synced to your Google account, and is never sent to us.</p>
+        <div class="scroll">
+          <table>
+            <thead><tr><th scope="col">What</th><th scope="col">Details</th><th scope="col">Where</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Preferences</th><td data-label="Details">Your settings: how long the model stays loaded, shortcuts, press-and-hold and live-preview switches, GPU or processor choice, and light or dark theme.</td><td data-label="Where"><code>chrome.storage.local</code></td></tr>
+              <tr><th scope="row">License agreement</th><td data-label="Details">The license version and date you agreed to, and the time you agreed.</td><td data-label="Where"><code>chrome.storage.local</code></td></tr>
+              <tr><th scope="row">Installed model record</th><td data-label="Details">Which writing styles are installed and where the model came from. A flag noting if the graphics chip failed, so it is not retried needlessly.</td><td data-label="Where"><code>chrome.storage.local</code></td></tr>
+              <tr><th scope="row">Prompt counters</th><td data-label="Details">Two numbers: how many rewrites you have accepted and how many times the extension has offered to turn on website access. They decide when to ask, so it is not repeated.</td><td data-label="Where"><code>chrome.storage.local</code></td></tr>
+              <tr><th scope="row">Working state</th><td data-label="Details">Whether the model is ready, and when it was last used, so it can be unloaded from memory when idle. Cleared when the browser closes.</td><td data-label="Where"><code>chrome.storage.session</code></td></tr>
+              <tr><th scope="row">Model files</th><td data-label="Details">The base model and the writing styles you downloaded.</td><td data-label="Where">The extension’s private file storage</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>To choose a sensible speed setting, the extension checks on your device how many processor cores you have and whether your browser offers a graphics chip. These checks stay on your device.</p>
+
+        <h3><span class="num">2.4</span>What we do not collect</h3>
+        <p>The extension does not collect or transmit any of the following, and we do not receive any of it:</p>
+        <ul>
+          <li>your name, email address or any account information (there are no accounts);</li>
+          <li>the text you select or the rewrites it produces;</li>
+          <li>your browsing history, the websites you visit, or the content of web pages;</li>
+          <li>keystrokes, clipboard contents, form data or passwords;</li>
+          <li>your location, device identifiers or fingerprints;</li>
+          <li>analytics, usage statistics, crash reports or advertising identifiers.</li>
+        </ul>
+        <p>The extension sets no cookies and loads no scripts, fonts or images from outside the extension.</p>
+      </section>
+
+      <section id="permissions">
+        <h2><span class="num">3</span>Browser permissions</h2>
+        <p>Chrome asks for permissions when you install an extension. EchoMeBetter requests the minimum it needs, and each one is used only for the purpose below.</p>
+        <div class="scroll">
+          <table>
+            <thead><tr><th scope="col">Permission</th><th scope="col">Why the extension needs it</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><code>contextMenus</code></th><td>Adds the EchoMeBetter styles to the right-click menu when text is selected.</td></tr>
+              <tr><th scope="row"><code>activeTab</code></th><td>When you pick a style from the menu, lets the extension work on that one tab, for that action only. It gives no access to your other tabs.</td></tr>
+              <tr><th scope="row"><code>scripting</code></th><td>Places the rewrite panel in the tab you are using, and runs the optional shortcut listener described below.</td></tr>
+              <tr><th scope="row"><code>offscreen</code></th><td>Runs the writing model in a hidden extension page, so it does not slow down the websites you are typing in.</td></tr>
+              <tr><th scope="row"><code>storage</code></th><td>Saves the preferences and records in Section 2.3.</td></tr>
+              <tr><th scope="row"><code>alarms</code></th><td>Wakes the extension to unload the model from memory after the idle time you chose.</td></tr>
+              <tr><th scope="row">All websites <em>(optional)</em></th><td>Asked for only if you turn on keyboard shortcuts or press-and-hold. See below.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><span class="num">3.1</span>Optional access to all websites</h3>
+        <p>The right-click menu works without this. If you want keyboard shortcuts or the press-and-hold menu, Chrome will ask you to allow EchoMeBetter on all websites. Nothing runs on web pages until you do.</p>
+        <p>Once allowed, a small script runs on web pages. It listens for the shortcut keys (<code>Alt+Shift</code> plus a letter, or <code>Ctrl+Shift</code> plus a letter on a Mac) and for a long press on selected text. It acts only when text is selected in an editable field, and it passes every other key press straight to the page. It does not record, store or send keystrokes, and it does not read page content.</p>
+        <p>You can withdraw this access at any time, in the extension’s popup or in Chrome under <strong>Extensions → EchoMeBetter → Details → Site access</strong>.</p>
+      </section>
+
+      <section id="use">
+        <h2><span class="num">4</span>How information is used</h2>
+        <p>The information described in Section 2 is used only to provide the extension’s features: to rewrite the text you select, to download and run the model, to remember your settings and to keep the model from using memory when idle. It is not used for advertising, profiling, analytics, research, or training any model, and it is not used for any purpose unrelated to the extension’s single purpose of rewriting your text on your device.</p>
+      </section>
+
+      <section id="sharing">
+        <h2><span class="num">5</span>Sharing and disclosure</h2>
+        <p>We do not sell, rent, trade or share personal information, because we do not receive any. Specifically:</p>
+        <ul>
+          <li>Your text, and the data in Section 2.3, never leave your device through the extension, so there is nothing for us to disclose to advertisers, data brokers, analytics providers or other third parties.</li>
+          <li>We cannot hand over information about your writing to a court or authority, because we do not hold it.</li>
+          <li>If the extension or the KeelCore project is transferred to a new owner, as the license allows, this policy and its commitments carry over to the new owner until a new policy is published under Section 14.</li>
+        </ul>
+        <p>If you email us (Section 15), we will use your message and address only to reply to you.</p>
+      </section>
+
+      <section id="third-parties">
+        <h2><span class="num">6</span>Third-party services</h2>
+        <ul>
+          <li><strong>Hugging Face</strong> hosts the model files and the catalog (Section 2.2). Its <a href="https://huggingface.co/privacy">privacy policy</a> applies to the requests it receives.</li>
+          <li><strong>Google and the Chrome Web Store</strong> distribute and update the extension. Google handles installation, updates and reviews under its own <a href="https://policies.google.com/privacy">privacy policy</a>. We see only the aggregate figures the Chrome Web Store shows developers, such as install counts and ratings.</li>
+          <li><strong>GitHub</strong> hosts this page and our public source code. GitHub may log visits to these pages under its <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">privacy statement</a>. Opening this page is not required to use the extension.</li>
+          <li><strong>Open-source components</strong> that run inside the extension, including ONNX Runtime Web (which runs the model), React and the Inter typeface, are bundled in the extension package and run on your device. They make no network connections of their own. Their licenses are listed in the extension’s <code>NOTICE</code> and in <a href="https://github.com/saravanan-a-r/KeelCore/blob/main/NOTICE">the repository</a>.</li>
+        </ul>
+      </section>
+
+      <section id="security">
+        <h2><span class="num">7</span>Security</h2>
+        <ul>
+          <li><strong>Local processing.</strong> Because rewriting happens on your device, there is no server holding your writing that could be breached.</li>
+          <li><strong>Encrypted downloads.</strong> Every request to Hugging Face uses HTTPS.</li>
+          <li><strong>Verified files.</strong> Each model file is checked against a fingerprint (SHA-256) published in the catalog before it is used. A file that does not match is deleted and not loaded.</li>
+          <li><strong>No remote code.</strong> The extension’s code ships in the extension package that Chrome reviews. The downloaded model files are data, not scripts, and the extension is not allowed to load or run scripts from the internet.</li>
+          <li><strong>Least access.</strong> The extension asks for no website access at install, and uses the permissions in Section 3 only as described.</li>
+        </ul>
+        <p>No system is perfectly secure. Data saved by the extension is protected by your browser profile and device. Anyone who can use your signed-in browser profile can use the extension and its stored files, so please keep your device secure.</p>
+      </section>
+
+      <section id="retention">
+        <h2><span class="num">8</span>Retention and deletion</h2>
+        <p>We keep no copies of your information, so there is nothing to delete on our side. Data saved on your device stays until you remove it:</p>
+        <ul>
+          <li><strong>Remove a writing style or the model</strong> from the extension’s popup. Removing the last style also removes the base model.</li>
+          <li><strong>Uninstall the extension</strong> in Chrome. Chrome then deletes everything the extension saved, including the model files.</li>
+          <li><strong>Working state</strong> is cleared by Chrome when the browser closes.</li>
+        </ul>
+      </section>
+
+      <section id="rights">
+        <h2><span class="num">9</span>Your choices and rights</h2>
+        <p>You are in control of the extension: you decide when to rewrite text, when to download the model, whether to allow website access, and when to remove everything.</p>
+        <p>Privacy laws, such as the EU and UK GDPR, the California Consumer Privacy Act as amended (CCPA/CPRA), and India’s Digital Personal Data Protection Act, 2023, give people rights over personal data held about them, including to access, correct, delete and port it, to object to or restrict its use, and to withdraw consent. Because the extension does not send personal data to us, we hold none about you through it, and there is nothing to access, correct or delete. The data on your device is yours, and you can see and remove it yourself as described in Section 8.</p>
+        <p>We do not sell or share personal information, and we do not use it for targeted advertising. We do not track you across websites, so there is nothing for a “Do Not Track” signal to switch off.</p>
+        <p>If you believe we hold information about you, for example because you emailed us, write to the address in Section 15 and we will respond within 30 days. You may also complain to your local data protection authority.</p>
+      </section>
+
+      <section id="children">
+        <h2><span class="num">10</span>Children</h2>
+        <p>EchoMeBetter is a general-purpose writing tool and is not directed at children under 13 (or under 16 where local law sets that age). We do not knowingly collect personal information from anyone, children included. Under the license, a person below the age of legal contract may use the extension only if a parent or guardian accepts the license on their behalf.</p>
+      </section>
+
+      <section id="international">
+        <h2><span class="num">11</span>International use</h2>
+        <p>We operate no servers that receive your information, so we transfer none across borders. Your text is processed on your own device, wherever you are. When you download the model, Hugging Face and its delivery networks may serve the files from, and process the request details in, other countries, under their own policies.</p>
+      </section>
+
+      <section id="output">
+        <h2><span class="num">12</span>AI-generated output</h2>
+        <p>Rewrites are produced by a machine learning model and can be inaccurate, incomplete or change your meaning. Always review the result before you use or send it. The license sets out the limits of our responsibility for output.</p>
+      </section>
+
+      <section id="cws">
+        <h2><span class="num">13</span>Chrome Web Store User Data Policy</h2>
+        <p>The use of information received by EchoMeBetter complies with the <a href="https://developer.chrome.com/docs/webstore/program-policies/user-data-faq">Chrome Web Store User Data Policy</a>, including its Limited Use requirements. In particular, we do not:</p>
+        <ul>
+          <li>sell or transfer user data to third parties, other than for the extension’s single purpose of rewriting your text;</li>
+          <li>use or transfer user data for purposes unrelated to that purpose, or for personalized, retargeted or interest-based advertising;</li>
+          <li>use or transfer user data to determine creditworthiness or for lending;</li>
+          <li>allow humans to read user data, since we receive none.</li>
+        </ul>
+      </section>
+
+      <section id="changes">
+        <h2><span class="num">14</span>Changes to this policy</h2>
+        <p>We may update this policy, for example if the extension gains a feature that handles information differently. The date at the top shows when it last changed, and earlier versions remain available in the <a href="https://github.com/saravanan-a-r/KeelCore">public repository history</a>. If a change is material, we will say so in the extension’s Chrome Web Store listing and, where the law requires it, ask for your consent first. Changes take effect when posted here.</p>
+      </section>
+
+      <section id="contact">
+        <h2><span class="num">15</span>Contact</h2>
+        <p>Questions, requests or concerns about this policy? Email <a href="mailto:sararavi.ar@gmail.com">sararavi.ar@gmail.com</a>, or open an issue at <a href="https://github.com/saravanan-a-r/KeelCore/issues">github.com/saravanan-a-r/KeelCore</a>. Please do not include sensitive information in a public issue.</p>
+        <p>Developer: Saravanan A R.</p>
+      </section>
+
+    </article>
+  </div>
+</div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>© 2026 Saravanan A R. All rights reserved. EchoMeBetter and KeelCore are names used by the copyright holder.</p>
+    <ul>
+      <li><a href="https://github.com/saravanan-a-r/KeelCore/blob/main/LICENSE">License</a></li>
+      <li><a href="https://github.com/saravanan-a-r/KeelCore">Source</a></li>
+      <li><a href="https://huggingface.co/KeelCore">KeelCore on Hugging Face</a></li>
+      <li><a href="./">Technical report</a></li>
+    </ul>
+  </div>
+</footer>
+</body>
+</html>
