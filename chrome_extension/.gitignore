@@ -12,8 +12,8 @@ models/
 
 *.tsbuildinfo
 
-# Custom onnxruntime-web build (with LoRA adapter support) and the matching
-# onnxruntime-common, installed from here by package.json. Large binaries:
-# kept on the developer's machine, not in git.
+# The old custom onnxruntime-web build, from before onnxruntime-web 1.31.1 (which
+# has LoRA adapter support) was on npm. Nothing uses it any more; large binaries
+# that stay out of git.
 vendor/
 *.tgz

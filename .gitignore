@@ -87,8 +87,8 @@ htmlcov/
 ownership/secrets/
 
 # ---------------------------------------------------------------------------
-# Model files and the custom onnxruntime-web tarball stay on the developer's
-# machine; the extension downloads its model at run time.
+# Model files and stray .tgz tarballs stay on the developer's machine; the
+# extension downloads its model at run time.
 # ---------------------------------------------------------------------------
 /serving_onnx_package/
 /*.tgz
