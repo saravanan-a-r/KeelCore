@@ -27,7 +27,7 @@ jobs:
       - name: Keep only the files the site serves
         run: |
           mkdir _site
-          cp -r github_site/index.html github_site/404.html github_site/favicon.svg github_site/.nojekyll github_site/assets _site/
+          cp -r github_site/index.html github_site/privacy.html github_site/404.html github_site/favicon.svg github_site/.nojekyll github_site/assets _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
