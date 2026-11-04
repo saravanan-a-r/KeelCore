@@ -243,7 +243,7 @@ tbody th { width: 28%; font-weight: 600; color: var(--fg); }
   <p class="lede">EchoMeBetter rewrites the text you select, using a writing model that runs inside your browser. We have no servers that receive your writing, and no accounts, analytics or ads. This policy explains exactly what the extension does and does not do with information.</p>
   <ul class="facts">
     <li>Effective November 4, 2026</li>
-    <li>Version 1.0</li>
+    <li>Version 1.1</li>
     <li>Applies to the EchoMeBetter Chrome extension</li>
   </ul>
 </section>
@@ -317,6 +317,7 @@ tbody th { width: 28%; font-weight: 600; color: var(--fg); }
         <ul>
           <li><strong>The model catalog.</strong> A small file, <code>model.json</code>, listing which writing styles exist. The extension reads it when you open the popup or the welcome page, and when a setup prompt is shown. A copy is reused for a few minutes.</li>
           <li><strong>The model files.</strong> The base model and the writing styles you choose, downloaded only after you accept the license and click Download. An interrupted download resumes where it stopped.</li>
+          <li><strong>An install notice.</strong> After a writing style has finished downloading, the extension asks Hugging Face for one small file, <code>config.json</code>, from that style&rsquo;s page. It is a HEAD request, which returns no content, and the extension does not read the answer. Hugging Face counts requests for that file as downloads of the style, which is how the download count on its page goes up. It is sent only after you have accepted the license and downloaded the style, it carries nothing beyond the request details described below, and we receive no information from it.</li>
         </ul>
         <p>Hugging Face receives what any website receives when you open a file from it: your IP address, your browser and operating system type, the address of the file requested, and the time. The extension does not send cookies, sign-in details, identifiers, settings, usage information or any of your text. Hugging Face and the content delivery networks it uses handle those request details under <a href="https://huggingface.co/privacy">their own privacy policy</a>.</p>
         <p>Once the model is on your device, rewriting works without an internet connection. If the catalog cannot be reached, the extension carries on with what is installed.</p>
@@ -394,7 +395,7 @@ tbody th { width: 28%; font-weight: 600; color: var(--fg); }
       <section id="third-parties">
         <h2><span class="num">6</span>Third-party services</h2>
         <ul>
-          <li><strong>Hugging Face</strong> hosts the model files and the catalog (Section 2.2). Its <a href="https://huggingface.co/privacy">privacy policy</a> applies to the requests it receives.</li>
+          <li><strong>Hugging Face</strong> hosts the model files and the catalog (Section 2.2). Its <a href="https://huggingface.co/privacy">privacy policy</a> applies to the requests it receives. We see the download count it shows on each model page; that is Hugging Face&rsquo;s own number, not information sent by the extension.</li>
           <li><strong>Google and the Chrome Web Store</strong> distribute and update the extension. Google handles installation, updates and reviews under its own <a href="https://policies.google.com/privacy">privacy policy</a>. We see only the aggregate figures the Chrome Web Store shows developers, such as install counts and ratings.</li>
           <li><strong>GitHub</strong> hosts this page and our public source code. GitHub may log visits to these pages under its <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">privacy statement</a>. Opening this page is not required to use the extension.</li>
           <li><strong>Open-source components</strong> that run inside the extension, including ONNX Runtime Web (which runs the model), React and the Inter typeface, are bundled in the extension package and run on your device. They make no network connections of their own. Their licenses are listed in the extension’s <code>NOTICE</code> and in <a href="https://github.com/saravanan-a-r/KeelCore/blob/main/NOTICE">the repository</a>.</li>

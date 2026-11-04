@@ -270,6 +270,28 @@ export async function downloadFiles(
   }
 }
 
+/** A folder of a Hugging Face repository at one revision: `https://huggingface.co/<owner>/<repo>/resolve/<revision>/...`. */
+const HUB_REPOSITORY = /^(https:\/\/huggingface\.co\/[^/]+\/[^/]+)\/resolve\/[^/]+\//;
+
+/**
+ * Tell the Hub that an adapter was installed. The Hub counts a repository's downloads from requests to its query
+ * files (config.json, unless the library names others), and an adapter's own files are not query files, so without
+ * this an adapter repository shows 0 downloads however often it is installed. This is one HEAD request to the
+ * repository's config.json, on the host the files came from; nothing is sent beyond the request itself. The Hub
+ * counts per repository, and model.json pins an adapter to an older commit, so the request goes to `main`.
+ * It never fails an install: a missing file or a network error is ignored. The privacy policy (section 2.2)
+ * describes this request; change one only together with the other.
+ */
+export async function countInstall(transport: DownloadTransport, folder: string): Promise<void> {
+  const repository = HUB_REPOSITORY.exec(folder)?.[1];
+  if (!repository) return;
+  try {
+    await transport.fetch(`${repository}/resolve/main/config.json`, { method: 'HEAD', cache: 'no-store', signal: AbortSignal.timeout(5000) });
+  } catch {
+    // Counting is not worth a failed install.
+  }
+}
+
 /** Any failure of a download, as the error the user is shown. */
 export function downloadError(error: unknown, signal: AbortSignal): EchoError {
   if (signal.aborted) return new EchoError('CANCELLED');

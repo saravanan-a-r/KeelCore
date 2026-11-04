@@ -1,6 +1,6 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, jest, test } from '@jest/globals';
 import { adapterFiles, baseFiles, bytesOf, type ModelFile } from '../../../engine/manifest';
-import { downloadFiles, fetchManifest, sha256Hex, type DownloadProgress, type DownloadTransport } from '../../../worker/modelDownloader';
+import { countInstall, downloadFiles, fetchManifest, sha256Hex, type DownloadProgress, type DownloadTransport } from '../../../worker/modelDownloader';
 import { ModelStore } from '../../../worker/modelStore';
 import { tinyManifest } from '../../helpers/fixtures';
 import { MemoryDirectory } from '../../helpers/memoryFileSystem';
@@ -173,5 +173,30 @@ describe('downloadFiles', () => {
     });
     await expect(pending).rejects.toMatchObject({ code: 'CANCELLED' });
     expect(await store.complete(FILES)).toBe(false);
+  });
+});
+
+describe('countInstall', () => {
+  const HUB = 'https://huggingface.co/KeelCore/KeelCore-750M-Professional/resolve/b9fcb2a87d6b579bfa9a714e6ad5ce16645e938e/onnx/';
+  const transportFor = (fetch: DownloadTransport['fetch']): DownloadTransport => ({ fetch, estimate: async () => ({}), digest: sha256Hex, now: () => 0 });
+
+  test('asks for the config.json of the repository on main with one HEAD, so the Hub counts the install, whichever commit is pinned', async () => {
+    const calls: Array<[string, RequestInit | undefined]> = [];
+    await countInstall(transportFor(async (url, init) => (calls.push([url, init]), new Response(null, { status: 200 }))), HUB);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]![0]).toBe('https://huggingface.co/KeelCore/KeelCore-750M-Professional/resolve/main/config.json');
+    expect(calls[0]![1]).toMatchObject({ method: 'HEAD', cache: 'no-store' });
+  });
+
+  test('does nothing for a model that is not served from a Hugging Face repository', async () => {
+    const fetch = jest.fn(async () => new Response(null, { status: 200 }));
+    await countInstall(transportFor(fetch), FIXTURE_URL);
+    await countInstall(transportFor(fetch), 'https://example.test/KeelCore/x/resolve/main/onnx/');
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  test('never fails: a network error or a missing file is ignored', async () => {
+    await expect(countInstall(transportFor(async () => Promise.reject(new TypeError('Failed to fetch'))), HUB)).resolves.toBeUndefined();
+    await expect(countInstall(transportFor(async () => new Response('not found', { status: 404 })), HUB)).resolves.toBeUndefined();
   });
 });

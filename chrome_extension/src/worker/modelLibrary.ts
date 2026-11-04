@@ -12,7 +12,7 @@ import { EchoError, toErrorPayload } from '../shared/errors';
 import type { EngineEvent } from '../shared/messages';
 import type { DownloadState, DownloadTarget, InstalledModelRecord } from '../shared/modelInstall';
 import { STYLE_IDS, type StyleId } from '../shared/styles';
-import { downloadError, downloadFiles, fetchManifest, type DownloadTransport } from './modelDownloader';
+import { countInstall, downloadError, downloadFiles, fetchManifest, type DownloadTransport } from './modelDownloader';
 import { filesOf, ModelStore, type StoredModel } from './modelStore';
 
 export interface LibraryDeps {
@@ -124,6 +124,13 @@ export class ModelLibrary {
 
       await store.commit(next);
       await store.prune(ModelStore.namesOf(next));
+      // Only an adapter fetched just now counts as one more install, not one that was already on this device.
+      const fetched = new Set(files.map((file) => file.sha256));
+      for (const style of target.adapters) {
+        const encoder = next.manifest.adapters[style]?.files.encoder;
+        // Not awaited: the download is done and verified, and counting must never hold the user up.
+        if (encoder?.source && fetched.has(encoder.sha256)) void countInstall(this.deps.transport, encoder.source);
+      }
       this.deps.emit({ type: 'installed', installed: toRecord(next) });
       // Downloaded to be used: load it now rather than ask for another click. Started
       // before the download is reported done, so whoever hears that already sees it loading.
