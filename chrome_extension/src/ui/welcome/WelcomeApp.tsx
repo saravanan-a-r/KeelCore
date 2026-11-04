@@ -219,16 +219,30 @@ export function WelcomeView(props: WelcomeViewProps) {
         </section>
       </main>
 
-      <footer className="_echo_$_flex _echo_$_items-center _echo_$_justify-center _echo_$_gap-2 _echo_$_border-0 _echo_$_border-t _echo_$_border-solid _echo_$_border-line _echo_$_px-6 _echo_$_py-8 _echo_$_text-center _echo_$_text-sm _echo_$_text-fg-muted">
-        <span className="_echo_$_shrink-0">
-          <Logo size={18} />
-        </span>
-        <span>
-          <Wordmark /> · Everything runs on your device. Nothing you write leaves your browser. ·{' '}
-          <a href={LICENSE_HREF} target="_blank" rel="noopener" className="_echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline">
+      {/* Same column as the page above it: the brand and the privacy line on the left, the license on the right (under them when narrow). */}
+      <footer className="_echo_$_border-0 _echo_$_border-t _echo_$_border-solid _echo_$_border-line">
+        <div className="_echo_$_mx-auto _echo_$_flex _echo_$_max-w-5xl _echo_$_flex-col _echo_$_gap-4 _echo_$_px-6 _echo_$_py-8 sm:_echo_$_flex-row sm:_echo_$_items-center sm:_echo_$_justify-between">
+          <div className="_echo_$_flex _echo_$_flex-col _echo_$_gap-2">
+            <span className="_echo_$_flex _echo_$_items-center _echo_$_gap-2 _echo_$_text-sm">
+              <span className="_echo_$_shrink-0">
+                <Logo size={20} />
+              </span>
+              <Wordmark />
+            </span>
+            <p className="_echo_$_text-sm _echo_$_leading-6 _echo_$_text-fg-muted">Everything runs on your device. Nothing you write leaves your browser.</p>
+          </div>
+          <a
+            href={LICENSE_HREF}
+            target="_blank"
+            rel="noopener"
+            className="_echo_$_inline-flex _echo_$_shrink-0 _echo_$_items-center _echo_$_gap-1 _echo_$_self-start _echo_$_text-sm _echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline sm:_echo_$_self-auto"
+          >
             License
+            <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="_echo_$_shrink-0">
+              <path d="M4.5 2.5h5v5M9.5 2.5l-7 7" />
+            </svg>
           </a>
-        </span>
+        </div>
       </footer>
     </div>
   );
