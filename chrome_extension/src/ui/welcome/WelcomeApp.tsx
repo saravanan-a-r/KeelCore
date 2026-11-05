@@ -229,7 +229,7 @@ export function WelcomeView(props: WelcomeViewProps) {
               </span>
               <Wordmark />
             </span>
-            <p className="_echo_$_text-sm _echo_$_leading-6 _echo_$_text-fg-muted">Everything runs on your device. Nothing you write leaves your browser.</p>
+            <p className="_echo_$_text-sm _echo_$_leading-6 _echo_$_text-fg-muted">Everything runs on your device. Your text never leaves it.</p>
           </div>
           <a
             href={LICENSE_HREF}

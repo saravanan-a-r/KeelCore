@@ -138,7 +138,7 @@ export function PopupView(props: PopupViewProps) {
               <path d="M8 1.5 2.5 3.8v3.6c0 3.3 2.3 6.1 5.5 7.1 3.2-1 5.5-3.8 5.5-7.1V3.8L8 1.5Z" />
               <path d="m5.6 8 1.7 1.7 3.2-3.3" />
             </svg>
-            On-device. Your text never leaves the browser.
+            On-device. Your text never leaves your device.
           </span>
           <div className="_echo_$_flex _echo_$_items-center _echo_$_justify-between _echo_$_gap-3">
             <span className="_echo_$_whitespace-nowrap">
