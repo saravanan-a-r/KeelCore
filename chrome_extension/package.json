@@ -1,8 +1,8 @@
 {
   "name": "echomebetter-chrome-extension",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "EchoMeBetter: on-device text rewriting from the right-click menu.",
+  "description": "Rewrite selected text in any text box: professional, grammar, friendly, concise or elaborate. Runs entirely on your device.",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
