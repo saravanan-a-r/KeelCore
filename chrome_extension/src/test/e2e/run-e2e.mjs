@@ -264,6 +264,21 @@ try {
       (await popup.getByRole('region', { name: 'Styles' }).getByRole('img', { name: 'Grammar style installed' }).count()) === 1,
       'the popup lists Grammar as installed too',
     );
+
+    // The two styles left, added from the popup like Concise: each one downloads, shows as installed and rewrites.
+    for (const style of ['Friendly', 'Elaborate']) {
+      const add = popup.getByRole('button', { name: new RegExp(`^Download the ${style} style`) });
+      if ((await add.count()) === 0) continue;
+      downloadStarted = Date.now();
+      await add.click();
+      await popup.getByRole('region', { name: 'Styles' }).getByRole('img', { name: `${style} style installed` }).waitFor({ timeout: 600_000 });
+      console.log(`  ${style} style, from the popup: download and verification took ${((Date.now() - downloadStarted) / 1000).toFixed(1)}s`);
+      await selectAll();
+      check((await startJob(`e2e-${style.toLowerCase()}`, style.toLowerCase()))?.ok === true, `a rewrite in ${style} starts`);
+      const card = await rewriteAndDiscard(style);
+      const rewritten = card.replace(new RegExp(`^.*Rewrite ready · ${style}`), '').replace(/(Replace|Discard).*$/s, '').trim();
+      check(rewritten.length > 0 && rewritten !== ORIGINAL, `${style} rewrote the text: "${rewritten}"`);
+    }
   }
 
   console.log('live preview:');
@@ -715,7 +730,10 @@ try {
   const popupsBefore = await popupTargets();
   await overlay.getByRole('button', { name: 'Keep it awake longer' }).click();
   for (const deadline = Date.now() + 10_000; (await popupTargets()) === popupsBefore && Date.now() < deadline; ) await welcome.waitForTimeout(100);
-  const intentLeft = 'popupIntent' in (await worker.evaluate(() => chrome.storage.session.get('popupIntent')));
+  // The popup takes the request once its page has loaded, a moment after its window appears.
+  const intentWaiting = async () => 'popupIntent' in (await worker.evaluate(() => chrome.storage.session.get('popupIntent')));
+  for (const deadline = Date.now() + 10_000; (await intentWaiting()) && Date.now() < deadline; ) await welcome.waitForTimeout(100);
+  const intentLeft = await intentWaiting();
   check((await popupTargets()) === popupsBefore + 1 && !intentLeft, '"Keep it awake longer" opened the toolbar popup, which took the request to start at that setting');
 
   // What that popup shows, on a page automation can read: the same request, taken the same way.
@@ -736,14 +754,18 @@ try {
   if (toAdd > 0) {
     await popup.getByRole('button', { name: 'Remove', exact: true }).click();
     await popup.getByRole('button', { name: 'Remove professional style' }).waitFor({ state: 'detached', timeout: 30_000 });
-    // Concise and Grammar were added above (two files each), so they stay: record, three base files and four adapter files.
-    check((await storedModelFiles(popup)).length === 8, 'removing the style deleted only its files');
+    // Concise, Grammar, Friendly and Elaborate were added above (two files each), so they stay: the record, three base files and eight adapter files.
+    check((await storedModelFiles(popup)).length === 12, 'removing the style deleted only its files');
     check((await badge()) === '', 'toolbar icon is flagged only when no style is left');
-    // Concise goes alone; Grammar is the last style, so the writing model goes with it.
-    await popup.getByRole('button', { name: 'Remove concise style' }).click();
-    await popup.getByRole('button', { name: 'Remove', exact: true }).click();
-    await popup.getByRole('button', { name: 'Remove concise style' }).waitFor({ state: 'detached', timeout: 30_000 });
-    check((await storedModelFiles(popup)).length === 6, 'removing a style while another stays kept the writing model');
+    // Each goes alone, the writing model staying, until Grammar is the last style: it takes the writing model with it.
+    let files = 12;
+    for (const style of ['concise', 'friendly', 'elaborate']) {
+      await popup.getByRole('button', { name: `Remove ${style} style` }).click();
+      await popup.getByRole('button', { name: 'Remove', exact: true }).click();
+      await popup.getByRole('button', { name: `Remove ${style} style` }).waitFor({ state: 'detached', timeout: 30_000 });
+      files -= 2;
+      check((await storedModelFiles(popup)).length === files, `removing ${style} while others stay kept the writing model (${files} files)`);
+    }
     await popup.getByRole('button', { name: 'Remove grammar style' }).click();
     check((await popup.getByText('Remove the Grammar style and the writing model?').count()) === 1, 'removing the last style asks to remove the writing model with it');
     await popup.getByRole('button', { name: 'Remove', exact: true }).click();
