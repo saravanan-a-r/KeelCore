@@ -8,6 +8,8 @@ Transformer, pretrained once from scratch on English prose, source code and
 command-line text. Each capability is then added on top as a small **LoRA
 adapter**, so a new task is a small download rather than a new model.
 
+<!-- ECHOMEBETTER-HIDDEN 1/3 (restore next week, when the EchoMeBetter extension and the adapters are announced): uncomment this whole block; it is the "EchoMeBetter is not the only use case" box.
+
 > ### EchoMeBetter is not the only use case of KeelCore. It is a by-product.
 >
 > **KeelCore is a general base model for LoRA adapters.** EchoMeBetter, the
@@ -15,6 +17,8 @@ adapter**, so a new task is a small download rather than a new model.
 > text-rewriting adapters on your device. That is one application of the base,
 > not its purpose. More adapters, for different use cases, are in progress,
 > and each one is added to the same base.
+
+-->
 
 ---
 
@@ -30,9 +34,8 @@ adapter**, so a new task is a small download rather than a new model.
       └───────────────┘      └───────────────┘      └───────────────┘   the user
 ```
 
-- **Install the base once, then pick the adapters you need.** EchoMeBetter
-  reads a catalogue (`model.json`) that lists the base and the adapters on
-  offer, with each file's size and SHA-256 checksum. The base comes first;
+- **Install the base once, then pick the adapters you need.** A catalogue
+  (`model.json`) lists the base and the adapters on offer,<!-- ECHOMEBETTER-HIDDEN 2/3 (restore next week): replace the words "A catalogue (`model.json`) lists" above with "EchoMeBetter reads a catalogue (`model.json`) that lists" --> with each file's size and SHA-256 checksum. The base comes first;
   any set of adapters can then be added to it or removed again, each
   independently of the others.
 - **Adapters are small.** A rank-16 LoRA adapter on every linear layer trains
@@ -60,7 +63,9 @@ adapter**, so a new task is a small download rather than a new model.
 ## Runs in the browser
 
 KeelCore is meant to run inside a web browser together with its adapters.
+<!-- ECHOMEBETTER-HIDDEN 3/3 (restore next week): uncomment this sentence.
 EchoMeBetter, the browser extension, runs the text-rewriting adapters.
+-->
 Inference happens on your device, in a worker, through ONNX Runtime Web:
 
 - **WebGPU** is the default wherever the browser offers a working GPU, with a
