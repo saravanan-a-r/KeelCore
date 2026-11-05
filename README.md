@@ -8,6 +8,9 @@ Transformer, pretrained once from scratch on English prose, source code and
 command-line text. Each capability is then added on top as a small **LoRA
 adapter**, so a new task is a small download rather than a new model.
 
+**Read the technical report (thesis): <https://saravanan-a-r.github.io/KeelCore/>**. It covers the
+architecture, the training data and recipe, and the full comparison with 13 open models.
+
 <!-- ECHOMEBETTER-HIDDEN 1/3 (restore next week, when the EchoMeBetter extension and the adapters are announced): uncomment this whole block; it is the "EchoMeBetter is not the only use case" box.
 
 > ### EchoMeBetter is not the only use case of KeelCore. It is a by-product.
