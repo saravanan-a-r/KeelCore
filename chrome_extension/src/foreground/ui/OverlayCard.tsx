@@ -19,6 +19,18 @@ export function toastPosition(anchor: AnchorRect | null, viewport: { width: numb
   return { left, bottom: Math.max(GAP, viewport.height - anchor.top + GAP) };
 }
 
+/**
+ * The vertical part of a card's `translate`: how far to move it so it stays inside the window. The card's
+ * height is only known to the browser (a percentage in `translate` means the card's own height), so, as
+ * with the preview's sideways shift, no JavaScript measures it. A card that fits is not moved at all.
+ * Placed below the text it moves up by exactly the overflow; placed above it, down by exactly the overflow.
+ */
+function verticalShift(place: CSSProperties, viewport: { height: number }): string {
+  if (typeof place.top === 'number') return `min(0px, calc(${viewport.height - GAP - place.top}px - 100%))`;
+  if (typeof place.bottom === 'number') return `max(0px, calc(100% - ${viewport.height - GAP - place.bottom}px))`;
+  return '0px';
+}
+
 /** The most of the window the preview may take across, as it grows to fit the rewrite. */
 export const PREVIEW_MAX_WIDTH_SHARE = 0.7;
 /** The preview's text grows to this tall, then scrolls. */
@@ -34,7 +46,8 @@ export function previewWidthRange(viewport: { width: number }): { min: number; m
  * Where the preview sits and how wide it is. It is as wide as its text
  * wants, between the range's two ends, so it grows to the right as the
  * rewrite does; where that would run off the window it moves left by
- * exactly the overflow. That shift is a `translate` (a percentage in it
+ * exactly the overflow (and a tall card that would run off the bottom or top
+ * moves up or down by its overflow). That shift is a `translate` (a percentage in it
  * means the card's own width, which only the browser knows), so no JavaScript
  * measures the card as it grows. It is `translate`, not `transform`, because
  * the card's pop-in animation holds `transform`.
@@ -43,7 +56,13 @@ export function previewStyle(anchor: AnchorRect | null, viewport: { width: numbe
   const { min, max } = previewWidthRange(viewport);
   const place = toastPosition(anchor, viewport);
   const left = place.left as number;
-  return { ...place, width: 'max-content', minWidth: min, maxWidth: max, translate: `min(0px, calc(${viewport.width - GAP - left}px - 100%))` };
+  return { ...place, width: 'max-content', minWidth: min, maxWidth: max, translate: `min(0px, calc(${viewport.width - GAP - left}px - 100%)) ${verticalShift(place, viewport)}` };
+}
+
+/** A toast's place and width; a tall one (with the wake-up note) stays inside the window. */
+function toastStyle(anchor: AnchorRect | null, viewport: { width: number; height: number }): CSSProperties {
+  const place = toastPosition(anchor, viewport);
+  return { ...place, width: Math.min(CARD_WIDTH, viewport.width - 2 * GAP), translate: `0px ${verticalShift(place, viewport)}` };
 }
 
 const TONE_ACCENT: Record<ToastState['tone'], string> = {
@@ -104,7 +123,7 @@ export function OverlayCard({ card, onDismiss }: { card: CardContent; onDismiss:
     <div
       role={toast?.tone === 'error' ? 'alert' : 'status'}
       style={{
-        ...(rewrite ? previewStyle(rewrite.anchor, viewport) : { ...toastPosition(toast!.anchor, viewport), width: Math.min(CARD_WIDTH, viewport.width - 2 * GAP) }),
+        ...(rewrite ? previewStyle(rewrite.anchor, viewport) : toastStyle(toast!.anchor, viewport)),
         contain: 'layout paint',
       }}
       // Keep focus (and the caret) in the user's editor when a button on the card is pressed.

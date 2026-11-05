@@ -179,9 +179,21 @@ describe('overlay', () => {
     const style = previewStyle({ top: 100, left: 50, bottom: 140, right: 400 }, { width: 1000, height: 800 });
     expect(style).toMatchObject({ left: 50, top: 150, width: 'max-content', minWidth: 360, maxWidth: 700 });
     // Room to the right is 940px (to the 10px margin): a card up to that wide needs no shift.
-    expect(style.translate).toBe('min(0px, calc(940px - 100%))');
+    // Room below is 640px (to the 10px margin): a card up to that tall needs no shift either.
+    expect(style.translate).toBe('min(0px, calc(940px - 100%)) min(0px, calc(640px - 100%))');
     // Near the right edge the toast's own clamp puts it at 630; the card then shifts left by whatever it overflows.
-    expect(previewStyle({ top: 100, left: 950, bottom: 140, right: 990 }, { width: 1000, height: 800 }).translate).toBe('min(0px, calc(360px - 100%))');
+    expect(previewStyle({ top: 100, left: 950, bottom: 140, right: 990 }, { width: 1000, height: 800 }).translate).toBe('min(0px, calc(360px - 100%)) min(0px, calc(640px - 100%))');
+  });
+
+  test('a tall card moves up from the window\'s bottom edge, or down from its top edge, by exactly what it would overflow', () => {
+    // Below the text there is room for the 96px estimate but not for a card with the wake-up note.
+    const nearBottom = previewStyle({ top: 560, left: 50, bottom: 600, right: 400 }, { width: 1000, height: 720 });
+    expect(nearBottom).toMatchObject({ top: 610 });
+    expect(nearBottom.translate).toBe('min(0px, calc(940px - 100%)) min(0px, calc(100px - 100%))');
+    // Placed above the text it is moved down instead.
+    const above = previewStyle({ top: 150, left: 50, bottom: 690, right: 400 }, { width: 1000, height: 720 });
+    expect(above).toMatchObject({ bottom: 580 });
+    expect(above.translate).toBe('min(0px, calc(940px - 100%)) max(0px, calc(100% - 130px))');
   });
 
   test('the preview scrolls past its height, follows the newest text, and lets go once the reader scrolls up', () => {
