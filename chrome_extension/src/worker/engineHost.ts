@@ -167,8 +167,14 @@ export class EngineHost {
     }
     if (signal.aborted) throw new EchoError('CANCELLED');
     this.emit({ type: 'job-phase', jobId, phase: 'rewriting' });
+    const stream = options.stream ? this.streamTo(jobId) : undefined;
+    // A restart drops the text shown so far: a new phase clears the preview, as for a second attempt.
+    const onRestart = () => {
+      stream?.reset();
+      this.emit({ type: 'job-phase', jobId, phase: 'rewriting' });
+    };
     try {
-      return await engine.rewrite(style, text, { signal, onPartial: options.stream ? this.streamTo(jobId) : undefined });
+      return await engine.rewrite(style, text, { signal, onPartial: stream?.report, onRestart });
     } catch (error) {
       if (error instanceof EngineBrokenError) this.discard(engine);
       throw error;
@@ -176,10 +182,14 @@ export class EngineHost {
   }
 
   /** Report the rewrite so far for `jobId`: the first token at once, then at most every STREAM_INTERVAL_MS. */
-  private streamTo(jobId: string): (readText: () => string) => void {
+  private streamTo(jobId: string): { report: (readText: () => string) => void; reset: () => void } {
     let last = -Infinity;
     let sent = '';
-    return (readText) => {
+    const reset = () => {
+      last = -Infinity;
+      sent = '';
+    };
+    const report = (readText: () => string) => {
       const at = this.now();
       if (at - last < STREAM_INTERVAL_MS) return;
       last = at;
@@ -189,6 +199,7 @@ export class EngineHost {
       sent = text;
       this.emit({ type: 'job-partial', jobId, text });
     };
+    return { report, reset };
   }
 
   /** Forget a broken engine; the next job loads a new one. Releasing it is not waited on: it must not hold the job up. */

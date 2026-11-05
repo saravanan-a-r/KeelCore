@@ -89,6 +89,38 @@ describe('EngineHost', () => {
     }
   });
 
+  test('a rewrite that restarts clears the preview with a new rewriting phase and shows its new text at once', async () => {
+    const clock = 1000;
+    for (const restart of [false, true]) {
+      const events: EngineEvent[] = [];
+      const engine = fakeEngine(async (_style, _text, options) => {
+        options?.onPartial?.(() => 'long first try');
+        if (restart) options?.onRestart?.();
+        // Same instant: only a reset throttle lets this through.
+        options?.onPartial?.(() => 'piece');
+        return 'piece';
+      });
+      const host = new EngineHost(async () => engine, (event) => events.push(event), () => clock);
+      host.enqueue('j', 'concise', 'x', { stream: true });
+      await host.idle();
+      const shown = events.filter((event) => (event.type === 'job-phase' && event.phase === 'rewriting') || event.type === 'job-partial');
+      expect(shown).toEqual(
+        restart
+          ? [
+              { type: 'job-phase', jobId: 'j', phase: 'rewriting' },
+              { type: 'job-partial', jobId: 'j', text: 'long first try' },
+              { type: 'job-phase', jobId: 'j', phase: 'rewriting' },
+              { type: 'job-partial', jobId: 'j', text: 'piece' },
+            ]
+          : [
+              { type: 'job-phase', jobId: 'j', phase: 'rewriting' },
+              { type: 'job-partial', jobId: 'j', text: 'long first try' },
+            ],
+      );
+      expect(events.at(-1)).toEqual({ type: 'job-done', jobId: 'j', text: 'piece' });
+    }
+  });
+
   test('a failed load is reported, fails the job, and can be retried', async () => {
     const events: EngineEvent[] = [];
     const loader = jest
