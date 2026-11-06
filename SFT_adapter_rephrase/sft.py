@@ -54,6 +54,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                             "(unset in the config: the eval split is carved out of the train data)")
     train.add_argument("--run-name", help="default: <time>_<device>_<style>_ckpt<step>_r<rank>")
     train.add_argument("--resume", type=Path, help="run directory to resume")
+    train.add_argument("--init-adapter", type=Path,
+                       help="start from the weights of a finished adapter (same base, rank and style): continued training")
     train.add_argument("--max-steps", type=int, help="overrides training.max_steps")
     train.add_argument("--train-examples", type=int, help="overrides data.train_examples")
     train.add_argument("--eval-examples", type=int, help="overrides data.eval_examples")
@@ -173,7 +175,8 @@ def _train(args, config) -> int:
     # resumable checkpoint is written before the process exits.
     signal.signal(signal.SIGTERM, signal.default_int_handler)
     trainer = prepare_training(
-        config, run_name=args.run_name, resume=args.resume, allow_shared_gpu=args.allow_shared_gpu
+        config, run_name=args.run_name, resume=args.resume, allow_shared_gpu=args.allow_shared_gpu,
+        init_adapter=args.init_adapter
     )
     try:
         summary = trainer.train()

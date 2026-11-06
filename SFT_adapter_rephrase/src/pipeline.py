@@ -17,7 +17,7 @@ from typing import Callable
 import torch
 
 from . import evaluation
-from .adapter_io import load_adapter, read_adapter_config
+from .adapter_io import adapter_config_from_dict, load_adapter, read_adapter_config
 from .base_model import BaseModelInfo, checkpoint_step, load_base_model
 from .codec import TextCodec
 from .config import SFTConfig
@@ -44,6 +44,7 @@ def prepare_training(
     run_name: str | None = None,
     resume: Path | None = None,
     allow_shared_gpu: bool = False,
+    init_adapter: Path | None = None,
     load_base: BaseLoader = load_base_model,
     codec: TextCodec | None = None,
     apply_resources: bool = True,
@@ -113,6 +114,10 @@ def prepare_training(
         raise AdapterError(
             f"attached adapter has {adapter.parameter_count():,} parameters, the formula predicts {expected:,}"
         )
+    if init_adapter is not None:
+        if resume is not None:
+            raise SFTError("--init-adapter starts a new run; a resumed run carries its own adapter state")
+        _init_from_adapter(adapter, init_adapter, config, base_info, codec, logger)
     logger.info(
         "adapter: rank %d, scaling %.4g%s, %d LoRA pairs, %d trainable tokens -> %s trainable params "
         "(%.2f%% of the base)",
@@ -193,6 +198,25 @@ def evaluate_adapter(
             evaluation.generation_metrics(records, e.acceptance, prefix="reference", use_reference_as_output=True)
         )
     return metrics
+
+
+def _init_from_adapter(adapter, directory: Path, config: SFTConfig, base_info, codec: TextCodec, logger) -> None:
+    """Start the new adapter from the weights of a finished one (continued training), after checking it fits."""
+    from safetensors.torch import load_file
+
+    document = read_adapter_config(directory)
+    if document.get("style_token") != config.data.style_token:
+        raise AdapterError(f"--init-adapter {directory} is for {document.get('style_token')}, not {config.data.style_token}")
+    if document["base"]["fingerprint"] != base_info.fingerprint:
+        raise AdapterError(f"--init-adapter {directory} was trained on another base (fingerprint "
+                           f"{document['base']['fingerprint'][:12]}, this base {base_info.fingerprint[:12]})")
+    if adapter_config_from_dict(document["adapter"]) != config.adapter:
+        raise AdapterError(f"--init-adapter {directory} has another adapter shape (rank/targets/alpha) than the config")
+    for token, token_id in document.get("trainable_tokens", {}).items():
+        if codec.token_map.get(token) != token_id:
+            raise AdapterError(f"tokenizer maps {token!r} differently from the adapter in {directory}")
+    adapter.load_state_dict(load_file(str(Path(directory) / "adapter.safetensors")))
+    logger.info("adapter weights initialised from %s", directory)
 
 
 def _trainable_token_ids(config: SFTConfig, codec: TextCodec) -> list[int]:
