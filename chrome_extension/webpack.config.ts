@@ -12,6 +12,9 @@
  *
  * Loaded through @babel/register (see babel.config.cjs).
  *
+ * A production build also zips dist/ into release/echomebetter-<version>.zip (tooling/zipPackage.ts),
+ * the file to upload to the Chrome Web Store.
+ *
  * The model is not bundled: the extension downloads it from Hugging Face when
  * the user asks (see model.source.json).
  */
@@ -23,6 +26,7 @@ import { join } from 'node:path';
 import type { Configuration, RuleSetRule } from 'webpack';
 import { ExtensionAssetsPlugin } from './tooling/extensionAssets';
 import { LicenseBannerPlugin } from './tooling/licenseBanner';
+import { ZipPackagePlugin } from './tooling/zipPackage';
 import remToPx from './tooling/remToPx.cjs';
 
 const root = __dirname;
@@ -151,7 +155,8 @@ export default (_env: unknown, argv: { mode?: string }): Configuration[] => {
     output: { path: dist, filename: '[name].js', iife: true, clean: false },
     module: { rules: [scripts, inlineStylesheet] },
     optimization: { splitChunks: false, runtimeChunk: false },
-    plugins: [new LicenseBannerPlugin()],
+    // The last build to finish: a production build ends by zipping dist/ into the package for the Chrome Web Store.
+    plugins: [new LicenseBannerPlugin(), ...(production ? [new ZipPackagePlugin({ distDir: dist, releaseDir: join(root, 'release'), name: 'echomebetter', version })] : [])],
   };
 
   return [extension, foreground];

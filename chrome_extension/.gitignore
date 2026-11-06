@@ -17,3 +17,6 @@ models/
 # that stay out of git.
 vendor/
 *.tgz
+
+# The Chrome Web Store zip, rebuilt by every production build.
+release/
