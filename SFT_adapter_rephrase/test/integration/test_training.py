@@ -16,7 +16,7 @@ from conftest import build_tiny_model, fake_decode, fake_encode, FAKE_TOKEN_MAP,
 from src.adapter_io import TENSORS_FILE, load_adapter
 from src.base_model import BaseModelInfo, base_fingerprint
 from src.codec import TextCodec
-from src.errors import ResumeError
+from src.errors import AdapterError, ResumeError, SFTError
 from src.pipeline import prepare_training
 from src.trainer import lr_multiplier
 
@@ -34,7 +34,8 @@ def _codec() -> TextCodec:
     return TextCodec(fake_encode, fake_decode, FAKE_TOKEN_MAP, "<style:concise>")
 
 
-def _trainer(tmp_path: Path, *, resume: Path | None = None, run_name: str = "run", **sections):
+def _trainer(tmp_path: Path, *, resume: Path | None = None, run_name: str = "run",
+             init_adapter: Path | None = None, **sections):
     if not (tmp_path / "data").exists():
         write_dataset(tmp_path / "data", sample_records(48), files=2)
     config = make_config(tmp_path, **sections)
@@ -42,6 +43,7 @@ def _trainer(tmp_path: Path, *, resume: Path | None = None, run_name: str = "run
         config,
         run_name=None if resume else run_name,
         resume=resume,
+        init_adapter=init_adapter,
         load_base=_tiny_loader,
         codec=_codec(),
         apply_resources=False,
@@ -208,3 +210,42 @@ def test_an_interrupt_leaves_a_resumable_checkpoint(tmp_path, monkeypatch):
     resumed = _trainer(tmp_path, resume=trainer.paths.run_dir, training={"max_steps": 10},
                        checkpointing={"every_steps": 100, "keep_last": 2})
     assert resumed.step == 4 and _train(resumed)["status"] == "completed"
+
+
+def test_init_adapter_starts_from_the_finished_weights(tmp_path):
+    """Continued training (phase 2): step 0 of the new run is exactly the finished adapter."""
+    first = _trainer(tmp_path / "first", training={"max_steps": 4})
+    _train(first)
+    finished = load_file(str(first.paths.run_dir / "final" / TENSORS_FILE))
+
+    second = _trainer(tmp_path / "second", init_adapter=first.paths.run_dir / "final", training={"max_steps": 2})
+    start = second.adapter.state_dict()
+    assert start.keys() == finished.keys()
+    assert all(torch.equal(start[k], finished[k]) for k in start)
+    assert any(finished[k].abs().sum() > 0 for k in finished if "lora_B" in k)  # not the no-op init
+    assert _train(second)["status"] == "completed"
+
+
+def test_init_adapter_refuses_another_shape(tmp_path):
+    first = _trainer(tmp_path / "first", training={"max_steps": 2})
+    _train(first)
+    with pytest.raises(AdapterError, match="another adapter shape"):
+        _trainer(tmp_path / "second", init_adapter=first.paths.run_dir / "final", adapter={"rank": 8})
+
+
+def test_init_adapter_refuses_another_base(tmp_path):
+    first = _trainer(tmp_path / "first", training={"max_steps": 2})
+    _train(first)
+    config = tmp_path / "first" / "runs" / "run" / "final" / "adapter_config.json"
+    document = json.loads(config.read_text())
+    document["base"]["fingerprint"] = "0" * 64
+    config.write_text(json.dumps(document))
+    with pytest.raises(AdapterError, match="trained on another base"):
+        _trainer(tmp_path / "second", init_adapter=config.parent)
+
+
+def test_init_adapter_cannot_be_combined_with_resume(tmp_path):
+    first = _trainer(tmp_path, training={"max_steps": 2})
+    _train(first)
+    with pytest.raises(SFTError, match="--init-adapter starts a new run"):
+        _trainer(tmp_path, resume=first.paths.run_dir, init_adapter=first.paths.run_dir / "final")
