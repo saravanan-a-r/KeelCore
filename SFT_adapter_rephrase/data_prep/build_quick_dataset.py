@@ -10,7 +10,7 @@ file per split so a CPU run does not have to scan every part file.
 Read-only against the source dataset: never writes into
 REPHRASE_MODEL/rephrase_dataset/final.
 
-    python SFT_adapter_rephrase/build_quick_dataset.py --style elaborate
+    python SFT_adapter_rephrase/data_prep/build_quick_dataset.py --style elaborate
 
 Writes:
     SFT_adapter_rephrase/dataset/quick/train/<style>.jsonl       (train_examples)
@@ -25,8 +25,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+SFT_DIR = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = SFT_DIR.parent
+sys.path.insert(0, str(SFT_DIR))
 
 from src.codec import TextCodec  # noqa: E402
 from src.config import load_sft_config, style_token_for  # noqa: E402
@@ -60,7 +61,7 @@ def main() -> None:
     parser.add_argument("--style", required=True)
     parser.add_argument("--source-dir", default=None,
                          help="default: REPHRASE_MODEL/rephrase_dataset/final/<style>")
-    parser.add_argument("--config", default=str(Path(__file__).resolve().parent / "adapter_config.yml"))
+    parser.add_argument("--config", default=str(SFT_DIR / "adapter_config.yml"))
     args = parser.parse_args()
 
     source_dir = Path(args.source_dir) if args.source_dir else (
@@ -87,8 +88,8 @@ def main() -> None:
 
     row_index = collect_row_index(config.data, report)
 
-    out_dir_train = PROJECT_ROOT / "SFT_adapter_rephrase" / "dataset" / "quick" / "train"
-    out_dir_eval = PROJECT_ROOT / "SFT_adapter_rephrase" / "dataset" / "quick" / "evals"
+    out_dir_train = SFT_DIR / "dataset" / "quick" / "train"
+    out_dir_eval = SFT_DIR / "dataset" / "quick" / "evals"
     out_dir_train.mkdir(parents=True, exist_ok=True)
     out_dir_eval.mkdir(parents=True, exist_ok=True)
 

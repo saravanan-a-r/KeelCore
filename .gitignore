@@ -47,6 +47,8 @@ runs/
 checkpoint-*/
 # SFT run logs (sft.log, metrics.jsonl, TensorBoard events). Run state, not source.
 SFT_adapter_rephrase/logs/
+# Locally built SFT datasets (rebuildable with SFT_adapter_rephrase/data_prep/).
+SFT_adapter_rephrase/dataset/
 
 # ---------------------------------------------------------------------------
 # Python
