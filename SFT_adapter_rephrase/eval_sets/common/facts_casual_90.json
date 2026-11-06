@@ -1,0 +1,722 @@
+[
+ {
+  "id": 0,
+  "input": "reminder: $1,249.50 needs to go in the report b4 friday",
+  "keep": [
+   "$1,249.50"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 1,
+  "input": "hey just saw $1,249.50 in the email, is that right??",
+  "keep": [
+   "$1,249.50"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 2,
+  "input": "dont forget $1,249.50 when u update the ticket",
+  "keep": [
+   "$1,249.50"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 3,
+  "input": "reminder: €79,500 needs to go in the report b4 friday",
+  "keep": [
+   "€79,500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 4,
+  "input": "hey just saw €79,500 in the email, is that right??",
+  "keep": [
+   "€79,500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 5,
+  "input": "fyi €79,500 is wat they quoted us yesterday",
+  "keep": [
+   "€79,500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 6,
+  "input": "fyi Rs 45,000 is wat they quoted us yesterday",
+  "keep": [
+   "Rs 45,000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 7,
+  "input": "hey just saw Rs 45,000 in the email, is that right??",
+  "keep": [
+   "Rs 45,000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 8,
+  "input": "reminder: Rs 45,000 needs to go in the report b4 friday",
+  "keep": [
+   "Rs 45,000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 9,
+  "input": "dont forget 15% when u update the ticket",
+  "keep": [
+   "15%"
+  ],
+  "category": "percent"
+ },
+ {
+  "id": 10,
+  "input": "hey just saw 15% in the email, is that right??",
+  "keep": [
+   "15%"
+  ],
+  "category": "percent"
+ },
+ {
+  "id": 11,
+  "input": "fyi 15% is wat they quoted us yesterday",
+  "keep": [
+   "15%"
+  ],
+  "category": "percent"
+ },
+ {
+  "id": 12,
+  "input": "pls confirm 0.75 asap, the client keeps asking",
+  "keep": [
+   "0.75"
+  ],
+  "category": "decimal"
+ },
+ {
+  "id": 13,
+  "input": "reminder: 0.75 needs to go in the report b4 friday",
+  "keep": [
+   "0.75"
+  ],
+  "category": "decimal"
+ },
+ {
+  "id": 14,
+  "input": "can u check 0.75 again, i think its wrong in the sheet",
+  "keep": [
+   "0.75"
+  ],
+  "category": "decimal"
+ },
+ {
+  "id": 15,
+  "input": "fyi 3.12.1 is wat they quoted us yesterday",
+  "keep": [
+   "3.12.1"
+  ],
+  "category": "version"
+ },
+ {
+  "id": 16,
+  "input": "pls confirm 3.12.1 asap, the client keeps asking",
+  "keep": [
+   "3.12.1"
+  ],
+  "category": "version"
+ },
+ {
+  "id": 17,
+  "input": "hey just saw 3.12.1 in the email, is that right??",
+  "keep": [
+   "3.12.1"
+  ],
+  "category": "version"
+ },
+ {
+  "id": 18,
+  "input": "hey just saw v2.4.0-rc1 in the email, is that right??",
+  "keep": [
+   "v2.4.0-rc1"
+  ],
+  "category": "version"
+ },
+ {
+  "id": 19,
+  "input": "reminder: v2.4.0-rc1 needs to go in the report b4 friday",
+  "keep": [
+   "v2.4.0-rc1"
+  ],
+  "category": "version"
+ },
+ {
+  "id": 20,
+  "input": "dont forget v2.4.0-rc1 when u update the ticket",
+  "keep": [
+   "v2.4.0-rc1"
+  ],
+  "category": "version"
+ },
+ {
+  "id": 21,
+  "input": "dont forget INC-48213 when u update the ticket",
+  "keep": [
+   "INC-48213"
+  ],
+  "category": "ticket"
+ },
+ {
+  "id": 22,
+  "input": "hey just saw INC-48213 in the email, is that right??",
+  "keep": [
+   "INC-48213"
+  ],
+  "category": "ticket"
+ },
+ {
+  "id": 23,
+  "input": "fyi INC-48213 is wat they quoted us yesterday",
+  "keep": [
+   "INC-48213"
+  ],
+  "category": "ticket"
+ },
+ {
+  "id": 24,
+  "input": "hey just saw PO#77812 in the email, is that right??",
+  "keep": [
+   "PO#77812"
+  ],
+  "category": "po"
+ },
+ {
+  "id": 25,
+  "input": "pls confirm PO#77812 asap, the client keeps asking",
+  "keep": [
+   "PO#77812"
+  ],
+  "category": "po"
+ },
+ {
+  "id": 26,
+  "input": "dont forget PO#77812 when u update the ticket",
+  "keep": [
+   "PO#77812"
+  ],
+  "category": "po"
+ },
+ {
+  "id": 27,
+  "input": "pls confirm ORD-2026-0091 asap, the client keeps asking",
+  "keep": [
+   "ORD-2026-0091"
+  ],
+  "category": "order"
+ },
+ {
+  "id": 28,
+  "input": "dont forget ORD-2026-0091 when u update the ticket",
+  "keep": [
+   "ORD-2026-0091"
+  ],
+  "category": "order"
+ },
+ {
+  "id": 29,
+  "input": "fyi ORD-2026-0091 is wat they quoted us yesterday",
+  "keep": [
+   "ORD-2026-0091"
+  ],
+  "category": "order"
+ },
+ {
+  "id": 30,
+  "input": "fyi j.smith@zentech.io is wat they quoted us yesterday",
+  "keep": [
+   "j.smith@zentech.io"
+  ],
+  "category": "email"
+ },
+ {
+  "id": 31,
+  "input": "hey just saw j.smith@zentech.io in the email, is that right??",
+  "keep": [
+   "j.smith@zentech.io"
+  ],
+  "category": "email"
+ },
+ {
+  "id": 32,
+  "input": "pls confirm j.smith@zentech.io asap, the client keeps asking",
+  "keep": [
+   "j.smith@zentech.io"
+  ],
+  "category": "email"
+ },
+ {
+  "id": 33,
+  "input": "reminder: +91 98450 12345 needs to go in the report b4 friday",
+  "keep": [
+   "+91 98450 12345"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 34,
+  "input": "can u check +91 98450 12345 again, i think its wrong in the sheet",
+  "keep": [
+   "+91 98450 12345"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 35,
+  "input": "dont forget +91 98450 12345 when u update the ticket",
+  "keep": [
+   "+91 98450 12345"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 36,
+  "input": "hey just saw (415) 555-0199 in the email, is that right??",
+  "keep": [
+   "(415) 555-0199"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 37,
+  "input": "fyi (415) 555-0199 is wat they quoted us yesterday",
+  "keep": [
+   "(415) 555-0199"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 38,
+  "input": "dont forget (415) 555-0199 when u update the ticket",
+  "keep": [
+   "(415) 555-0199"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 39,
+  "input": "dont forget 10:30 am when u update the ticket",
+  "keep": [
+   "10:30 am"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 40,
+  "input": "can u check 10:30 am again, i think its wrong in the sheet",
+  "keep": [
+   "10:30 am"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 41,
+  "input": "reminder: 10:30 am needs to go in the report b4 friday",
+  "keep": [
+   "10:30 am"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 42,
+  "input": "pls confirm 5 pm asap, the client keeps asking",
+  "keep": [
+   "5 pm"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 43,
+  "input": "dont forget 5 pm when u update the ticket",
+  "keep": [
+   "5 pm"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 44,
+  "input": "reminder: 5 pm needs to go in the report b4 friday",
+  "keep": [
+   "5 pm"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 45,
+  "input": "dont forget 17:45 when u update the ticket",
+  "keep": [
+   "17:45"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 46,
+  "input": "can u check 17:45 again, i think its wrong in the sheet",
+  "keep": [
+   "17:45"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 47,
+  "input": "reminder: 17:45 needs to go in the report b4 friday",
+  "keep": [
+   "17:45"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 48,
+  "input": "hey just saw 9-11 am in the email, is that right??",
+  "keep": [
+   "9-11 am"
+  ],
+  "category": "range"
+ },
+ {
+  "id": 49,
+  "input": "pls confirm 9-11 am asap, the client keeps asking",
+  "keep": [
+   "9-11 am"
+  ],
+  "category": "range"
+ },
+ {
+  "id": 50,
+  "input": "can u check 9-11 am again, i think its wrong in the sheet",
+  "keep": [
+   "9-11 am"
+  ],
+  "category": "range"
+ },
+ {
+  "id": 51,
+  "input": "can u check 2-3 weeks again, i think its wrong in the sheet",
+  "keep": [
+   "2-3 weeks"
+  ],
+  "category": "range"
+ },
+ {
+  "id": 52,
+  "input": "fyi 2-3 weeks is wat they quoted us yesterday",
+  "keep": [
+   "2-3 weeks"
+  ],
+  "category": "range"
+ },
+ {
+  "id": 53,
+  "input": "dont forget 2-3 weeks when u update the ticket",
+  "keep": [
+   "2-3 weeks"
+  ],
+  "category": "range"
+ },
+ {
+  "id": 54,
+  "input": "pls confirm MAX_RETRIES=5 asap, the client keeps asking",
+  "keep": [
+   "MAX_RETRIES=5"
+  ],
+  "category": "kv"
+ },
+ {
+  "id": 55,
+  "input": "dont forget MAX_RETRIES=5 when u update the ticket",
+  "keep": [
+   "MAX_RETRIES=5"
+  ],
+  "category": "kv"
+ },
+ {
+  "id": 56,
+  "input": "hey just saw MAX_RETRIES=5 in the email, is that right??",
+  "keep": [
+   "MAX_RETRIES=5"
+  ],
+  "category": "kv"
+ },
+ {
+  "id": 57,
+  "input": "reminder: timeout=30s needs to go in the report b4 friday",
+  "keep": [
+   "timeout=30s"
+  ],
+  "category": "kv"
+ },
+ {
+  "id": 58,
+  "input": "pls confirm timeout=30s asap, the client keeps asking",
+  "keep": [
+   "timeout=30s"
+  ],
+  "category": "kv"
+ },
+ {
+  "id": 59,
+  "input": "can u check timeout=30s again, i think its wrong in the sheet",
+  "keep": [
+   "timeout=30s"
+  ],
+  "category": "kv"
+ },
+ {
+  "id": 60,
+  "input": "reminder: 2,000 units needs to go in the report b4 friday",
+  "keep": [
+   "2,000 units"
+  ],
+  "category": "qty"
+ },
+ {
+  "id": 61,
+  "input": "pls confirm 2,000 units asap, the client keeps asking",
+  "keep": [
+   "2,000 units"
+  ],
+  "category": "qty"
+ },
+ {
+  "id": 62,
+  "input": "hey just saw 2,000 units in the email, is that right??",
+  "keep": [
+   "2,000 units"
+  ],
+  "category": "qty"
+ },
+ {
+  "id": 63,
+  "input": "dont forget 50000 when u update the ticket",
+  "keep": [
+   "50000"
+  ],
+  "category": "bigint"
+ },
+ {
+  "id": 64,
+  "input": "pls confirm 50000 asap, the client keeps asking",
+  "keep": [
+   "50000"
+  ],
+  "category": "bigint"
+ },
+ {
+  "id": 65,
+  "input": "fyi 50000 is wat they quoted us yesterday",
+  "keep": [
+   "50000"
+  ],
+  "category": "bigint"
+ },
+ {
+  "id": 66,
+  "input": "fyi Q2 2026 is wat they quoted us yesterday",
+  "keep": [
+   "Q2 2026"
+  ],
+  "category": "quarter"
+ },
+ {
+  "id": 67,
+  "input": "pls confirm Q2 2026 asap, the client keeps asking",
+  "keep": [
+   "Q2 2026"
+  ],
+  "category": "quarter"
+ },
+ {
+  "id": 68,
+  "input": "reminder: Q2 2026 needs to go in the report b4 friday",
+  "keep": [
+   "Q2 2026"
+  ],
+  "category": "quarter"
+ },
+ {
+  "id": 69,
+  "input": "reminder: FY25 needs to go in the report b4 friday",
+  "keep": [
+   "FY25"
+  ],
+  "category": "fy"
+ },
+ {
+  "id": 70,
+  "input": "dont forget FY25 when u update the ticket",
+  "keep": [
+   "FY25"
+  ],
+  "category": "fy"
+ },
+ {
+  "id": 71,
+  "input": "hey just saw FY25 in the email, is that right??",
+  "keep": [
+   "FY25"
+  ],
+  "category": "fy"
+ },
+ {
+  "id": 72,
+  "input": "pls confirm room 4B asap, the client keeps asking",
+  "keep": [
+   "room 4B"
+  ],
+  "category": "room"
+ },
+ {
+  "id": 73,
+  "input": "hey just saw room 4B in the email, is that right??",
+  "keep": [
+   "room 4B"
+  ],
+  "category": "room"
+ },
+ {
+  "id": 74,
+  "input": "fyi room 4B is wat they quoted us yesterday",
+  "keep": [
+   "room 4B"
+  ],
+  "category": "room"
+ },
+ {
+  "id": 75,
+  "input": "dont forget gate B12 when u update the ticket",
+  "keep": [
+   "gate B12"
+  ],
+  "category": "gate"
+ },
+ {
+  "id": 76,
+  "input": "can u check gate B12 again, i think its wrong in the sheet",
+  "keep": [
+   "gate B12"
+  ],
+  "category": "gate"
+ },
+ {
+  "id": 77,
+  "input": "hey just saw gate B12 in the email, is that right??",
+  "keep": [
+   "gate B12"
+  ],
+  "category": "gate"
+ },
+ {
+  "id": 78,
+  "input": "pls confirm flight AI 302 asap, the client keeps asking",
+  "keep": [
+   "flight AI 302"
+  ],
+  "category": "flight"
+ },
+ {
+  "id": 79,
+  "input": "can u check flight AI 302 again, i think its wrong in the sheet",
+  "keep": [
+   "flight AI 302"
+  ],
+  "category": "flight"
+ },
+ {
+  "id": 80,
+  "input": "hey just saw flight AI 302 in the email, is that right??",
+  "keep": [
+   "flight AI 302"
+  ],
+  "category": "flight"
+ },
+ {
+  "id": 81,
+  "input": "pls confirm IFSC HDFC0001234 asap, the client keeps asking",
+  "keep": [
+   "IFSC HDFC0001234"
+  ],
+  "category": "ifsc"
+ },
+ {
+  "id": 82,
+  "input": "reminder: IFSC HDFC0001234 needs to go in the report b4 friday",
+  "keep": [
+   "IFSC HDFC0001234"
+  ],
+  "category": "ifsc"
+ },
+ {
+  "id": 83,
+  "input": "dont forget IFSC HDFC0001234 when u update the ticket",
+  "keep": [
+   "IFSC HDFC0001234"
+  ],
+  "category": "ifsc"
+ },
+ {
+  "id": 84,
+  "input": "fyi acct 00123456789 is wat they quoted us yesterday",
+  "keep": [
+   "acct 00123456789"
+  ],
+  "category": "account"
+ },
+ {
+  "id": 85,
+  "input": "dont forget acct 00123456789 when u update the ticket",
+  "keep": [
+   "acct 00123456789"
+  ],
+  "category": "account"
+ },
+ {
+  "id": 86,
+  "input": "pls confirm acct 00123456789 asap, the client keeps asking",
+  "keep": [
+   "acct 00123456789"
+  ],
+  "category": "account"
+ },
+ {
+  "id": 87,
+  "input": "pls confirm SKU 88-1203 asap, the client keeps asking",
+  "keep": [
+   "SKU 88-1203"
+  ],
+  "category": "sku"
+ },
+ {
+  "id": 88,
+  "input": "dont forget SKU 88-1203 when u update the ticket",
+  "keep": [
+   "SKU 88-1203"
+  ],
+  "category": "sku"
+ },
+ {
+  "id": 89,
+  "input": "reminder: SKU 88-1203 needs to go in the report b4 friday",
+  "keep": [
+   "SKU 88-1203"
+  ],
+  "category": "sku"
+ }
+]

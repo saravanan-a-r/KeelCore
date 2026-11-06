@@ -1,0 +1,770 @@
+[
+ {
+  "id": 0,
+  "input": "flight lands 23rd dec, can someone pick me up",
+  "keep": [
+   "23rd dec"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 1,
+  "input": "the deadline got pushed to 23rd dec so we r ok",
+  "keep": [
+   "23rd dec"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 2,
+  "input": "hey the release is planned for 23rd dec but qa isnt done yet",
+  "keep": [
+   "23rd dec"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 3,
+  "input": "payment was received on 23rd dec but the receipt is missing",
+  "keep": [
+   "23rd dec"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 4,
+  "input": "can u pls move the meeting to 31/03/2026? ill be out otherwise",
+  "keep": [
+   "31/03/2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 5,
+  "input": "31/03/2026 works for me, lets lock it in",
+  "keep": [
+   "31/03/2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 6,
+  "input": "leave request: 31/03/2026 pls approve thx",
+  "keep": [
+   "31/03/2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 7,
+  "input": "invoice is due 31/03/2026, remind the client asap",
+  "keep": [
+   "31/03/2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 8,
+  "input": "can u pls move the meeting to 2025-11-30? ill be out otherwise",
+  "keep": [
+   "2025-11-30"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 9,
+  "input": "invoice is due 2025-11-30, remind the client asap",
+  "keep": [
+   "2025-11-30"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 10,
+  "input": "payment was received on 2025-11-30 but the receipt is missing",
+  "keep": [
+   "2025-11-30"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 11,
+  "input": "hey the release is planned for 2025-11-30 but qa isnt done yet",
+  "keep": [
+   "2025-11-30"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 12,
+  "input": "payment was received on 15-Feb-2026 but the receipt is missing",
+  "keep": [
+   "15-Feb-2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 13,
+  "input": "15-Feb-2026 works for me, lets lock it in",
+  "keep": [
+   "15-Feb-2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 14,
+  "input": "invoice is due 15-Feb-2026, remind the client asap",
+  "keep": [
+   "15-Feb-2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 15,
+  "input": "leave request: 15-Feb-2026 pls approve thx",
+  "keep": [
+   "15-Feb-2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 16,
+  "input": "invoice is due Jan 5th, remind the client asap",
+  "keep": [
+   "Jan 5th"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 17,
+  "input": "flight lands Jan 5th, can someone pick me up",
+  "keep": [
+   "Jan 5th"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 18,
+  "input": "payment was received on Jan 5th but the receipt is missing",
+  "keep": [
+   "Jan 5th"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 19,
+  "input": "can u pls move the meeting to Jan 5th? ill be out otherwise",
+  "keep": [
+   "Jan 5th"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 20,
+  "input": "leave request: 5 jan pls approve thx",
+  "keep": [
+   "5 jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 21,
+  "input": "payment was received on 5 jan but the receipt is missing",
+  "keep": [
+   "5 jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 22,
+  "input": "hey the release is planned for 5 jan but qa isnt done yet",
+  "keep": [
+   "5 jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 23,
+  "input": "invoice is due 5 jan, remind the client asap",
+  "keep": [
+   "5 jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 24,
+  "input": "3/28/11 works for me, lets lock it in",
+  "keep": [
+   "3/28/11"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 25,
+  "input": "invoice is due 3/28/11, remind the client asap",
+  "keep": [
+   "3/28/11"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 26,
+  "input": "can u pls move the meeting to 3/28/11? ill be out otherwise",
+  "keep": [
+   "3/28/11"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 27,
+  "input": "payment was received on 3/28/11 but the receipt is missing",
+  "keep": [
+   "3/28/11"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 28,
+  "input": "payment was received on Mon 12 Aug but the receipt is missing",
+  "keep": [
+   "Mon 12 Aug"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 29,
+  "input": "invoice is due Mon 12 Aug, remind the client asap",
+  "keep": [
+   "Mon 12 Aug"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 30,
+  "input": "Mon 12 Aug works for me, lets lock it in",
+  "keep": [
+   "Mon 12 Aug"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 31,
+  "input": "can u pls move the meeting to Mon 12 Aug? ill be out otherwise",
+  "keep": [
+   "Mon 12 Aug"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 32,
+  "input": "can u pls move the meeting to 12.08.2024? ill be out otherwise",
+  "keep": [
+   "12.08.2024"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 33,
+  "input": "invoice is due 12.08.2024, remind the client asap",
+  "keep": [
+   "12.08.2024"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 34,
+  "input": "12.08.2024 works for me, lets lock it in",
+  "keep": [
+   "12.08.2024"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 35,
+  "input": "the deadline got pushed to 12.08.2024 so we r ok",
+  "keep": [
+   "12.08.2024"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 36,
+  "input": "hey the release is planned for Q3 2025 but qa isnt done yet",
+  "keep": [
+   "Q3 2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 37,
+  "input": "payment was received on Q3 2025 but the receipt is missing",
+  "keep": [
+   "Q3 2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 38,
+  "input": "Q3 2025 works for me, lets lock it in",
+  "keep": [
+   "Q3 2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 39,
+  "input": "invoice is due Q3 2025, remind the client asap",
+  "keep": [
+   "Q3 2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 40,
+  "input": "leave request: fri 14th pls approve thx",
+  "keep": [
+   "fri 14th"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 41,
+  "input": "invoice is due fri 14th, remind the client asap",
+  "keep": [
+   "fri 14th"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 42,
+  "input": "the deadline got pushed to fri 14th so we r ok",
+  "keep": [
+   "fri 14th"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 43,
+  "input": "fri 14th works for me, lets lock it in",
+  "keep": [
+   "fri 14th"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 44,
+  "input": "1st of march works for me, lets lock it in",
+  "keep": [
+   "1st of march"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 45,
+  "input": "hey the release is planned for 1st of march but qa isnt done yet",
+  "keep": [
+   "1st of march"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 46,
+  "input": "can u pls move the meeting to 1st of march? ill be out otherwise",
+  "keep": [
+   "1st of march"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 47,
+  "input": "payment was received on 1st of march but the receipt is missing",
+  "keep": [
+   "1st of march"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 48,
+  "input": "March 3rd, 2026 works for me, lets lock it in",
+  "keep": [
+   "March 3rd, 2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 49,
+  "input": "invoice is due March 3rd, 2026, remind the client asap",
+  "keep": [
+   "March 3rd, 2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 50,
+  "input": "payment was received on March 3rd, 2026 but the receipt is missing",
+  "keep": [
+   "March 3rd, 2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 51,
+  "input": "hey the release is planned for March 3rd, 2026 but qa isnt done yet",
+  "keep": [
+   "March 3rd, 2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 52,
+  "input": "invoice is due 09-04-2025, remind the client asap",
+  "keep": [
+   "09-04-2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 53,
+  "input": "hey the release is planned for 09-04-2025 but qa isnt done yet",
+  "keep": [
+   "09-04-2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 54,
+  "input": "09-04-2025 works for me, lets lock it in",
+  "keep": [
+   "09-04-2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 55,
+  "input": "flight lands 09-04-2025, can someone pick me up",
+  "keep": [
+   "09-04-2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 56,
+  "input": "can u pls move the meeting to 2nd jan? ill be out otherwise",
+  "keep": [
+   "2nd jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 57,
+  "input": "flight lands 2nd jan, can someone pick me up",
+  "keep": [
+   "2nd jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 58,
+  "input": "the deadline got pushed to 2nd jan so we r ok",
+  "keep": [
+   "2nd jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 59,
+  "input": "hey the release is planned for 2nd jan but qa isnt done yet",
+  "keep": [
+   "2nd jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 60,
+  "input": "invoice is due Sept 21, remind the client asap",
+  "keep": [
+   "Sept 21"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 61,
+  "input": "hey the release is planned for Sept 21 but qa isnt done yet",
+  "keep": [
+   "Sept 21"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 62,
+  "input": "Sept 21 works for me, lets lock it in",
+  "keep": [
+   "Sept 21"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 63,
+  "input": "the deadline got pushed to Sept 21 so we r ok",
+  "keep": [
+   "Sept 21"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 64,
+  "input": "payment was received on 14 March but the receipt is missing",
+  "keep": [
+   "14 March"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 65,
+  "input": "the deadline got pushed to 14 March so we r ok",
+  "keep": [
+   "14 March"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 66,
+  "input": "hey the release is planned for 14 March but qa isnt done yet",
+  "keep": [
+   "14 March"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 67,
+  "input": "invoice is due 14 March, remind the client asap",
+  "keep": [
+   "14 March"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 68,
+  "input": "payment was received on 20260415 but the receipt is missing",
+  "keep": [
+   "20260415"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 69,
+  "input": "leave request: 20260415 pls approve thx",
+  "keep": [
+   "20260415"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 70,
+  "input": "the deadline got pushed to 20260415 so we r ok",
+  "keep": [
+   "20260415"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 71,
+  "input": "invoice is due 20260415, remind the client asap",
+  "keep": [
+   "20260415"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 72,
+  "input": "can u pls move the meeting to Tue, 7 Oct 2025? ill be out otherwise",
+  "keep": [
+   "Tue, 7 Oct 2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 73,
+  "input": "hey the release is planned for Tue, 7 Oct 2025 but qa isnt done yet",
+  "keep": [
+   "Tue, 7 Oct 2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 74,
+  "input": "payment was received on Tue, 7 Oct 2025 but the receipt is missing",
+  "keep": [
+   "Tue, 7 Oct 2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 75,
+  "input": "Tue, 7 Oct 2025 works for me, lets lock it in",
+  "keep": [
+   "Tue, 7 Oct 2025"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 76,
+  "input": "10:30 am on 4th May works for me, lets lock it in",
+  "keep": [
+   "10:30 am on 4th May"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 77,
+  "input": "can u pls move the meeting to 10:30 am on 4th May? ill be out otherwise",
+  "keep": [
+   "10:30 am on 4th May"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 78,
+  "input": "flight lands 10:30 am on 4th May, can someone pick me up",
+  "keep": [
+   "10:30 am on 4th May"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 79,
+  "input": "leave request: 10:30 am on 4th May pls approve thx",
+  "keep": [
+   "10:30 am on 4th May"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 80,
+  "input": "the deadline got pushed to end of june 2026 so we r ok",
+  "keep": [
+   "end of june 2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 81,
+  "input": "leave request: end of june 2026 pls approve thx",
+  "keep": [
+   "end of june 2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 82,
+  "input": "flight lands end of june 2026, can someone pick me up",
+  "keep": [
+   "end of june 2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 83,
+  "input": "can u pls move the meeting to end of june 2026? ill be out otherwise",
+  "keep": [
+   "end of june 2026"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 84,
+  "input": "payment was received on Dec 31st but the receipt is missing",
+  "keep": [
+   "Dec 31st"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 85,
+  "input": "can u pls move the meeting to Dec 31st? ill be out otherwise",
+  "keep": [
+   "Dec 31st"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 86,
+  "input": "the deadline got pushed to Dec 31st so we r ok",
+  "keep": [
+   "Dec 31st"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 87,
+  "input": "invoice is due Dec 31st, remind the client asap",
+  "keep": [
+   "Dec 31st"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 88,
+  "input": "leave request: 11/12 pls approve thx",
+  "keep": [
+   "11/12"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 89,
+  "input": "can u pls move the meeting to 11/12? ill be out otherwise",
+  "keep": [
+   "11/12"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 90,
+  "input": "invoice is due 11/12, remind the client asap",
+  "keep": [
+   "11/12"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 91,
+  "input": "payment was received on 11/12 but the receipt is missing",
+  "keep": [
+   "11/12"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 92,
+  "input": "the deadline got pushed to from 23rd dec to 2nd jan so we r ok",
+  "keep": [
+   "from 23rd dec to 2nd jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 93,
+  "input": "flight lands from 23rd dec to 2nd jan, can someone pick me up",
+  "keep": [
+   "from 23rd dec to 2nd jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 94,
+  "input": "hey the release is planned for from 23rd dec to 2nd jan but qa isnt done yet",
+  "keep": [
+   "from 23rd dec to 2nd jan"
+  ],
+  "category": "date"
+ },
+ {
+  "id": 95,
+  "input": "from 23rd dec to 2nd jan works for me, lets lock it in",
+  "keep": [
+   "from 23rd dec to 2nd jan"
+  ],
+  "category": "date"
+ }
+]

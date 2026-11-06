@@ -1,0 +1,482 @@
+[
+ {
+  "id": 0,
+  "input": "can u send it to 8080? thats what they told me",
+  "keep": [
+   "8080"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 1,
+  "input": "set it to 8080 and restart, it shud work then",
+  "keep": [
+   "8080"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 2,
+  "input": "we got 8080 in the last report, double check it pls",
+  "keep": [
+   "8080"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 3,
+  "input": "set it to 5432 and restart, it shud work then",
+  "keep": [
+   "5432"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 4,
+  "input": "we got 5432 in the last report, double check it pls",
+  "keep": [
+   "5432"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 5,
+  "input": "can u send it to 5432? thats what they told me",
+  "keep": [
+   "5432"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 6,
+  "input": "can u send it to 94107? thats what they told me",
+  "keep": [
+   "94107"
+  ],
+  "category": "zip"
+ },
+ {
+  "id": 7,
+  "input": "set it to 94107 and restart, it shud work then",
+  "keep": [
+   "94107"
+  ],
+  "category": "zip"
+ },
+ {
+  "id": 8,
+  "input": "we got 94107 in the last report, double check it pls",
+  "keep": [
+   "94107"
+  ],
+  "category": "zip"
+ },
+ {
+  "id": 9,
+  "input": "can u send it to 560034? thats what they told me",
+  "keep": [
+   "560034"
+  ],
+  "category": "pincode"
+ },
+ {
+  "id": 10,
+  "input": "they said 560034 is the final number, dont change it",
+  "keep": [
+   "560034"
+  ],
+  "category": "pincode"
+ },
+ {
+  "id": 11,
+  "input": "the server runs on 560034 now, pls update the config",
+  "keep": [
+   "560034"
+  ],
+  "category": "pincode"
+ },
+ {
+  "id": 12,
+  "input": "the server runs on 4521 now, pls update the config",
+  "keep": [
+   "4521"
+  ],
+  "category": "pin"
+ },
+ {
+  "id": 13,
+  "input": "we got 4521 in the last report, double check it pls",
+  "keep": [
+   "4521"
+  ],
+  "category": "pin"
+ },
+ {
+  "id": 14,
+  "input": "set it to 4521 and restart, it shud work then",
+  "keep": [
+   "4521"
+  ],
+  "category": "pin"
+ },
+ {
+  "id": 15,
+  "input": "set it to 50000 and restart, it shud work then",
+  "keep": [
+   "50000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 16,
+  "input": "the server runs on 50000 now, pls update the config",
+  "keep": [
+   "50000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 17,
+  "input": "they said 50000 is the final number, dont change it",
+  "keep": [
+   "50000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 18,
+  "input": "can u send it to 120000? thats what they told me",
+  "keep": [
+   "120000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 19,
+  "input": "they said 120000 is the final number, dont change it",
+  "keep": [
+   "120000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 20,
+  "input": "we got 120000 in the last report, double check it pls",
+  "keep": [
+   "120000"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 21,
+  "input": "the server runs on 1500 now, pls update the config",
+  "keep": [
+   "1500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 22,
+  "input": "set it to 1500 and restart, it shud work then",
+  "keep": [
+   "1500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 23,
+  "input": "we got 1500 in the last report, double check it pls",
+  "keep": [
+   "1500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 24,
+  "input": "set it to 2048 and restart, it shud work then",
+  "keep": [
+   "2048"
+  ],
+  "category": "size"
+ },
+ {
+  "id": 25,
+  "input": "they said 2048 is the final number, dont change it",
+  "keep": [
+   "2048"
+  ],
+  "category": "size"
+ },
+ {
+  "id": 26,
+  "input": "the server runs on 2048 now, pls update the config",
+  "keep": [
+   "2048"
+  ],
+  "category": "size"
+ },
+ {
+  "id": 27,
+  "input": "we got 10000 in the last report, double check it pls",
+  "keep": [
+   "10000"
+  ],
+  "category": "count"
+ },
+ {
+  "id": 28,
+  "input": "set it to 10000 and restart, it shud work then",
+  "keep": [
+   "10000"
+  ],
+  "category": "count"
+ },
+ {
+  "id": 29,
+  "input": "they said 10000 is the final number, dont change it",
+  "keep": [
+   "10000"
+  ],
+  "category": "count"
+ },
+ {
+  "id": 30,
+  "input": "the server runs on 3600 now, pls update the config",
+  "keep": [
+   "3600"
+  ],
+  "category": "seconds"
+ },
+ {
+  "id": 31,
+  "input": "we got 3600 in the last report, double check it pls",
+  "keep": [
+   "3600"
+  ],
+  "category": "seconds"
+ },
+ {
+  "id": 32,
+  "input": "they said 3600 is the final number, dont change it",
+  "keep": [
+   "3600"
+  ],
+  "category": "seconds"
+ },
+ {
+  "id": 33,
+  "input": "can u send it to 65535? thats what they told me",
+  "keep": [
+   "65535"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 34,
+  "input": "the server runs on 65535 now, pls update the config",
+  "keep": [
+   "65535"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 35,
+  "input": "set it to 65535 and restart, it shud work then",
+  "keep": [
+   "65535"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 36,
+  "input": "the server runs on 100000 now, pls update the config",
+  "keep": [
+   "100000"
+  ],
+  "category": "limit"
+ },
+ {
+  "id": 37,
+  "input": "set it to 100000 and restart, it shud work then",
+  "keep": [
+   "100000"
+  ],
+  "category": "limit"
+ },
+ {
+  "id": 38,
+  "input": "they said 100000 is the final number, dont change it",
+  "keep": [
+   "100000"
+  ],
+  "category": "limit"
+ },
+ {
+  "id": 39,
+  "input": "they said 7500 is the final number, dont change it",
+  "keep": [
+   "7500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 40,
+  "input": "we got 7500 in the last report, double check it pls",
+  "keep": [
+   "7500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 41,
+  "input": "can u send it to 7500? thats what they told me",
+  "keep": [
+   "7500"
+  ],
+  "category": "amount"
+ },
+ {
+  "id": 42,
+  "input": "set it to 25000 and restart, it shud work then",
+  "keep": [
+   "25000"
+  ],
+  "category": "salary"
+ },
+ {
+  "id": 43,
+  "input": "can u send it to 25000? thats what they told me",
+  "keep": [
+   "25000"
+  ],
+  "category": "salary"
+ },
+ {
+  "id": 44,
+  "input": "the server runs on 25000 now, pls update the config",
+  "keep": [
+   "25000"
+  ],
+  "category": "salary"
+ },
+ {
+  "id": 45,
+  "input": "the server runs on 1234567890 now, pls update the config",
+  "keep": [
+   "1234567890"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 46,
+  "input": "set it to 1234567890 and restart, it shud work then",
+  "keep": [
+   "1234567890"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 47,
+  "input": "they said 1234567890 is the final number, dont change it",
+  "keep": [
+   "1234567890"
+  ],
+  "category": "phone"
+ },
+ {
+  "id": 48,
+  "input": "the server runs on 00042 now, pls update the config",
+  "keep": [
+   "00042"
+  ],
+  "category": "code"
+ },
+ {
+  "id": 49,
+  "input": "can u send it to 00042? thats what they told me",
+  "keep": [
+   "00042"
+  ],
+  "category": "code"
+ },
+ {
+  "id": 50,
+  "input": "they said 00042 is the final number, dont change it",
+  "keep": [
+   "00042"
+  ],
+  "category": "code"
+ },
+ {
+  "id": 51,
+  "input": "they said 0800 is the final number, dont change it",
+  "keep": [
+   "0800"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 52,
+  "input": "the server runs on 0800 now, pls update the config",
+  "keep": [
+   "0800"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 53,
+  "input": "set it to 0800 and restart, it shud work then",
+  "keep": [
+   "0800"
+  ],
+  "category": "time"
+ },
+ {
+  "id": 54,
+  "input": "they said 1099 is the final number, dont change it",
+  "keep": [
+   "1099"
+  ],
+  "category": "form"
+ },
+ {
+  "id": 55,
+  "input": "set it to 1099 and restart, it shud work then",
+  "keep": [
+   "1099"
+  ],
+  "category": "form"
+ },
+ {
+  "id": 56,
+  "input": "we got 1099 in the last report, double check it pls",
+  "keep": [
+   "1099"
+  ],
+  "category": "form"
+ },
+ {
+  "id": 57,
+  "input": "set it to 3000 and restart, it shud work then",
+  "keep": [
+   "3000"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 58,
+  "input": "can u send it to 3000? thats what they told me",
+  "keep": [
+   "3000"
+  ],
+  "category": "port"
+ },
+ {
+  "id": 59,
+  "input": "they said 3000 is the final number, dont change it",
+  "keep": [
+   "3000"
+  ],
+  "category": "port"
+ }
+]

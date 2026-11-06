@@ -1,0 +1,317 @@
+[
+ {
+  "id": 0,
+  "input": "j.smith@zentech.io pls check this asap",
+  "keep": [
+   "j.smith@zentech.io"
+  ]
+ },
+ {
+  "id": 1,
+  "input": "fyi j.smith@zentech.io is the right one, not the old one",
+  "keep": [
+   "j.smith@zentech.io"
+  ]
+ },
+ {
+  "id": 2,
+  "input": "use j.smith@zentech.io for this, the other one is broken",
+  "keep": [
+   "j.smith@zentech.io"
+  ]
+ },
+ {
+  "id": 3,
+  "input": "fyi priya.k@acme-corp.com is the right one, not the old one",
+  "keep": [
+   "priya.k@acme-corp.com"
+  ]
+ },
+ {
+  "id": 4,
+  "input": "can u send the file to priya.k@acme-corp.com today",
+  "keep": [
+   "priya.k@acme-corp.com"
+  ]
+ },
+ {
+  "id": 5,
+  "input": "i already pinged priya.k@acme-corp.com but no reply yet",
+  "keep": [
+   "priya.k@acme-corp.com"
+  ]
+ },
+ {
+  "id": 6,
+  "input": "support@getkeel.app pls check this asap",
+  "keep": [
+   "support@getkeel.app"
+  ]
+ },
+ {
+  "id": 7,
+  "input": "can u send the file to support@getkeel.app today",
+  "keep": [
+   "support@getkeel.app"
+  ]
+ },
+ {
+  "id": 8,
+  "input": "use support@getkeel.app for this, the other one is broken",
+  "keep": [
+   "support@getkeel.app"
+  ]
+ },
+ {
+  "id": 9,
+  "input": "use a.b.rao@mail.example.org for this, the other one is broken",
+  "keep": [
+   "a.b.rao@mail.example.org"
+  ]
+ },
+ {
+  "id": 10,
+  "input": "can u send the file to a.b.rao@mail.example.org today",
+  "keep": [
+   "a.b.rao@mail.example.org"
+  ]
+ },
+ {
+  "id": 11,
+  "input": "i already pinged a.b.rao@mail.example.org but no reply yet",
+  "keep": [
+   "a.b.rao@mail.example.org"
+  ]
+ },
+ {
+  "id": 12,
+  "input": "can u send the file to dev-team@startup.io today",
+  "keep": [
+   "dev-team@startup.io"
+  ]
+ },
+ {
+  "id": 13,
+  "input": "use dev-team@startup.io for this, the other one is broken",
+  "keep": [
+   "dev-team@startup.io"
+  ]
+ },
+ {
+  "id": 14,
+  "input": "i already pinged dev-team@startup.io but no reply yet",
+  "keep": [
+   "dev-team@startup.io"
+  ]
+ },
+ {
+  "id": 15,
+  "input": "@ravi_dev pls check this asap",
+  "keep": [
+   "@ravi_dev"
+  ]
+ },
+ {
+  "id": 16,
+  "input": "use @ravi_dev for this, the other one is broken",
+  "keep": [
+   "@ravi_dev"
+  ]
+ },
+ {
+  "id": 17,
+  "input": "fyi @ravi_dev is the right one, not the old one",
+  "keep": [
+   "@ravi_dev"
+  ]
+ },
+ {
+  "id": 18,
+  "input": "can u send the file to @jsmith today",
+  "keep": [
+   "@jsmith"
+  ]
+ },
+ {
+  "id": 19,
+  "input": "fyi @jsmith is the right one, not the old one",
+  "keep": [
+   "@jsmith"
+  ]
+ },
+ {
+  "id": 20,
+  "input": "i already pinged @jsmith but no reply yet",
+  "keep": [
+   "@jsmith"
+  ]
+ },
+ {
+  "id": 21,
+  "input": "fyi ~/projects/app/config.yaml is the right one, not the old one",
+  "keep": [
+   "~/projects/app/config.yaml"
+  ]
+ },
+ {
+  "id": 22,
+  "input": "can u send the file to ~/projects/app/config.yaml today",
+  "keep": [
+   "~/projects/app/config.yaml"
+  ]
+ },
+ {
+  "id": 23,
+  "input": "i already pinged ~/projects/app/config.yaml but no reply yet",
+  "keep": [
+   "~/projects/app/config.yaml"
+  ]
+ },
+ {
+  "id": 24,
+  "input": "/var/log/nginx/error.log pls check this asap",
+  "keep": [
+   "/var/log/nginx/error.log"
+  ]
+ },
+ {
+  "id": 25,
+  "input": "use /var/log/nginx/error.log for this, the other one is broken",
+  "keep": [
+   "/var/log/nginx/error.log"
+  ]
+ },
+ {
+  "id": 26,
+  "input": "fyi /var/log/nginx/error.log is the right one, not the old one",
+  "keep": [
+   "/var/log/nginx/error.log"
+  ]
+ },
+ {
+  "id": 27,
+  "input": "fyi C:\\Users\\anna\\Desktop\\report.xlsx is the right one, not the old one",
+  "keep": [
+   "C:\\Users\\anna\\Desktop\\report.xlsx"
+  ]
+ },
+ {
+  "id": 28,
+  "input": "i already pinged C:\\Users\\anna\\Desktop\\report.xlsx but no reply yet",
+  "keep": [
+   "C:\\Users\\anna\\Desktop\\report.xlsx"
+  ]
+ },
+ {
+  "id": 29,
+  "input": "C:\\Users\\anna\\Desktop\\report.xlsx pls check this asap",
+  "keep": [
+   "C:\\Users\\anna\\Desktop\\report.xlsx"
+  ]
+ },
+ {
+  "id": 30,
+  "input": "can u send the file to npm install today",
+  "keep": [
+   "npm install"
+  ]
+ },
+ {
+  "id": 31,
+  "input": "i already pinged npm install but no reply yet",
+  "keep": [
+   "npm install"
+  ]
+ },
+ {
+  "id": 32,
+  "input": "use npm install for this, the other one is broken",
+  "keep": [
+   "npm install"
+  ]
+ },
+ {
+  "id": 33,
+  "input": "i already pinged git rebase -i but no reply yet",
+  "keep": [
+   "git rebase -i"
+  ]
+ },
+ {
+  "id": 34,
+  "input": "can u send the file to git rebase -i today",
+  "keep": [
+   "git rebase -i"
+  ]
+ },
+ {
+  "id": 35,
+  "input": "git rebase -i pls check this asap",
+  "keep": [
+   "git rebase -i"
+  ]
+ },
+ {
+  "id": 36,
+  "input": "can u send the file to README.md today",
+  "keep": [
+   "README.md"
+  ]
+ },
+ {
+  "id": 37,
+  "input": "fyi README.md is the right one, not the old one",
+  "keep": [
+   "README.md"
+  ]
+ },
+ {
+  "id": 38,
+  "input": "i already pinged README.md but no reply yet",
+  "keep": [
+   "README.md"
+  ]
+ },
+ {
+  "id": 39,
+  "input": "use api.v2.example.com for this, the other one is broken",
+  "keep": [
+   "api.v2.example.com"
+  ]
+ },
+ {
+  "id": 40,
+  "input": "api.v2.example.com pls check this asap",
+  "keep": [
+   "api.v2.example.com"
+  ]
+ },
+ {
+  "id": 41,
+  "input": "fyi api.v2.example.com is the right one, not the old one",
+  "keep": [
+   "api.v2.example.com"
+  ]
+ },
+ {
+  "id": 42,
+  "input": "can u send the file to localhost:3000 today",
+  "keep": [
+   "localhost:3000"
+  ]
+ },
+ {
+  "id": 43,
+  "input": "i already pinged localhost:3000 but no reply yet",
+  "keep": [
+   "localhost:3000"
+  ]
+ },
+ {
+  "id": 44,
+  "input": "localhost:3000 pls check this asap",
+  "keep": [
+   "localhost:3000"
+  ]
+ }
+]
