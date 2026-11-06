@@ -1,0 +1,5 @@
+# Rank 16, phase 1: a new adapter trained from scratch on the style's phase-1 teacher data.
+# Read by scripts/make_run_config.py; everything not set here comes from adapter_config.yml
+# (2 epochs, lr 3e-4 cosine) and the shared data and GPU rules in that script.
+rank: 16
+every_steps: 2000        # evaluation + checkpoint interval

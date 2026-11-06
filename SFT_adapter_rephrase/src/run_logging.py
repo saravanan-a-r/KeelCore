@@ -7,7 +7,7 @@ Run logging: a text log, a machine-readable metrics file, and TensorBoard.
 
 The TensorBoard directory is this module's own, never `runs/pretrain/
 tensorboard` (the config refuses anything under `runs/pretrain`). Serve it
-on its own port with `SFT_adapter_rephrase/tensorboard.sh` -- pretraining's
+on its own port with `SFT_adapter_rephrase/scripts/tensorboard.sh` -- pretraining's
 TensorBoard keeps 6006.
 
 `metrics.jsonl` duplicates the scalars on purpose: it can be read with

@@ -22,7 +22,7 @@ Train, evaluate or use a rephrase adapter for any `<style:...>` token.
     # try it
     python SFT_adapter_rephrase/sft.py rephrase --device cpu --adapter .../final --text "..."
 
-TensorBoard: `SFT_adapter_rephrase/tensorboard.sh` (port 6007; pretraining keeps 6006).
+TensorBoard: `SFT_adapter_rephrase/scripts/tensorboard.sh` (port 6007; pretraining keeps 6006).
 """
 
 from __future__ import annotations

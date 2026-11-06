@@ -3,13 +3,13 @@
 # (6006, runs/pretrain/tensorboard). Pinned to the spare cores 22-27 at
 # nice 19 so it never competes with pretraining or a CPU SFT run.
 #
-#   SFT_adapter_rephrase/tensorboard.sh            # port 6007
-#   PORT=6010 SFT_adapter_rephrase/tensorboard.sh
+#   SFT_adapter_rephrase/scripts/tensorboard.sh            # port 6007
+#   PORT=6010 SFT_adapter_rephrase/scripts/tensorboard.sh
 set -euo pipefail
 
-HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SFT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PORT="${PORT:-6007}"
-LOGDIR="${HERE}/logs"
+LOGDIR="${SFT_DIR}/logs"
 TENSORBOARD="${TENSORBOARD:-/root/tensorboard-venv/bin/tensorboard}"
 if [[ ! -x "${TENSORBOARD}" ]]; then
   TENSORBOARD="$(command -v tensorboard)"

@@ -1,0 +1,12 @@
+# Rank 16, phase 2: continue the finished rank-16 phase-1 adapter on the frozen phase-2 data.
+# Measured in the professional trial of 2026-11-05 (REPHRASE_MODEL/rephrase_dataset/final/phase_2/README.md).
+# Read by scripts/make_run_config.py; everything not set here comes from adapter_config.yml
+# and the shared data and GPU rules in that script.
+rank: 16                 # must equal the phase-1 adapter's rank: continuing keeps the shape
+every_steps: 200         # evaluation + checkpoint interval
+training:
+  epochs: 1              # the trial's new-data loss had flattened within one pass
+  learning_rate: 5.0e-5  # phase 1 peaked at 3e-4 and ended at 3e-5; a gentle continuation
+  lr_schedule: cosine
+  warmup_steps: 30
+  min_lr_ratio: 0.1
