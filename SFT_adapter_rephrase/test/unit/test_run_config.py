@@ -13,6 +13,7 @@ import yaml
 
 from conftest import ROOT
 
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import make_run_config as mrc  # noqa: E402
@@ -77,6 +78,7 @@ def test_runs_and_logs_go_to_the_runs_root(tmp_path):
     ({"rank": 16, "every_steps": 200, "epochs": 1}, "unknown keys"),
     ({"rank": 0, "every_steps": 200}, "positive integer"),
     ({"rank": 16, "every_steps": "200"}, "positive integer"),
+    ({"rank": 16, "every_steps": 200, "keep_last": 0}, "positive integer"),
     ({"rank": 16, "every_steps": 200, "training": [1]}, "mapping"),
 ])
 def test_malformed_recipes_are_refused(tmp_path, recipe, message):
@@ -88,6 +90,60 @@ def test_an_unknown_training_key_is_refused_by_the_config_loader(tmp_path):
     path = _write(tmp_path, {"rank": 16, "every_steps": 200, "training": {"no_such_knob": 1}})
     with pytest.raises(Exception, match="no_such_knob"):
         mrc.write_config(path, "grammar", tmp_path / "runs", tmp_path / "out.yml")
+
+
+def test_every_checkpoint_is_kept_unless_the_recipe_says_otherwise(tmp_path):
+    every = mrc.build_document({"rank": 16, "every_steps": 200}, tmp_path)
+    assert every["checkpointing"] == {"every_steps": 200, "keep_last": mrc.EVERYTHING}
+    capped = mrc.build_document({"rank": 32, "every_steps": 2000, "keep_last": 4}, tmp_path)
+    assert capped["checkpointing"] == {"every_steps": 2000, "keep_last": 4}
+    path = _write(tmp_path, {"rank": 32, "every_steps": 2000, "keep_last": 4})
+    assert mrc.write_config(path, "grammar", tmp_path / "runs", tmp_path / "out.yml").startswith("config ok: rank 32")
+
+
+def test_rank_32_phase_1_differs_from_the_released_rank_16_only_in_rank_and_checkpoint_retention(tmp_path):
+    rank_16 = mrc.build_document(mrc.read_recipe(ROOT / "rank_16/phase_1/recipe.yml"), tmp_path)
+    rank_32 = mrc.build_document(mrc.read_recipe(ROOT / "rank_32/phase_1/recipe.yml"), tmp_path)
+    assert rank_32["adapter"]["rank"] == 32 and rank_32["adapter"]["alpha"] == 8.0 and rank_32["adapter"]["use_rslora"]
+    assert rank_32["checkpointing"]["keep_last"] < mrc.EVERYTHING
+    for doc in (rank_16, rank_32):
+        doc["adapter"].pop("rank")
+        doc["checkpointing"].pop("keep_last")
+    assert rank_16 == rank_32
+
+
+def test_a_lane_trains_the_same_steps_inside_its_slice_of_the_gpu(tmp_path):
+    lane = mrc.Lane("0-20", 18.0)
+    solo = mrc.build_document(mrc.read_recipe(ROOT / "rank_16/phase_1/recipe.yml"), tmp_path)
+    shared = mrc.build_document(mrc.read_recipe(ROOT / "rank_16/phase_1/recipe.yml"), tmp_path, lane=lane)
+    gpu = shared["devices"]["gpu"]
+    assert gpu["overrides"]["training"]["batch_size"] * gpu["overrides"]["training"]["gradient_accumulation_steps"] == mrc.EFFECTIVE_BATCH
+    assert gpu["overrides"]["training"]["micro_batch_tokens"] == 32000
+    assert gpu["overrides"]["evaluation"]["generation_batch_size"] == 32
+    assert (gpu["resources"]["cores"], gpu["resources"]["gpu_memory_gb"], gpu["resources"]["require_exclusive_gpu"]) == ("0-20", 18.0, False)
+    for doc in (solo, shared):                       # everything that shapes the result is identical
+        for key in ("batch_size", "gradient_accumulation_steps", "micro_batch_tokens", "checkpointing_min_tokens"):
+            doc["devices"]["gpu"]["overrides"]["training"].pop(key)
+        doc["devices"]["gpu"]["overrides"]["evaluation"].pop("generation_batch_size")
+        doc["devices"]["gpu"].pop("resources")
+    assert solo == shared
+
+
+def test_a_lane_config_loads_and_a_solo_one_has_no_cap(tmp_path):
+    recipe = ROOT / "rank_16/phase_2/recipe.yml"
+    summary = mrc.write_config(recipe, "grammar", tmp_path / "runs", tmp_path / "lane.yml", mrc.Lane("21-41", 18.0))
+    assert "lane: cores 21-41, GPU memory capped at 18 GB" in summary
+    mrc.write_config(recipe, "grammar", tmp_path / "runs", tmp_path / "solo.yml")
+    from src.config import load_sft_config
+    assert load_sft_config(tmp_path / "lane.yml", "gpu").resources.gpu_memory_gb == 18.0
+    solo = load_sft_config(tmp_path / "solo.yml", "gpu").resources
+    assert solo.gpu_memory_gb is None and solo.require_exclusive_gpu is True
+
+
+def test_lane_cores_and_memory_cap_go_together(tmp_path):
+    with pytest.raises(SystemExit):
+        mrc.main(["--recipe", str(ROOT / "rank_16/phase_1/recipe.yml"), "--style", "grammar",
+                  "--runs-root", str(tmp_path), "--out", str(tmp_path / "x.yml"), "--lane-cores", "0-20"])
 
 
 def test_get_prints_one_recipe_value(capsys):

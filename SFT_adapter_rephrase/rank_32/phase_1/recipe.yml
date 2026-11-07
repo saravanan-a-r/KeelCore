@@ -1,0 +1,9 @@
+# Rank 32, phase 1: a new adapter trained from scratch on the style's phase-1 teacher data.
+# Read by scripts/make_run_config.py; everything not set here comes from adapter_config.yml
+# (2 epochs, lr 3e-4 cosine, alpha 8 with rsLoRA: the output is scaled by 8 / sqrt(32) = 1.414)
+# and the shared data and GPU rules in that script.
+rank: 32
+every_steps: 2000        # evaluation + checkpoint interval
+# A rank-32 checkpoint (adapter + optimizer state) is ~440 MB, so keeping all ~75 of a style would
+# take ~33 GB. The last 4 are enough to resume; best/ and final/ are kept apart from them.
+keep_last: 4
