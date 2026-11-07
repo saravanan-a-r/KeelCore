@@ -1,0 +1,902 @@
+[
+ {
+  "id": 1,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "win_path",
+  "input": "Please check D:\\shared\\ops\\runbook_v2.docx before the review on Friday.",
+  "keep": [
+   "D:\\shared\\ops\\runbook_v2.docx"
+  ]
+ },
+ {
+  "id": 2,
+  "tier": "easy",
+  "position": "end",
+  "kind": "win_path",
+  "input": "The file you need is C:\\Users\\omar\\Downloads\\invoice_8841.pdf",
+  "keep": [
+   "C:\\Users\\omar\\Downloads\\invoice_8841.pdf"
+  ]
+ },
+ {
+  "id": 3,
+  "tier": "easy",
+  "position": "start",
+  "kind": "win_path",
+  "input": "C:\\Users\\priya\\Documents\\q3_budget.xlsx is the one we agreed on in the meeting.",
+  "keep": [
+   "C:\\Users\\priya\\Documents\\q3_budget.xlsx"
+  ]
+ },
+ {
+  "id": 4,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "win_path",
+  "input": "hey can u look at C:\\Users\\priya\\Documents\\q3_budget.xlsx today, pls",
+  "keep": [
+   "C:\\Users\\priya\\Documents\\q3_budget.xlsx"
+  ]
+ },
+ {
+  "id": 5,
+  "tier": "medium",
+  "position": "end",
+  "kind": "win_path",
+  "input": "fyi the latest one is D:\\shared\\ops\\runbook_v2.docx",
+  "keep": [
+   "D:\\shared\\ops\\runbook_v2.docx"
+  ]
+ },
+ {
+  "id": 6,
+  "tier": "medium",
+  "position": "start",
+  "kind": "win_path",
+  "input": "C:\\Users\\omar\\Downloads\\invoice_8841.pdf keeps failing since this morning, any idea why",
+  "keep": [
+   "C:\\Users\\omar\\Downloads\\invoice_8841.pdf"
+  ]
+ },
+ {
+  "id": 7,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "win_path",
+  "input": "i tryed D:\\shared\\ops\\runbook_v2.docx twice but its stil not workin, can u chek",
+  "keep": [
+   "D:\\shared\\ops\\runbook_v2.docx"
+  ]
+ },
+ {
+  "id": 8,
+  "tier": "hard",
+  "position": "end",
+  "kind": "win_path",
+  "input": "pls dont forgt to updte C:\\Users\\omar\\Downloads\\invoice_8841.pdf",
+  "keep": [
+   "C:\\Users\\omar\\Downloads\\invoice_8841.pdf"
+  ]
+ },
+ {
+  "id": 9,
+  "tier": "hard",
+  "position": "start",
+  "kind": "win_path",
+  "input": "C:\\Users\\priya\\Documents\\q3_budget.xlsx is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "C:\\Users\\priya\\Documents\\q3_budget.xlsx"
+  ]
+ },
+ {
+  "id": 10,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "unix_path",
+  "input": "Please check /home/kenji/scripts/backup.sh before the review on Friday.",
+  "keep": [
+   "/home/kenji/scripts/backup.sh"
+  ]
+ },
+ {
+  "id": 11,
+  "tier": "easy",
+  "position": "end",
+  "kind": "unix_path",
+  "input": "The file you need is ~/projects/atlas/config/settings.json",
+  "keep": [
+   "~/projects/atlas/config/settings.json"
+  ]
+ },
+ {
+  "id": 12,
+  "tier": "easy",
+  "position": "start",
+  "kind": "unix_path",
+  "input": "/var/log/nginx/error.log is the one we agreed on in the meeting.",
+  "keep": [
+   "/var/log/nginx/error.log"
+  ]
+ },
+ {
+  "id": 13,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "unix_path",
+  "input": "hey can u look at /var/log/nginx/error.log today, pls",
+  "keep": [
+   "/var/log/nginx/error.log"
+  ]
+ },
+ {
+  "id": 14,
+  "tier": "medium",
+  "position": "end",
+  "kind": "unix_path",
+  "input": "fyi the latest one is /home/kenji/scripts/backup.sh",
+  "keep": [
+   "/home/kenji/scripts/backup.sh"
+  ]
+ },
+ {
+  "id": 15,
+  "tier": "medium",
+  "position": "start",
+  "kind": "unix_path",
+  "input": "~/projects/atlas/config/settings.json keeps failing since this morning, any idea why",
+  "keep": [
+   "~/projects/atlas/config/settings.json"
+  ]
+ },
+ {
+  "id": 16,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "unix_path",
+  "input": "i tryed /home/kenji/scripts/backup.sh twice but its stil not workin, can u chek",
+  "keep": [
+   "/home/kenji/scripts/backup.sh"
+  ]
+ },
+ {
+  "id": 17,
+  "tier": "hard",
+  "position": "end",
+  "kind": "unix_path",
+  "input": "pls dont forgt to updte ~/projects/atlas/config/settings.json",
+  "keep": [
+   "~/projects/atlas/config/settings.json"
+  ]
+ },
+ {
+  "id": 18,
+  "tier": "hard",
+  "position": "start",
+  "kind": "unix_path",
+  "input": "/var/log/nginx/error.log is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "/var/log/nginx/error.log"
+  ]
+ },
+ {
+  "id": 19,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "command",
+  "input": "Please check kubectl rollout restart deploy/web before the review on Friday.",
+  "keep": [
+   "kubectl rollout restart deploy/web"
+  ]
+ },
+ {
+  "id": 20,
+  "tier": "easy",
+  "position": "end",
+  "kind": "command",
+  "input": "The file you need is docker compose up -d",
+  "keep": [
+   "docker compose up -d"
+  ]
+ },
+ {
+  "id": 21,
+  "tier": "easy",
+  "position": "start",
+  "kind": "command",
+  "input": "pip install -r requirements.txt is the one we agreed on in the meeting.",
+  "keep": [
+   "pip install -r requirements.txt"
+  ]
+ },
+ {
+  "id": 22,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "command",
+  "input": "hey can u look at pip install -r requirements.txt today, pls",
+  "keep": [
+   "pip install -r requirements.txt"
+  ]
+ },
+ {
+  "id": 23,
+  "tier": "medium",
+  "position": "end",
+  "kind": "command",
+  "input": "fyi the latest one is kubectl rollout restart deploy/web",
+  "keep": [
+   "kubectl rollout restart deploy/web"
+  ]
+ },
+ {
+  "id": 24,
+  "tier": "medium",
+  "position": "start",
+  "kind": "command",
+  "input": "docker compose up -d keeps failing since this morning, any idea why",
+  "keep": [
+   "docker compose up -d"
+  ]
+ },
+ {
+  "id": 25,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "command",
+  "input": "i tryed kubectl rollout restart deploy/web twice but its stil not workin, can u chek",
+  "keep": [
+   "kubectl rollout restart deploy/web"
+  ]
+ },
+ {
+  "id": 26,
+  "tier": "hard",
+  "position": "end",
+  "kind": "command",
+  "input": "pls dont forgt to updte docker compose up -d",
+  "keep": [
+   "docker compose up -d"
+  ]
+ },
+ {
+  "id": 27,
+  "tier": "hard",
+  "position": "start",
+  "kind": "command",
+  "input": "pip install -r requirements.txt is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "pip install -r requirements.txt"
+  ]
+ },
+ {
+  "id": 28,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "code_span",
+  "input": "Please check `npm run build -- --prod` before the review on Friday.",
+  "keep": [
+   "`npm run build -- --prod`"
+  ]
+ },
+ {
+  "id": 29,
+  "tier": "easy",
+  "position": "end",
+  "kind": "code_span",
+  "input": "The file you need is `terraform apply -auto-approve`",
+  "keep": [
+   "`terraform apply -auto-approve`"
+  ]
+ },
+ {
+  "id": 30,
+  "tier": "easy",
+  "position": "start",
+  "kind": "code_span",
+  "input": "`git cherry-pick a1b2c3d` is the one we agreed on in the meeting.",
+  "keep": [
+   "`git cherry-pick a1b2c3d`"
+  ]
+ },
+ {
+  "id": 31,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "code_span",
+  "input": "hey can u look at `git cherry-pick a1b2c3d` today, pls",
+  "keep": [
+   "`git cherry-pick a1b2c3d`"
+  ]
+ },
+ {
+  "id": 32,
+  "tier": "medium",
+  "position": "end",
+  "kind": "code_span",
+  "input": "fyi the latest one is `npm run build -- --prod`",
+  "keep": [
+   "`npm run build -- --prod`"
+  ]
+ },
+ {
+  "id": 33,
+  "tier": "medium",
+  "position": "start",
+  "kind": "code_span",
+  "input": "`terraform apply -auto-approve` keeps failing since this morning, any idea why",
+  "keep": [
+   "`terraform apply -auto-approve`"
+  ]
+ },
+ {
+  "id": 34,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "code_span",
+  "input": "i tryed `npm run build -- --prod` twice but its stil not workin, can u chek",
+  "keep": [
+   "`npm run build -- --prod`"
+  ]
+ },
+ {
+  "id": 35,
+  "tier": "hard",
+  "position": "end",
+  "kind": "code_span",
+  "input": "pls dont forgt to updte `terraform apply -auto-approve`",
+  "keep": [
+   "`terraform apply -auto-approve`"
+  ]
+ },
+ {
+  "id": 36,
+  "tier": "hard",
+  "position": "start",
+  "kind": "code_span",
+  "input": "`git cherry-pick a1b2c3d` is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "`git cherry-pick a1b2c3d`"
+  ]
+ },
+ {
+  "id": 37,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "host",
+  "input": "Please check db-replica-02.eu-west.internal before the review on Friday.",
+  "keep": [
+   "db-replica-02.eu-west.internal"
+  ]
+ },
+ {
+  "id": 38,
+  "tier": "easy",
+  "position": "end",
+  "kind": "host",
+  "input": "The file you need is cdn.static.brightwave.net",
+  "keep": [
+   "cdn.static.brightwave.net"
+  ]
+ },
+ {
+  "id": 39,
+  "tier": "easy",
+  "position": "start",
+  "kind": "host",
+  "input": "auth.staging.acme-corp.io is the one we agreed on in the meeting.",
+  "keep": [
+   "auth.staging.acme-corp.io"
+  ]
+ },
+ {
+  "id": 40,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "host",
+  "input": "hey can u look at auth.staging.acme-corp.io today, pls",
+  "keep": [
+   "auth.staging.acme-corp.io"
+  ]
+ },
+ {
+  "id": 41,
+  "tier": "medium",
+  "position": "end",
+  "kind": "host",
+  "input": "fyi the latest one is db-replica-02.eu-west.internal",
+  "keep": [
+   "db-replica-02.eu-west.internal"
+  ]
+ },
+ {
+  "id": 42,
+  "tier": "medium",
+  "position": "start",
+  "kind": "host",
+  "input": "cdn.static.brightwave.net keeps failing since this morning, any idea why",
+  "keep": [
+   "cdn.static.brightwave.net"
+  ]
+ },
+ {
+  "id": 43,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "host",
+  "input": "i tryed db-replica-02.eu-west.internal twice but its stil not workin, can u chek",
+  "keep": [
+   "db-replica-02.eu-west.internal"
+  ]
+ },
+ {
+  "id": 44,
+  "tier": "hard",
+  "position": "end",
+  "kind": "host",
+  "input": "pls dont forgt to updte cdn.static.brightwave.net",
+  "keep": [
+   "cdn.static.brightwave.net"
+  ]
+ },
+ {
+  "id": 45,
+  "tier": "hard",
+  "position": "start",
+  "kind": "host",
+  "input": "auth.staging.acme-corp.io is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "auth.staging.acme-corp.io"
+  ]
+ },
+ {
+  "id": 46,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "bare_domain",
+  "input": "Please check pypi.org before the review on Friday.",
+  "keep": [
+   "pypi.org"
+  ]
+ },
+ {
+  "id": 47,
+  "tier": "easy",
+  "position": "end",
+  "kind": "bare_domain",
+  "input": "The file you need is stackoverflow.com",
+  "keep": [
+   "stackoverflow.com"
+  ]
+ },
+ {
+  "id": 48,
+  "tier": "easy",
+  "position": "start",
+  "kind": "bare_domain",
+  "input": "gitlab.com is the one we agreed on in the meeting.",
+  "keep": [
+   "gitlab.com"
+  ]
+ },
+ {
+  "id": 49,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "bare_domain",
+  "input": "hey can u look at gitlab.com today, pls",
+  "keep": [
+   "gitlab.com"
+  ]
+ },
+ {
+  "id": 50,
+  "tier": "medium",
+  "position": "end",
+  "kind": "bare_domain",
+  "input": "fyi the latest one is pypi.org",
+  "keep": [
+   "pypi.org"
+  ]
+ },
+ {
+  "id": 51,
+  "tier": "medium",
+  "position": "start",
+  "kind": "bare_domain",
+  "input": "stackoverflow.com keeps failing since this morning, any idea why",
+  "keep": [
+   "stackoverflow.com"
+  ]
+ },
+ {
+  "id": 52,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "bare_domain",
+  "input": "i tryed pypi.org twice but its stil not workin, can u chek",
+  "keep": [
+   "pypi.org"
+  ]
+ },
+ {
+  "id": 53,
+  "tier": "hard",
+  "position": "end",
+  "kind": "bare_domain",
+  "input": "pls dont forgt to updte stackoverflow.com",
+  "keep": [
+   "stackoverflow.com"
+  ]
+ },
+ {
+  "id": 54,
+  "tier": "hard",
+  "position": "start",
+  "kind": "bare_domain",
+  "input": "gitlab.com is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "gitlab.com"
+  ]
+ },
+ {
+  "id": 55,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "email",
+  "input": "Please check ops-team@acme-corp.io before the review on Friday.",
+  "keep": [
+   "ops-team@acme-corp.io"
+  ]
+ },
+ {
+  "id": 56,
+  "tier": "easy",
+  "position": "end",
+  "kind": "email",
+  "input": "The file you need is kenji.sato@atlas.dev",
+  "keep": [
+   "kenji.sato@atlas.dev"
+  ]
+ },
+ {
+  "id": 57,
+  "tier": "easy",
+  "position": "start",
+  "kind": "email",
+  "input": "l.moreno@brightwave.net is the one we agreed on in the meeting.",
+  "keep": [
+   "l.moreno@brightwave.net"
+  ]
+ },
+ {
+  "id": 58,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "email",
+  "input": "hey can u look at l.moreno@brightwave.net today, pls",
+  "keep": [
+   "l.moreno@brightwave.net"
+  ]
+ },
+ {
+  "id": 59,
+  "tier": "medium",
+  "position": "end",
+  "kind": "email",
+  "input": "fyi the latest one is ops-team@acme-corp.io",
+  "keep": [
+   "ops-team@acme-corp.io"
+  ]
+ },
+ {
+  "id": 60,
+  "tier": "medium",
+  "position": "start",
+  "kind": "email",
+  "input": "kenji.sato@atlas.dev keeps failing since this morning, any idea why",
+  "keep": [
+   "kenji.sato@atlas.dev"
+  ]
+ },
+ {
+  "id": 61,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "email",
+  "input": "i tryed ops-team@acme-corp.io twice but its stil not workin, can u chek",
+  "keep": [
+   "ops-team@acme-corp.io"
+  ]
+ },
+ {
+  "id": 62,
+  "tier": "hard",
+  "position": "end",
+  "kind": "email",
+  "input": "pls dont forgt to updte kenji.sato@atlas.dev",
+  "keep": [
+   "kenji.sato@atlas.dev"
+  ]
+ },
+ {
+  "id": 63,
+  "tier": "hard",
+  "position": "start",
+  "kind": "email",
+  "input": "l.moreno@brightwave.net is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "l.moreno@brightwave.net"
+  ]
+ },
+ {
+  "id": 64,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "id",
+  "input": "Please check SR 7781-B before the review on Friday.",
+  "keep": [
+   "SR 7781-B"
+  ]
+ },
+ {
+  "id": 65,
+  "tier": "easy",
+  "position": "end",
+  "kind": "id",
+  "input": "The file you need is ticket #A44-019",
+  "keep": [
+   "ticket #A44-019"
+  ]
+ },
+ {
+  "id": 66,
+  "tier": "easy",
+  "position": "start",
+  "kind": "id",
+  "input": "JIRA-5521 is the one we agreed on in the meeting.",
+  "keep": [
+   "JIRA-5521"
+  ]
+ },
+ {
+  "id": 67,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "id",
+  "input": "hey can u look at JIRA-5521 today, pls",
+  "keep": [
+   "JIRA-5521"
+  ]
+ },
+ {
+  "id": 68,
+  "tier": "medium",
+  "position": "end",
+  "kind": "id",
+  "input": "fyi the latest one is SR 7781-B",
+  "keep": [
+   "SR 7781-B"
+  ]
+ },
+ {
+  "id": 69,
+  "tier": "medium",
+  "position": "start",
+  "kind": "id",
+  "input": "ticket #A44-019 keeps failing since this morning, any idea why",
+  "keep": [
+   "ticket #A44-019"
+  ]
+ },
+ {
+  "id": 70,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "id",
+  "input": "i tryed SR 7781-B twice but its stil not workin, can u chek",
+  "keep": [
+   "SR 7781-B"
+  ]
+ },
+ {
+  "id": 71,
+  "tier": "hard",
+  "position": "end",
+  "kind": "id",
+  "input": "pls dont forgt to updte ticket #A44-019",
+  "keep": [
+   "ticket #A44-019"
+  ]
+ },
+ {
+  "id": 72,
+  "tier": "hard",
+  "position": "start",
+  "kind": "id",
+  "input": "JIRA-5521 is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "JIRA-5521"
+  ]
+ },
+ {
+  "id": 73,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "kv",
+  "input": "Please check LOG_LEVEL=debug before the review on Friday.",
+  "keep": [
+   "LOG_LEVEL=debug"
+  ]
+ },
+ {
+  "id": 74,
+  "tier": "easy",
+  "position": "end",
+  "kind": "kv",
+  "input": "The file you need is retry_after=15m",
+  "keep": [
+   "retry_after=15m"
+  ]
+ },
+ {
+  "id": 75,
+  "tier": "easy",
+  "position": "start",
+  "kind": "kv",
+  "input": "max_connections=200 is the one we agreed on in the meeting.",
+  "keep": [
+   "max_connections=200"
+  ]
+ },
+ {
+  "id": 76,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "kv",
+  "input": "hey can u look at max_connections=200 today, pls",
+  "keep": [
+   "max_connections=200"
+  ]
+ },
+ {
+  "id": 77,
+  "tier": "medium",
+  "position": "end",
+  "kind": "kv",
+  "input": "fyi the latest one is LOG_LEVEL=debug",
+  "keep": [
+   "LOG_LEVEL=debug"
+  ]
+ },
+ {
+  "id": 78,
+  "tier": "medium",
+  "position": "start",
+  "kind": "kv",
+  "input": "retry_after=15m keeps failing since this morning, any idea why",
+  "keep": [
+   "retry_after=15m"
+  ]
+ },
+ {
+  "id": 79,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "kv",
+  "input": "i tryed LOG_LEVEL=debug twice but its stil not workin, can u chek",
+  "keep": [
+   "LOG_LEVEL=debug"
+  ]
+ },
+ {
+  "id": 80,
+  "tier": "hard",
+  "position": "end",
+  "kind": "kv",
+  "input": "pls dont forgt to updte retry_after=15m",
+  "keep": [
+   "retry_after=15m"
+  ]
+ },
+ {
+  "id": 81,
+  "tier": "hard",
+  "position": "start",
+  "kind": "kv",
+  "input": "max_connections=200 is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "max_connections=200"
+  ]
+ },
+ {
+  "id": 82,
+  "tier": "easy",
+  "position": "middle",
+  "kind": "version",
+  "input": "Please check v0.9.12-beta before the review on Friday.",
+  "keep": [
+   "v0.9.12-beta"
+  ]
+ },
+ {
+  "id": 83,
+  "tier": "easy",
+  "position": "end",
+  "kind": "version",
+  "input": "The file you need is release-2025.10",
+  "keep": [
+   "release-2025.10"
+  ]
+ },
+ {
+  "id": 84,
+  "tier": "easy",
+  "position": "start",
+  "kind": "version",
+  "input": "v3.1.4 is the one we agreed on in the meeting.",
+  "keep": [
+   "v3.1.4"
+  ]
+ },
+ {
+  "id": 85,
+  "tier": "medium",
+  "position": "middle",
+  "kind": "version",
+  "input": "hey can u look at v3.1.4 today, pls",
+  "keep": [
+   "v3.1.4"
+  ]
+ },
+ {
+  "id": 86,
+  "tier": "medium",
+  "position": "end",
+  "kind": "version",
+  "input": "fyi the latest one is v0.9.12-beta",
+  "keep": [
+   "v0.9.12-beta"
+  ]
+ },
+ {
+  "id": 87,
+  "tier": "medium",
+  "position": "start",
+  "kind": "version",
+  "input": "release-2025.10 keeps failing since this morning, any idea why",
+  "keep": [
+   "release-2025.10"
+  ]
+ },
+ {
+  "id": 88,
+  "tier": "hard",
+  "position": "middle",
+  "kind": "version",
+  "input": "i tryed v0.9.12-beta twice but its stil not workin, can u chek",
+  "keep": [
+   "v0.9.12-beta"
+  ]
+ },
+ {
+  "id": 89,
+  "tier": "hard",
+  "position": "end",
+  "kind": "version",
+  "input": "pls dont forgt to updte release-2025.10",
+  "keep": [
+   "release-2025.10"
+  ]
+ },
+ {
+  "id": 90,
+  "tier": "hard",
+  "position": "start",
+  "kind": "version",
+  "input": "v3.1.4 is brokn again aftr the upgrade, plz help asap",
+  "keep": [
+   "v3.1.4"
+  ]
+ }
+]

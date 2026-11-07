@@ -1,0 +1,721 @@
+[
+ {
+  "id": 1,
+  "category": "shorthand",
+  "word": "b4",
+  "input": "pls send the deck b4 the client call",
+  "expect": [
+   [
+    "before",
+    "prior to",
+    "ahead of"
+   ]
+  ],
+  "forbid": [
+   "b4",
+   "B4"
+  ]
+ },
+ {
+  "id": 2,
+  "category": "shorthand",
+  "word": "b4",
+  "input": "need the numbers b4 friday or we miss the deadline",
+  "expect": [
+   [
+    "before",
+    "by"
+   ]
+  ],
+  "forbid": [
+   "b4",
+   "B4"
+  ]
+ },
+ {
+  "id": 3,
+  "category": "shorthand",
+  "word": "b4",
+  "input": "can u check the contract b4 i sign it",
+  "expect": [
+   [
+    "before",
+    "prior to"
+   ]
+  ],
+  "forbid": [
+   "b4",
+   "B4"
+  ]
+ },
+ {
+  "id": 4,
+  "category": "shorthand",
+  "word": "tmrw",
+  "input": "cant make the standup tmrw, dentist at 9",
+  "expect": [
+   [
+    "tomorrow"
+   ]
+  ],
+  "forbid": [
+   "tmrw"
+  ]
+ },
+ {
+  "id": 5,
+  "category": "shorthand",
+  "word": "tmrw",
+  "input": "tmrw works better for the demo if thats ok",
+  "expect": [
+   [
+    "tomorrow"
+   ]
+  ],
+  "forbid": [
+   "tmrw",
+   "Tmrw"
+  ]
+ },
+ {
+  "id": 6,
+  "category": "shorthand",
+  "word": "tmrw",
+  "input": "will send the report tmrw morning",
+  "expect": [
+   [
+    "tomorrow"
+   ]
+  ],
+  "forbid": [
+   "tmrw"
+  ]
+ },
+ {
+  "id": 7,
+  "category": "shorthand",
+  "word": "acct",
+  "input": "my acct got locked after the password reset",
+  "expect": [
+   [
+    "account"
+   ]
+  ],
+  "forbid": [
+   "acct",
+   "address"
+  ]
+ },
+ {
+  "id": 8,
+  "category": "shorthand",
+  "word": "acct",
+  "input": "pls close the old acct, we moved to the new bank",
+  "expect": [
+   [
+    "account"
+   ]
+  ],
+  "forbid": [
+   "acct"
+  ]
+ },
+ {
+  "id": 9,
+  "category": "shorthand",
+  "word": "acct",
+  "input": "which acct should i bill this to",
+  "expect": [
+   [
+    "account"
+   ]
+  ],
+  "forbid": [
+   "acct"
+  ]
+ },
+ {
+  "id": 10,
+  "category": "shorthand",
+  "word": "thx",
+  "input": "got the invoice, thx for the quick reply",
+  "expect": [
+   [
+    "thank"
+   ]
+  ],
+  "forbid": [
+   "thx",
+   "Thx"
+  ]
+ },
+ {
+  "id": 11,
+  "category": "shorthand",
+  "word": "thx",
+  "input": "thx, that fixed it",
+  "expect": [
+   [
+    "thank"
+   ]
+  ],
+  "forbid": [
+   "thx",
+   "Thx"
+  ]
+ },
+ {
+  "id": 12,
+  "category": "shorthand",
+  "word": "cuz",
+  "input": "i was late cuz the train got cancelled",
+  "expect": [
+   [
+    "because",
+    "as",
+    "due to",
+    "since"
+   ]
+  ],
+  "forbid": [
+   "cuz"
+  ]
+ },
+ {
+  "id": 13,
+  "category": "shorthand",
+  "word": "cuz",
+  "input": "we paused the rollout cuz of the bug in checkout",
+  "expect": [
+   [
+    "because",
+    "as",
+    "due to",
+    "since"
+   ]
+  ],
+  "forbid": [
+   "cuz"
+  ]
+ },
+ {
+  "id": 14,
+  "category": "shorthand",
+  "word": "bc",
+  "input": "moved the call to 3pm bc the client is travelling",
+  "expect": [
+   [
+    "because",
+    "as",
+    "since",
+    "due to"
+   ]
+  ],
+  "forbid": [
+   " bc "
+  ]
+ },
+ {
+  "id": 15,
+  "category": "shorthand",
+  "word": "w/",
+  "input": "pls share the file w/ the legal team",
+  "expect": [
+   [
+    "with"
+   ]
+  ],
+  "forbid": [
+   "w/ "
+  ]
+ },
+ {
+  "id": 16,
+  "category": "shorthand",
+  "word": "msg",
+  "input": "saw ur msg, will reply after lunch",
+  "expect": [
+   [
+    "message"
+   ]
+  ],
+  "forbid": [
+   "msg"
+  ]
+ },
+ {
+  "id": 17,
+  "category": "shorthand",
+  "word": "mtg",
+  "input": "the mtg with finance moved to monday",
+  "expect": [
+   [
+    "meeting"
+   ]
+  ],
+  "forbid": [
+   "mtg"
+  ]
+ },
+ {
+  "id": 18,
+  "category": "shorthand",
+  "word": "mgr",
+  "input": "my mgr has to approve the leave first",
+  "expect": [
+   [
+    "manager"
+   ]
+  ],
+  "forbid": [
+   "mgr"
+  ]
+ },
+ {
+  "id": 19,
+  "category": "shorthand",
+  "word": "ppl",
+  "input": "too many ppl on the invite, can we cut it down",
+  "expect": [
+   [
+    "people",
+    "attendees",
+    "participants"
+   ]
+  ],
+  "forbid": [
+   "ppl"
+  ]
+ },
+ {
+  "id": 20,
+  "category": "shorthand",
+  "word": "rn",
+  "input": "im on another call rn, can i ring u back",
+  "expect": [
+   [
+    "right now",
+    "currently",
+    "at the moment"
+   ]
+  ],
+  "forbid": [
+   " rn"
+  ]
+ },
+ {
+  "id": 21,
+  "category": "shorthand",
+  "word": "idk",
+  "input": "idk if the refund went through, can u check",
+  "expect": [
+   [
+    "not sure",
+    "do not know",
+    "don't know",
+    "unsure",
+    "uncertain"
+   ]
+  ],
+  "forbid": [
+   "idk"
+  ]
+ },
+ {
+  "id": 22,
+  "category": "shorthand",
+  "word": "nvm",
+  "input": "nvm, found the file on the shared drive",
+  "expect": [
+   [
+    "never mind",
+    "disregard",
+    "no longer"
+   ]
+  ],
+  "forbid": [
+   "nvm"
+  ]
+ },
+ {
+  "id": 23,
+  "category": "shorthand",
+  "word": "ty",
+  "input": "ty for covering my shift yesterday",
+  "expect": [
+   [
+    "thank"
+   ]
+  ],
+  "forbid": [
+   "ty "
+  ]
+ },
+ {
+  "id": 24,
+  "category": "shorthand",
+  "word": "wfh",
+  "input": "im wfh today, ping me on chat",
+  "expect": [
+   [
+    "working from home",
+    "work from home",
+    "remote"
+   ]
+  ],
+  "forbid": [
+   "wfh"
+  ]
+ },
+ {
+  "id": 25,
+  "category": "misspelling",
+  "word": "brokn",
+  "input": "the printer on floor 2 is brokn since monday",
+  "expect": [
+   [
+    "broken",
+    "not working",
+    "out of order"
+   ]
+  ],
+  "forbid": [
+   "running"
+  ]
+ },
+ {
+  "id": 26,
+  "category": "misspelling",
+  "word": "brokn",
+  "input": "screen brokn after the update, cant log in",
+  "expect": [
+   [
+    "broken",
+    "not working",
+    "stopped working"
+   ]
+  ],
+  "forbid": [
+   "running"
+  ]
+ },
+ {
+  "id": 27,
+  "category": "misspelling",
+  "word": "cancled",
+  "input": "the client cancled the order this morning",
+  "expect": [
+   [
+    "cancelled",
+    "canceled",
+    "called off"
+   ]
+  ],
+  "forbid": [
+   "closed",
+   "cancled"
+  ]
+ },
+ {
+  "id": 28,
+  "category": "misspelling",
+  "word": "cancled",
+  "input": "flight got cancled so ill join remotely",
+  "expect": [
+   [
+    "cancelled",
+    "canceled"
+   ]
+  ],
+  "forbid": [
+   "cancled"
+  ]
+ },
+ {
+  "id": 29,
+  "category": "misspelling",
+  "word": "dashbord",
+  "input": "the dashbord shows the wrong totals for march",
+  "expect": [
+   [
+    "dashboard"
+   ]
+  ],
+  "forbid": [
+   "dashbord"
+  ]
+ },
+ {
+  "id": 30,
+  "category": "misspelling",
+  "word": "dashbord",
+  "input": "can u add a filter to the sales dashbord",
+  "expect": [
+   [
+    "dashboard"
+   ]
+  ],
+  "forbid": [
+   "dashbord"
+  ]
+ },
+ {
+  "id": 31,
+  "category": "misspelling",
+  "word": "recived",
+  "input": "we never recived the second shipment",
+  "expect": [
+   [
+    "received"
+   ]
+  ],
+  "forbid": [
+   "recived"
+  ]
+ },
+ {
+  "id": 32,
+  "category": "misspelling",
+  "word": "delivred",
+  "input": "the parcel was delivred to the wrong address",
+  "expect": [
+   [
+    "delivered"
+   ]
+  ],
+  "forbid": [
+   "delivred"
+  ]
+ },
+ {
+  "id": 33,
+  "category": "misspelling",
+  "word": "aproved",
+  "input": "budget got aproved yesterday, we can start",
+  "expect": [
+   [
+    "approved"
+   ]
+  ],
+  "forbid": [
+   "aproved"
+  ]
+ },
+ {
+  "id": 34,
+  "category": "misspelling",
+  "word": "schedul",
+  "input": "pls schedul a call with the vendor next week",
+  "expect": [
+   [
+    "schedule",
+    "arrange",
+    "set up"
+   ]
+  ],
+  "forbid": [
+   "schedul ",
+   "scheduled a call"
+  ]
+ },
+ {
+  "id": 35,
+  "category": "misspelling",
+  "word": "updat",
+  "input": "can u updat the price list before the launch",
+  "expect": [
+   [
+    "update"
+   ]
+  ],
+  "forbid": [
+   "updated the price",
+   "updat "
+  ]
+ },
+ {
+  "id": 36,
+  "category": "misspelling",
+  "word": "missin",
+  "input": "two pages are missin from the signed contract",
+  "expect": [
+   [
+    "missing"
+   ]
+  ],
+  "forbid": [
+   "missin "
+  ]
+ },
+ {
+  "id": 37,
+  "category": "misspelling",
+  "word": "payed",
+  "input": "i payed the invoice twice by mistake",
+  "expect": [
+   [
+    "paid"
+   ]
+  ],
+  "forbid": [
+   "payed"
+  ]
+ },
+ {
+  "id": 38,
+  "category": "misspelling",
+  "word": "loose",
+  "input": "we will loose the client if this slips again",
+  "expect": [
+   [
+    "lose"
+   ]
+  ],
+  "forbid": [
+   "loose"
+  ]
+ },
+ {
+  "id": 39,
+  "category": "misspelling",
+  "word": "lisence",
+  "input": "our lisence expires end of the month",
+  "expect": [
+   [
+    "licence",
+    "license"
+   ]
+  ],
+  "forbid": [
+   "lisence"
+  ]
+ },
+ {
+  "id": 40,
+  "category": "misspelling",
+  "word": "stil",
+  "input": "the bug is stil there after the hotfix",
+  "expect": [
+   [
+    "still"
+   ]
+  ],
+  "forbid": [
+   "stil "
+  ]
+ },
+ {
+  "id": 41,
+  "category": "misspelling",
+  "word": "accomodation",
+  "input": "pls book the accomodation for the offsite",
+  "expect": [
+   [
+    "accommodation"
+   ]
+  ],
+  "forbid": [
+   "accomodation"
+  ]
+ },
+ {
+  "id": 42,
+  "category": "misspelling",
+  "word": "refnd",
+  "input": "customer wants a refnd for the broken chair",
+  "expect": [
+   [
+    "refund"
+   ]
+  ],
+  "forbid": [
+   "refnd"
+  ]
+ },
+ {
+  "id": 43,
+  "category": "misspelling",
+  "word": "shiped",
+  "input": "the order shiped today, tracking to follow",
+  "expect": [
+   [
+    "shipped",
+    "dispatched",
+    "sent"
+   ]
+  ],
+  "forbid": [
+   "shiped"
+  ]
+ },
+ {
+  "id": 44,
+  "category": "misspelling",
+  "word": "comittee",
+  "input": "the comittee meets on thursday to decide",
+  "expect": [
+   [
+    "committee"
+   ]
+  ],
+  "forbid": [
+   "comittee"
+  ]
+ },
+ {
+  "id": 45,
+  "category": "misspelling",
+  "word": "seperate",
+  "input": "pls send the two invoices in seperate emails",
+  "expect": [
+   [
+    "separate"
+   ]
+  ],
+  "forbid": [
+   "seperate"
+  ]
+ },
+ {
+  "id": 46,
+  "category": "misspelling",
+  "word": "untill",
+  "input": "the office is closed untill the 3rd",
+  "expect": [
+   [
+    "until"
+   ]
+  ],
+  "forbid": [
+   "untill"
+  ]
+ },
+ {
+  "id": 47,
+  "category": "misspelling",
+  "word": "tommorow",
+  "input": "can we move the review to tommorow",
+  "expect": [
+   [
+    "tomorrow"
+   ]
+  ],
+  "forbid": [
+   "tommorow"
+  ]
+ },
+ {
+  "id": 48,
+  "category": "misspelling",
+  "word": "adress",
+  "input": "pls confirm the delivery adress for the order",
+  "expect": [
+   [
+    "address"
+   ]
+  ],
+  "forbid": [
+   "adress"
+  ]
+ }
+]
