@@ -1,0 +1,1006 @@
+[
+ {
+  "id": 0,
+  "tier": "easy",
+  "category": "order",
+  "input": "Ordr #48213 was suposed to arrive on 12 March but it still hasnt shown up, can you check with the carier?",
+  "typos": {
+   "Ordr": [
+    "Order"
+   ],
+   "suposed": [
+    "supposed"
+   ],
+   "hasnt": [
+    "hasn't",
+    "has",
+    "not"
+   ],
+   "carier": [
+    "carrier"
+   ]
+  },
+  "keep": [
+   "#48213",
+   "12 March"
+  ]
+ },
+ {
+  "id": 1,
+  "tier": "medium",
+  "category": "order",
+  "input": "order #48213 was suposed to arive on 12 March but it still hasnt shown up, can u check with the carier pls",
+  "typos": {
+   "suposed": [
+    "supposed"
+   ],
+   "arive": [
+    "arrive"
+   ],
+   "hasnt": [
+    "hasn't",
+    "has",
+    "not"
+   ],
+   "u": [
+    "you"
+   ],
+   "carier": [
+    "carrier"
+   ],
+   "pls": [
+    "please"
+   ]
+  },
+  "keep": [
+   "#48213",
+   "12 March"
+  ]
+ },
+ {
+  "id": 2,
+  "tier": "hard",
+  "category": "order",
+  "input": "order #48213 shoud have arived on 12 March cuz thats what the site sed, still nothing, can u chek with the carier thx",
+  "typos": {
+   "shoud": [
+    "should"
+   ],
+   "arived": [
+    "arrived"
+   ],
+   "cuz": [
+    "because"
+   ],
+   "thats": [
+    "that's"
+   ],
+   "sed": [
+    "said"
+   ],
+   "u": [
+    "you"
+   ],
+   "chek": [
+    "check"
+   ],
+   "carier": [
+    "carrier"
+   ],
+   "thx": [
+    "thank",
+    "thanks"
+   ]
+  },
+  "keep": [
+   "#48213",
+   "12 March"
+  ]
+ },
+ {
+  "id": 3,
+  "tier": "easy",
+  "category": "incident",
+  "input": "The deploymnet to prod failed at 02:15 with error E_CONN_RESET, please rollback to v2.4.1 and notfy the oncall.",
+  "typos": {
+   "deploymnet": [
+    "deployment"
+   ],
+   "notfy": [
+    "notify"
+   ]
+  },
+  "keep": [
+   "02:15",
+   "E_CONN_RESET",
+   "v2.4.1"
+  ]
+ },
+ {
+  "id": 4,
+  "tier": "medium",
+  "category": "incident",
+  "input": "the deploymnet to prod failed at 02:15 with error E_CONN_RESET, pls rollback to v2.4.1 and notfy the oncall, thx",
+  "typos": {
+   "deploymnet": [
+    "deployment"
+   ],
+   "pls": [
+    "please"
+   ],
+   "notfy": [
+    "notify"
+   ],
+   "thx": [
+    "thank",
+    "thanks"
+   ]
+  },
+  "keep": [
+   "02:15",
+   "E_CONN_RESET",
+   "v2.4.1"
+  ]
+ },
+ {
+  "id": 5,
+  "tier": "hard",
+  "category": "incident",
+  "input": "deploymnet to prod faild at 02:15 wit error E_CONN_RESET pls rollbak to v2.4.1 and tell oncall",
+  "typos": {
+   "deploymnet": [
+    "deployment"
+   ],
+   "faild": [
+    "failed"
+   ],
+   "wit": [
+    "with"
+   ],
+   "pls": [
+    "please"
+   ],
+   "rollbak": [
+    "rollback"
+   ]
+  },
+  "keep": [
+   "02:15",
+   "E_CONN_RESET",
+   "v2.4.1"
+  ]
+ },
+ {
+  "id": 6,
+  "tier": "easy",
+  "category": "refund",
+  "input": "Thank you for reaching out. Unfortunatly we cannot refund the $89.99 becuase the warrenty expired on 1 June 2025.",
+  "typos": {
+   "Unfortunatly": [
+    "Unfortunately"
+   ],
+   "becuase": [
+    "because"
+   ],
+   "warrenty": [
+    "warranty"
+   ]
+  },
+  "keep": [
+   "$89.99",
+   "1 June 2025"
+  ]
+ },
+ {
+  "id": 7,
+  "tier": "medium",
+  "category": "refund",
+  "input": "thank you for reaching out. unfortunatly we cant refund the $89.99 becuase the warrenty expired on 1 June 2025",
+  "typos": {
+   "unfortunatly": [
+    "unfortunately"
+   ],
+   "cant": [
+    "can't",
+    "cannot",
+    "can"
+   ],
+   "becuase": [
+    "because"
+   ],
+   "warrenty": [
+    "warranty"
+   ]
+  },
+  "keep": [
+   "$89.99",
+   "1 June 2025"
+  ]
+ },
+ {
+  "id": 8,
+  "tier": "hard",
+  "category": "refund",
+  "input": "thx for reachin out. sadly we cant refund ur $89.99 cuz the warrenty ran out on 1 June 2025",
+  "typos": {
+   "thx": [
+    "thank",
+    "thanks"
+   ],
+   "reachin": [
+    "reaching"
+   ],
+   "cant": [
+    "can't",
+    "cannot",
+    "can"
+   ],
+   "ur": [
+    "your"
+   ],
+   "cuz": [
+    "because"
+   ],
+   "warrenty": [
+    "warranty"
+   ]
+  },
+  "keep": [
+   "$89.99",
+   "1 June 2025"
+  ]
+ },
+ {
+  "id": 9,
+  "tier": "easy",
+  "category": "schedule",
+  "input": "Can we move the standup from 9:30 to 10:00 tommorow? I have a dentist apointment.",
+  "typos": {
+   "tommorow": [
+    "tomorrow"
+   ],
+   "apointment": [
+    "appointment"
+   ]
+  },
+  "keep": [
+   "9:30",
+   "10:00"
+  ]
+ },
+ {
+  "id": 10,
+  "tier": "medium",
+  "category": "schedule",
+  "input": "can we move the standup from 9:30 to 10:00 tommorow? i have a dentist apointment and cant make it",
+  "typos": {
+   "tommorow": [
+    "tomorrow"
+   ],
+   "apointment": [
+    "appointment"
+   ],
+   "cant": [
+    "can't",
+    "cannot",
+    "can"
+   ]
+  },
+  "keep": [
+   "9:30",
+   "10:00"
+  ]
+ },
+ {
+  "id": 11,
+  "tier": "hard",
+  "category": "schedule",
+  "input": "can we push standup frm 9:30 to 10:00 tmrw, got a dentist apointment n cant make it",
+  "typos": {
+   "frm": [
+    "from"
+   ],
+   "tmrw": [
+    "tomorrow"
+   ],
+   "apointment": [
+    "appointment"
+   ],
+   "n": [
+    "and"
+   ],
+   "cant": [
+    "can't",
+    "cannot",
+    "can"
+   ]
+  },
+  "keep": [
+   "9:30",
+   "10:00"
+  ]
+ },
+ {
+  "id": 12,
+  "tier": "easy",
+  "category": "support",
+  "input": "My pasword reset link expired. I tried three times and the email never arrives, please hlep.",
+  "typos": {
+   "pasword": [
+    "password"
+   ],
+   "hlep": [
+    "help"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 13,
+  "tier": "medium",
+  "category": "support",
+  "input": "my pasword reset link expired. i tried three times and the email never arives, pls help",
+  "typos": {
+   "pasword": [
+    "password"
+   ],
+   "arives": [
+    "arrives"
+   ],
+   "pls": [
+    "please"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 14,
+  "tier": "hard",
+  "category": "support",
+  "input": "pasword reset link expird, tried three times n the email never arives, pls help me",
+  "typos": {
+   "pasword": [
+    "password"
+   ],
+   "expird": [
+    "expired"
+   ],
+   "n": [
+    "and"
+   ],
+   "arives": [
+    "arrives"
+   ],
+   "pls": [
+    "please"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 15,
+  "tier": "easy",
+  "category": "purchase",
+  "input": "Please aprove purchase order PO-77120 for 14 laptops before the quater ends on 31 March.",
+  "typos": {
+   "aprove": [
+    "approve"
+   ],
+   "quater": [
+    "quarter"
+   ]
+  },
+  "keep": [
+   "PO-77120",
+   "14 laptops",
+   "31 March"
+  ]
+ },
+ {
+  "id": 16,
+  "tier": "medium",
+  "category": "purchase",
+  "input": "pls aprove purchase order PO-77120 for 14 laptops before the quater ends on 31 March, its urgent",
+  "typos": {
+   "pls": [
+    "please"
+   ],
+   "aprove": [
+    "approve"
+   ],
+   "quater": [
+    "quarter"
+   ],
+   "its": [
+    "it's",
+    "it",
+    "is"
+   ]
+  },
+  "keep": [
+   "PO-77120",
+   "14 laptops",
+   "31 March"
+  ]
+ },
+ {
+  "id": 17,
+  "tier": "hard",
+  "category": "purchase",
+  "input": "pls aprove PO-77120 for 14 laptops b4 quater end 31 March its urgent",
+  "typos": {
+   "pls": [
+    "please"
+   ],
+   "aprove": [
+    "approve"
+   ],
+   "b4": [
+    "before"
+   ],
+   "quater": [
+    "quarter"
+   ],
+   "its": [
+    "it's",
+    "it",
+    "is"
+   ]
+  },
+  "keep": [
+   "PO-77120",
+   "14 laptops",
+   "31 March"
+  ]
+ },
+ {
+  "id": 18,
+  "tier": "easy",
+  "category": "travel",
+  "input": "Our flight lands at 6:45 am on Sunady, could you book a taxi to the Hilton downtwon?",
+  "typos": {
+   "Sunady": [
+    "Sunday"
+   ],
+   "downtwon": [
+    "downtown"
+   ]
+  },
+  "keep": [
+   "6:45 am",
+   "Hilton"
+  ]
+ },
+ {
+  "id": 19,
+  "tier": "medium",
+  "category": "travel",
+  "input": "our flight lands at 6:45 am on sunday, could u book a taxi to the Hilton downtwon",
+  "typos": {
+   "u": [
+    "you"
+   ],
+   "downtwon": [
+    "downtown"
+   ]
+  },
+  "keep": [
+   "6:45 am",
+   "Hilton"
+  ]
+ },
+ {
+  "id": 20,
+  "tier": "hard",
+  "category": "travel",
+  "input": "our flite lands 6:45 am sunday can u book a taxi to the Hilton downtwon thx",
+  "typos": {
+   "flite": [
+    "flight"
+   ],
+   "u": [
+    "you"
+   ],
+   "downtwon": [
+    "downtown"
+   ],
+   "thx": [
+    "thank",
+    "thanks"
+   ]
+  },
+  "keep": [
+   "6:45 am",
+   "Hilton"
+  ]
+ },
+ {
+  "id": 21,
+  "tier": "easy",
+  "category": "review",
+  "input": "I reviewd your pull request and left a few comments on the retry logic in client.py, othrwise it looks good.",
+  "typos": {
+   "reviewd": [
+    "reviewed"
+   ],
+   "othrwise": [
+    "otherwise"
+   ]
+  },
+  "keep": [
+   "client.py"
+  ]
+ },
+ {
+  "id": 22,
+  "tier": "medium",
+  "category": "review",
+  "input": "i reviewd your pull request and left a few comemnts on the retry logic in client.py, otherwise it looks good, nice work",
+  "typos": {
+   "reviewd": [
+    "reviewed"
+   ],
+   "comemnts": [
+    "comments"
+   ]
+  },
+  "keep": [
+   "client.py"
+  ]
+ },
+ {
+  "id": 23,
+  "tier": "hard",
+  "category": "review",
+  "input": "reviewd ur pull request, left a few comemnts on the retry logic in client.py, othrwise looks good",
+  "typos": {
+   "reviewd": [
+    "reviewed"
+   ],
+   "ur": [
+    "your"
+   ],
+   "comemnts": [
+    "comments"
+   ],
+   "othrwise": [
+    "otherwise"
+   ]
+  },
+  "keep": [
+   "client.py"
+  ]
+ },
+ {
+  "id": 24,
+  "tier": "easy",
+  "category": "leave",
+  "input": "I would like to request leav from 3 to 7 June because of a family weding, please confirm if that works.",
+  "typos": {
+   "leav": [
+    "leave"
+   ],
+   "weding": [
+    "wedding"
+   ]
+  },
+  "keep": [
+   "3 to 7 June"
+  ]
+ },
+ {
+  "id": 25,
+  "tier": "medium",
+  "category": "leave",
+  "input": "i would like to request leav from 3 to 7 June becuase of a family weding, pls confirm if that works",
+  "typos": {
+   "leav": [
+    "leave"
+   ],
+   "becuase": [
+    "because"
+   ],
+   "weding": [
+    "wedding"
+   ],
+   "pls": [
+    "please"
+   ]
+  },
+  "keep": [
+   "3 to 7 June"
+  ]
+ },
+ {
+  "id": 26,
+  "tier": "hard",
+  "category": "leave",
+  "input": "want to take leav 3 to 7 June cuz of a family weding, pls confirm ok",
+  "typos": {
+   "leav": [
+    "leave"
+   ],
+   "cuz": [
+    "because"
+   ],
+   "weding": [
+    "wedding"
+   ],
+   "pls": [
+    "please"
+   ]
+  },
+  "keep": [
+   "3 to 7 June"
+  ]
+ },
+ {
+  "id": 27,
+  "tier": "easy",
+  "category": "repair",
+  "input": "The heater in apartment 4B has been brokn since Monday and it is freezng, can someone come today?",
+  "typos": {
+   "brokn": [
+    "broken"
+   ],
+   "freezng": [
+    "freezing"
+   ]
+  },
+  "keep": [
+   "4B",
+   "Monday"
+  ]
+ },
+ {
+  "id": 28,
+  "tier": "medium",
+  "category": "repair",
+  "input": "the heater in apartment 4B has been brokn since Monday and its freezng, can someone come today",
+  "typos": {
+   "brokn": [
+    "broken"
+   ],
+   "its": [
+    "it's",
+    "it",
+    "is"
+   ],
+   "freezng": [
+    "freezing"
+   ]
+  },
+  "keep": [
+   "4B",
+   "Monday"
+  ]
+ },
+ {
+  "id": 29,
+  "tier": "hard",
+  "category": "repair",
+  "input": "heater in apt 4B brokn since Monday its freezng can someone come today pls",
+  "typos": {
+   "brokn": [
+    "broken"
+   ],
+   "its": [
+    "it's",
+    "it",
+    "is"
+   ],
+   "freezng": [
+    "freezing"
+   ],
+   "pls": [
+    "please"
+   ]
+  },
+  "keep": [
+   "4B",
+   "Monday"
+  ]
+ },
+ {
+  "id": 30,
+  "tier": "easy",
+  "category": "feedback",
+  "input": "The new dashbord is much faster, but the export buton is missing and the colors are hard to read.",
+  "typos": {
+   "dashbord": [
+    "dashboard"
+   ],
+   "buton": [
+    "button"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 31,
+  "tier": "medium",
+  "category": "feedback",
+  "input": "the new dashbord is much faster but the export buton is missin and the colors are hard to read",
+  "typos": {
+   "dashbord": [
+    "dashboard"
+   ],
+   "buton": [
+    "button"
+   ],
+   "missin": [
+    "missing"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 32,
+  "tier": "hard",
+  "category": "feedback",
+  "input": "new dashbord is way faster but export buton is missin n the colors are hard to read",
+  "typos": {
+   "dashbord": [
+    "dashboard"
+   ],
+   "buton": [
+    "button"
+   ],
+   "missin": [
+    "missing"
+   ],
+   "n": [
+    "and"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 33,
+  "tier": "easy",
+  "category": "invoice",
+  "input": "Attatched is invoice INV-20418 for $3,250.00, payment is due within 30 days of recepit.",
+  "typos": {
+   "Attatched": [
+    "Attached"
+   ],
+   "recepit": [
+    "receipt"
+   ]
+  },
+  "keep": [
+   "INV-20418",
+   "$3,250.00",
+   "30 days"
+  ]
+ },
+ {
+  "id": 34,
+  "tier": "medium",
+  "category": "invoice",
+  "input": "attatched is invoice INV-20418 for $3,250.00, payment is due within 30 days of recepit, thx",
+  "typos": {
+   "attatched": [
+    "attached"
+   ],
+   "recepit": [
+    "receipt"
+   ],
+   "thx": [
+    "thank",
+    "thanks"
+   ]
+  },
+  "keep": [
+   "INV-20418",
+   "$3,250.00",
+   "30 days"
+  ]
+ },
+ {
+  "id": 35,
+  "tier": "hard",
+  "category": "invoice",
+  "input": "attatched invoice INV-20418 $3,250.00 due within 30 days of recepit thx",
+  "typos": {
+   "attatched": [
+    "attached"
+   ],
+   "recepit": [
+    "receipt"
+   ],
+   "thx": [
+    "thank",
+    "thanks"
+   ]
+  },
+  "keep": [
+   "INV-20418",
+   "$3,250.00",
+   "30 days"
+  ]
+ },
+ {
+  "id": 36,
+  "tier": "easy",
+  "category": "friend",
+  "input": "Thanks for the birtday wishes yesterday, it realy made my day, we should grab dinner on Saturday.",
+  "typos": {
+   "birtday": [
+    "birthday"
+   ],
+   "realy": [
+    "really"
+   ]
+  },
+  "keep": [
+   "Saturday"
+  ]
+ },
+ {
+  "id": 37,
+  "tier": "medium",
+  "category": "friend",
+  "input": "thanks for the birtday wishes yesterday, it realy made my day, we should grab dinner on saturday definately",
+  "typos": {
+   "birtday": [
+    "birthday"
+   ],
+   "realy": [
+    "really"
+   ],
+   "definately": [
+    "definitely"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 38,
+  "tier": "hard",
+  "category": "friend",
+  "input": "thx for the birtday wishes yesterday it realy made my day, we shuld grab dinner on saturday",
+  "typos": {
+   "thx": [
+    "thank",
+    "thanks"
+   ],
+   "birtday": [
+    "birthday"
+   ],
+   "realy": [
+    "really"
+   ],
+   "shuld": [
+    "should"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 39,
+  "tier": "easy",
+  "category": "notes",
+  "input": "Action items: Maria will updat the roadmap by Wednesday, and Tom will schedul the customer interveiws.",
+  "typos": {
+   "updat": [
+    "update"
+   ],
+   "schedul": [
+    "schedule"
+   ],
+   "interveiws": [
+    "interviews"
+   ]
+  },
+  "keep": [
+   "Maria",
+   "Tom",
+   "Wednesday"
+  ]
+ },
+ {
+  "id": 40,
+  "tier": "medium",
+  "category": "notes",
+  "input": "action items: Maria will updat the roadmap by Wednesday, and Tom will schedul the customer interveiws",
+  "typos": {
+   "updat": [
+    "update"
+   ],
+   "schedul": [
+    "schedule"
+   ],
+   "interveiws": [
+    "interviews"
+   ]
+  },
+  "keep": [
+   "Maria",
+   "Tom",
+   "Wednesday"
+  ]
+ },
+ {
+  "id": 41,
+  "tier": "hard",
+  "category": "notes",
+  "input": "action items Maria updat the roadmap by Wednesday, Tom schedul customer interveiws",
+  "typos": {
+   "updat": [
+    "update"
+   ],
+   "schedul": [
+    "schedule"
+   ],
+   "interveiws": [
+    "interviews"
+   ]
+  },
+  "keep": [
+   "Maria",
+   "Tom",
+   "Wednesday"
+  ]
+ },
+ {
+  "id": 42,
+  "tier": "easy",
+  "category": "ops",
+  "input": "The disk usege on server db-prod-02 reached 92 percent, please clear the old logs befor it fills up.",
+  "typos": {
+   "usege": [
+    "usage"
+   ],
+   "befor": [
+    "before"
+   ]
+  },
+  "keep": [
+   "db-prod-02",
+   "92 percent"
+  ]
+ },
+ {
+  "id": 43,
+  "tier": "medium",
+  "category": "ops",
+  "input": "the disk usege on server db-prod-02 reached 92 percent, pls clear the old logs befor it fills up",
+  "typos": {
+   "usege": [
+    "usage"
+   ],
+   "pls": [
+    "please"
+   ],
+   "befor": [
+    "before"
+   ]
+  },
+  "keep": [
+   "db-prod-02",
+   "92 percent"
+  ]
+ },
+ {
+  "id": 44,
+  "tier": "hard",
+  "category": "ops",
+  "input": "disk usege on db-prod-02 hit 92 percent pls clear old logs befor it fills up",
+  "typos": {
+   "usege": [
+    "usage"
+   ],
+   "pls": [
+    "please"
+   ],
+   "befor": [
+    "before"
+   ]
+  },
+  "keep": [
+   "db-prod-02",
+   "92 percent"
+  ]
+ }
+]
