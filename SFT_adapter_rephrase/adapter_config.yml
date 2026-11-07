@@ -246,6 +246,8 @@ devices:
       idle_io: false
       precision: bf16
       require_exclusive_gpu: true
+      # gpu_memory_gb: 18         # cap this process's GPU memory when runs share the GPU (--lanes in the
+      #                           # launchers sets it together with require_exclusive_gpu: false)
     overrides:
       training: {batch_size: 32, gradient_accumulation_steps: 1}
       evaluation: {every_steps: 200, loss_examples: 2000, generation_examples: 500, generation_batch_size: 64}

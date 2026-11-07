@@ -39,6 +39,7 @@ def test_real_cpu_profile_keeps_away_from_pretraining():
 
 def test_real_gpu_profile_refuses_a_shared_gpu():
     assert load_sft_config(REAL_CONFIG, "gpu").resources.require_exclusive_gpu is True
+    assert load_sft_config(REAL_CONFIG, "gpu").resources.gpu_memory_gb is None
 
 
 def test_real_profiles_share_one_effective_batch_size():
@@ -179,3 +180,18 @@ def test_resume_signature_ignores_how_the_step_is_split_and_where_files_live(tmp
 )
 def test_resume_signature_changes_with_what_shapes_the_run(tmp_path, section, change):
     assert make_config(tmp_path).resume_signature() != make_config(tmp_path, **{section: change}).resume_signature()
+
+
+@pytest.mark.parametrize("device, value", [("gpu", 0), ("gpu", -4), ("gpu", "18"), ("gpu", True), ("cpu", 18)])
+def test_gpu_memory_cap_must_be_a_positive_number_on_the_gpu_profile(tmp_path, device, value):
+    document = config_document(tmp_path)
+    document["devices"].setdefault("gpu", {"resources": dict(document["devices"]["cpu"]["resources"], precision="bf16")})
+    document["devices"][device]["resources"]["gpu_memory_gb"] = value
+    with pytest.raises(SFTConfigError, match="gpu_memory_gb"):
+        build_sft_config(document, device)
+
+
+def test_gpu_memory_cap_is_accepted_on_the_gpu_profile(tmp_path):
+    document = config_document(tmp_path)
+    document["devices"]["gpu"] = {"resources": dict(document["devices"]["cpu"]["resources"], precision="bf16", cores=None, gpu_memory_gb=18)}
+    assert build_sft_config(document, "gpu").resources.gpu_memory_gb == 18

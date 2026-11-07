@@ -56,6 +56,33 @@ def test_gpu_plan_refuses_a_gpu_another_process_is_using(monkeypatch):
         resources.apply_plan(plan, require_exclusive_gpu=True)
 
 
+def test_gpu_memory_cap_is_applied_to_the_process(monkeypatch):
+    caps = []
+    monkeypatch.setattr(resources.torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(resources.torch.cuda, "current_device", lambda: 0)
+    monkeypatch.setattr(resources.torch.cuda, "get_device_properties", lambda index: type("P", (), {"total_memory": 40 * 2**30})())
+    monkeypatch.setattr(resources.torch.cuda, "set_per_process_memory_fraction", lambda fraction, index: caps.append((fraction, index)))
+    config = ResourceConfig(cores=None, threads=None, nice=0, idle_io=False, precision="bf16", gpu_memory_gb=18.0)
+    plan = resources.plan_devices("gpu", config)
+    assert "gpu_memory_cap=18GB" in plan.describe()
+    assert "GPU memory capped at 18 GB" in resources.apply_plan(plan)
+    assert caps == [(18 / 40, 0)]
+
+
+def test_gpu_memory_cap_larger_than_the_gpu_is_refused(monkeypatch):
+    monkeypatch.setattr(resources.torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(resources.torch.cuda, "current_device", lambda: 0)
+    monkeypatch.setattr(resources.torch.cuda, "get_device_properties", lambda index: type("P", (), {"total_memory": 40 * 2**30})())
+    plan = resources.plan_devices("gpu", ResourceConfig(cores=None, threads=None, nice=0, idle_io=False, precision="bf16", gpu_memory_gb=64.0))
+    with pytest.raises(ResourceError, match="exceeds the GPU"):
+        resources.apply_plan(plan)
+
+
+def test_a_plan_without_a_cap_describes_no_cap():
+    plan = resources.plan_devices("gpu", ResourceConfig(cores=None, threads=None, nice=0, idle_io=False, precision="bf16"))
+    assert plan.gpu_memory_gb is None and "cap" not in plan.describe()
+
+
 _THREAD_PROBE = """
 import os, sys, threading
 os.environ["CUDA_VISIBLE_DEVICES"] = ""

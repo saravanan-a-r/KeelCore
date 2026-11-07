@@ -17,7 +17,10 @@ GPU plan (`--device gpu`), for after pretraining:
   - refuses to start while any other process holds the GPU, unless
     explicitly allowed -- an accidental `--device gpu` during pretraining
     would otherwise allocate next to a job using 35 of 40 GB;
-  - all cores, bf16 autocast.
+  - all cores, bf16 autocast;
+  - `gpu_memory_gb` caps this process's GPU memory when several runs share
+    the GPU: a run that outgrows its cap fails alone (and can be resumed)
+    instead of starving its neighbours, which the shared vGPU does not survive.
 """
 
 from __future__ import annotations
@@ -42,6 +45,7 @@ class DevicePlan:
     threads: int
     nice: int
     idle_io: bool
+    gpu_memory_gb: float | None = None
 
     def autocast(self):
         """A zero-argument context factory for the forward passes."""
@@ -51,9 +55,10 @@ class DevicePlan:
 
     def describe(self) -> str:
         cores = "all" if self.cores is None else _format_cores(self.cores)
+        cap = "" if self.gpu_memory_gb is None else f" gpu_memory_cap={self.gpu_memory_gb:g}GB"
         return (
             f"device={self.device} precision={self.precision} cores={cores} "
-            f"threads={self.threads} nice={self.nice} idle_io={self.idle_io}"
+            f"threads={self.threads} nice={self.nice} idle_io={self.idle_io}{cap}"
         )
 
 
@@ -107,6 +112,7 @@ def plan_devices(device: str, resources: ResourceConfig) -> DevicePlan:
         threads=threads,
         nice=resources.nice,
         idle_io=resources.idle_io,
+        gpu_memory_gb=resources.gpu_memory_gb,
     )
 
 
@@ -134,6 +140,13 @@ def apply_plan(plan: DevicePlan, *, require_exclusive_gpu: bool = False) -> list
                     f"the GPU is in use by {listed}. SFT on the GPU is meant for after "
                     f"pretraining; pass --allow-shared-gpu only if you are sure"
                 )
+        if plan.gpu_memory_gb is not None:
+            index = plan.device.index if plan.device.index is not None else torch.cuda.current_device()
+            total_gb = torch.cuda.get_device_properties(index).total_memory / 2**30
+            if plan.gpu_memory_gb > total_gb:
+                raise ResourceError(f"gpu_memory_gb {plan.gpu_memory_gb:g} exceeds the GPU's {total_gb:.1f} GB")
+            torch.cuda.set_per_process_memory_fraction(plan.gpu_memory_gb / total_gb, index)
+            notes.append(f"GPU memory capped at {plan.gpu_memory_gb:g} GB")
 
     # Affinity, nice and I/O priority are per *thread* on Linux, and importing
     # torch has already started a thread pool (one thread per core, 42 here);

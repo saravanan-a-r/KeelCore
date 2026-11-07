@@ -227,6 +227,7 @@ class ResourceConfig:
     idle_io: bool
     precision: str
     require_exclusive_gpu: bool = False
+    gpu_memory_gb: float | None = None       # cap on this process's GPU memory (several runs sharing the GPU)
 
 
 @dataclass(frozen=True)
@@ -545,6 +546,9 @@ def _validate(config: SFTConfig) -> None:
     check(r.precision in PRECISIONS, f"resources.precision must be one of {PRECISIONS}")
     check(r.threads is None or (_is_int(r.threads) and r.threads >= 1), "resources.threads must be null or >= 1")
     check(_is_int(r.nice) and 0 <= r.nice <= 19, "resources.nice must be in [0, 19]")
+    check(r.gpu_memory_gb is None or (config.device == "gpu" and isinstance(r.gpu_memory_gb, (int, float))
+                                      and not isinstance(r.gpu_memory_gb, bool) and r.gpu_memory_gb > 0),
+          "resources.gpu_memory_gb must be null or a positive number of GB (gpu profile only)")
     if config.device == "cpu":
         check(r.precision == "fp32", "the cpu profile must use fp32 (bf16 autocast is ~4x slower on CPU)")
         check(r.cores is not None, "the cpu profile must pin explicit cores so it cannot land on pretraining's")
