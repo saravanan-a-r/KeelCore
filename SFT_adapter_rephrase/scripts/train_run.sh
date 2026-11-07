@@ -18,11 +18,26 @@
 #   REQUIRED_TRAIN_FILES  file names that must exist in <input>/train
 #
 # Options of every train.sh:
-#   --style S          professional | elaborate | concise | friendly | grammar (default professional)
+#   --style S          professional | elaborate | concise | friendly | grammar (default professional);
+#                      `all` trains the five one after another, skipping finished ones (re-run to resume)
+#   --lanes N          with --style all: 1 (default) one style at a time, 2 two styles at a time on the one
+#                      GPU (see "Lanes" below)
 #   --input DIR        holds train/ and evals/; every *.jsonl under train/ is trained on and every
 #                      *.jsonl under evals/ scores the checkpoints (both read recursively)
 #   --base-model DIR   the pretrained checkpoint (default <repo>/runs/pretrain/checkpoint-90000)
 #   --init-adapter DIR only when the run continues an adapter (INIT_RUNS_ROOT set)
+#
+# Lanes (--style all --lanes 2, experimental): one run keeps the GPU ~45% busy (a step is ~15,000 small kernel
+# launches, so it waits on the CPU); two side by side measured 1.57x the throughput, with the same steps, the same
+# effective batch and the same data order. The styles still to train are split into two lanes that finish together
+# (all five: professional + friendly | elaborate + concise + grammar; without grammar: professional + concise |
+# friendly + elaborate). Each lane gets half of the CPU cores, a GPU memory cap of 18 GB (a lane that outgrows it
+# fails alone instead of starving the other, which the shared vGPU does not survive) and smaller evaluation
+# batches (scripts/make_run_config.py has the numbers). The GPU must be empty. Each lane's console output goes
+# to RUNS_ROOT/lane_<N>.log; the runs' own logs are unchanged.
+# Known limit: in testing the GPU hung (no progress, cause not found) in most attempts with two processes
+# starting or resuming together. Ctrl-C saves a checkpoint in both lanes, but --lanes refuses a style that has a
+# checkpoint: resume it alone with `--style <style>`, or with `--style all` without --lanes.
 #
 # Behaviour shared by every run:
 #   - Everything is checked before the GPU is touched: data folders, cleanup classes, the base
@@ -30,7 +45,9 @@
 #   - Re-running the same command resumes an interrupted run from its last checkpoint. A
 #     finished run is never overwritten: move RUNS_ROOT/<style> away to train it again. A run
 #     stopped before its first checkpoint is moved aside (<style>.aborted-<time>) and restarted.
-#   - TensorBoard (port 6007) and GPU telemetry run beside the training and stop with it.
+#   - TensorBoard (port 6007) and GPU telemetry run beside the training and stop with it. One
+#     TensorBoard serves every rank and phase, one section each: runs show up as
+#     rank_<N>/phase_<K>/<style> (see tensorboard_logdir_spec).
 #   - Rows not trainable are counted, by reason, in the first lines of sft.log: a literal control
 #     token in the text, a side over 2048 tokens, a train input that is also an eval input,
 #     duplicate inputs, and identity pairs.
@@ -42,7 +59,12 @@ REPO_ROOT="$(cd "${SFT_DIR}/.." && pwd)"
 PY="${PY:-/root/venv/bin/python}"
 TENSORBOARD="${TENSORBOARD:-/root/tensorboard-venv/bin/tensorboard}"
 TB_PORT="${TB_PORT:-6007}"
-STYLES_RE='^(professional|elaborate|concise|friendly|grammar)$'
+ALL_STYLES="professional elaborate concise friendly grammar"
+LANE_MEMORY_GB=18                                        # 2 x 18 GB + the CUDA contexts of the 40 GB GPU
+# Rough length of a style's phase-1 run (the rank-16 steps, in thousands, longest first): lanes are balanced by it.
+STYLE_ORDER=(professional friendly elaborate concise grammar)
+declare -A STYLE_WEIGHT=([professional]=148 [friendly]=146 [elaborate]=129 [concise]=127 [grammar]=93)
+STYLES_RE="^(${ALL_STYLES// /|})\$"
 CLEANUP_CLASSES="KEEP KEEP_CJK_TAIL KEEP_LONGER_SEGMENT REVIEW_TRUNCATED STRIP_NOTE TRUNCATE_AT_LEAK TRUNCATE_AT_TAG"
 
 die() { echo "error: $*" >&2; exit 2; }
@@ -75,6 +97,7 @@ parse_args() {
       --style) STYLE="${2:?--style needs a value}"; shift 2 ;;
       --input) INPUT="${2:?--input needs a value}"; shift 2 ;;
       --base-model) BASE_MODEL="${2:?--base-model needs a value}"; shift 2 ;;
+      --lanes) die "--lanes needs --style all" ;;
       --init-adapter)
         [[ -n "${INIT_RUNS_ROOT:-}" ]] || die "--init-adapter: this run trains a new adapter (see --help)"
         INIT_ADAPTER="${2:?--init-adapter needs a value}"; shift 2 ;;
@@ -153,32 +176,201 @@ preflight() {
 
   CFG="${CONFIG_DIR}/${STYLE}.yml"
   mkdir -p "${RUNS_ROOT}"
+  local lane_args=()
+  [[ -z "${SFT_LANE:-}" ]] || lane_args=(--lane-cores "$(lane_cores "${SFT_LANE}")" --lane-memory-gb "${LANE_MEMORY_GB}")
   "${PY}" "${SFT_DIR}/scripts/make_run_config.py" --recipe "${RECIPE}" --style "${STYLE}" \
-    --runs-root "${RUNS_ROOT}" --out "${CFG}" || die "the run configuration is not valid"
+    --runs-root "${RUNS_ROOT}" --out "${CFG}" "${lane_args[@]}" || die "the run configuration is not valid"
+}
+
+# The --logdir_spec of the one TensorBoard: a section per rank and phase. The rank-16 runs predate
+# the rank_<N> output folders and keep theirs; later runs live in runs/rank_<N>/phase_<K>.
+tensorboard_logdir_spec() {
+  local -A sections=([rank_16/phase_1]="${SFT_DIR}/runs/adapters" [rank_16/phase_2]="${SFT_DIR}/runs/adapters_phase_2")
+  local dir
+  for dir in "${SFT_DIR}"/runs/rank_*/phase_*; do
+    [[ -d "${dir}" ]] && sections["${dir#"${SFT_DIR}/runs/"}"]="${dir}"
+  done
+  local name spec=()
+  for name in $(printf '%s\n' "${!sections[@]}" | sort -V); do
+    [[ -d "${sections[${name}]}" ]] && spec+=("${name}:${sections[${name}]}")
+  done
+  local IFS=,
+  echo "${spec[*]}"
+}
+
+# The CPU cores of lane 1 or 2: the first or the second half of the machine's cores.
+lane_cores() {
+  local half=$(( $(nproc) / 2 ))
+  (( half >= 1 )) || die "--lanes 2 needs at least 2 CPU cores"
+  echo "$(( ($1 - 1) * half ))-$(( $1 * half - 1 ))"
+}
+
+# Lanes share the GPU through memory caps, which only work if nothing else is on it.
+require_empty_gpu() {
+  local busy
+  busy="$("${NVIDIA_SMI:-nvidia-smi}" --query-compute-apps=pid,used_memory --format=csv,noheader 2> /dev/null || true)"
+  [[ -z "${busy}" ]] || die "--lanes 2 needs an empty GPU, in use by (pid, memory): $(echo ${busy})"
+}
+
+start_tensorboard() {
+  if ss -ltn | grep -q ":${TB_PORT} "; then
+    echo "TensorBoard: already serving on port ${TB_PORT}"
+    return
+  fi
+  nice -n 19 "${TENSORBOARD}" --logdir_spec "$(tensorboard_logdir_spec)" --host 127.0.0.1 --port "${TB_PORT}" \
+    --samples_per_plugin scalars=100000,text=1000,histograms=200 --reload_interval 30 \
+    --window_title "${TB_TITLE}" > /dev/null 2>&1 &
+  PIDS+=($!)
+  echo "TensorBoard: http://127.0.0.1:${TB_PORT}"
 }
 
 start_side_processes() {
   PIDS=()
   trap 'kill "${PIDS[@]}" 2>/dev/null || true' EXIT
-
-  if ss -ltn | grep -q ":${TB_PORT} "; then
-    echo "TensorBoard: already serving on port ${TB_PORT}"
-  else
-    nice -n 19 "${TENSORBOARD}" --logdir "${RUNS_ROOT}" --host 127.0.0.1 --port "${TB_PORT}" \
-      --samples_per_plugin scalars=100000,text=1000,histograms=200 --reload_interval 30 \
-      --window_title "${TB_TITLE}" > /dev/null 2>&1 &
-    PIDS+=($!)
-    echo "TensorBoard: http://127.0.0.1:${TB_PORT}"
-  fi
-
+  start_tensorboard
   nice -n 19 "${PY}" "${SFT_DIR}/scripts/gpu_telemetry.py" "${RUN_DIR}" "$$" \
     --every-steps "${EVERY_STEPS}" --step-zero "${STEP_ZERO}" &
   PIDS+=($!)
 }
 
+# One lane (or the whole run): the styles of STYLE_LIST in order, each in its own run of this launcher,
+# until one fails. A finished style is skipped, an interrupted one resumes, so the same command continues
+# after any stop. Exits with the failing run's code.
+run_styles() {
+  local styles="$1" style status code i
+  shift
+  local args=("$@")
+  for style in ${styles}; do
+    status="$(run_status "${RUNS_ROOT}/${style}")"
+    if [[ "${status}" == "completed" || "${status}" == "early_stopped" ]]; then
+      echo "== ${style} ${RUN_LABEL}: already finished (${status}), skipped"
+      continue
+    fi
+    for i in "${!args[@]}"; do
+      [[ "${args[i]}" == "--style" ]] && args[i+1]="${style}"
+    done
+    code=0
+    bash "${CALLER}" "${args[@]}" || code=$?
+    (( code == 0 )) || exit "${code}"
+  done
+}
+
+# The styles still to train (not finished), longest first, split into two lanes whose summed weights are as equal
+# as possible; the longest style is in lane 1. Sets LANE_1 and LANE_2 (space-separated, longest first).
+split_lanes() {
+  local pending=() style
+  for style in "${STYLE_ORDER[@]}"; do
+    case " $* " in *" ${style} "*) pending+=("${style}") ;; esac
+  done
+  local n=${#pending[@]} mask i best=-1 best_mask=0 load_1 load_2 worst
+  for (( mask = 0; mask < (1 << n); mask += 2 )); do          # bit 0 stays 0: the longest style is in lane 1
+    load_1=0; load_2=0
+    for (( i = 0; i < n; i++ )); do
+      if (( (mask >> i) & 1 )); then load_2=$(( load_2 + STYLE_WEIGHT[${pending[i]}] ))
+      else load_1=$(( load_1 + STYLE_WEIGHT[${pending[i]}] )); fi
+    done
+    worst=$(( load_1 > load_2 ? load_1 : load_2 ))
+    if (( best < 0 || worst < best )); then best=${worst}; best_mask=${mask}; fi
+  done
+  LANE_1=""; LANE_2=""
+  for (( i = 0; i < n; i++ )); do
+    if (( (best_mask >> i) & 1 )); then LANE_2+="${pending[i]} "; else LANE_1+="${pending[i]} "; fi
+  done
+  LANE_1="${LANE_1% }"; LANE_2="${LANE_2% }"
+}
+
+stop_lanes() {
+  local pid
+  for pid in "$@"; do kill -INT -- "-${pid}" 2> /dev/null || true; done
+}
+
+# Wait for a lane; a trapped signal interrupts `wait` while the lane is still saving its checkpoint.
+wait_for() {
+  local code=0
+  while true; do
+    wait "$1" || code=$?
+    kill -0 "$1" 2> /dev/null || return "${code}"
+    code=0
+  done
+}
+
+# --style all [--lanes N]: see "Lanes" in the header.
+train_all_styles() {
+  local args=() lanes=1
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --lanes) lanes="${2:?--lanes needs a value}"; shift 2 ;;
+      --input|--init-adapter) die "$1: not with --style all (every style has its own data folder)" ;;
+      *) args+=("$1"); shift ;;
+    esac
+  done
+  [[ "${lanes}" =~ ^[12]$ ]] || die "--lanes must be 1 or 2 (got '${lanes}')"
+  PIDS=()
+  trap 'kill "${PIDS[@]}" 2>/dev/null || true' EXIT
+  [[ "${DRY_RUN:-0}" == 1 ]] || { mkdir -p "${RUNS_ROOT}"; start_tensorboard; }
+
+  if (( lanes == 1 )); then
+    run_styles "${ALL_STYLES}" "${args[@]}"
+    echo "== all styles done (${RUN_LABEL})"
+    return
+  fi
+
+  local pending=() style status
+  for style in "${STYLE_ORDER[@]}"; do
+    status="$(run_status "${RUNS_ROOT}/${style}")"
+    if [[ "${status}" == "completed" || "${status}" == "early_stopped" ]]; then
+      echo "== ${style} ${RUN_LABEL}: already finished (${status}), skipped"
+    else
+      pending+=("${style}")
+    fi
+  done
+  if (( ${#pending[@]} < 2 )); then            # nothing to share the GPU with: one run, at full speed
+    run_styles "${pending[*]}" "${args[@]}"
+    echo "== all styles done (${RUN_LABEL})"
+    return
+  fi
+
+  local interrupted=()
+  for style in "${pending[@]}"; do
+    ! compgen -G "${RUNS_ROOT}/${style}/checkpoints/step-*/trainer_state.pt" > /dev/null || interrupted+=("${style}")
+  done
+  (( ${#interrupted[@]} == 0 )) || die "interrupted run(s) to resume first, one at a time, with --style <style> or --style all (no --lanes): ${interrupted[*]}"
+  [[ "${DRY_RUN:-0}" == 1 ]] || require_empty_gpu
+  mkdir -p "${RUNS_ROOT}"
+  split_lanes "${pending[@]}"
+  local lane lane_pids=() lane_styles=("${LANE_1}" "${LANE_2}") failed=0 code
+  # Job control gives each lane its own process group with default signal handling (a background job of a
+  # script ignores Ctrl-C), so Ctrl-C or a kill of this command is passed on to the lanes as SIGINT: sft.py
+  # then saves a resumable checkpoint, and the same command continues from it.
+  set -m
+  trap 'stop_lanes "${lane_pids[@]}"' INT TERM
+  for lane in 1 2; do
+    ( SFT_LANE="${lane}" run_styles "${lane_styles[lane-1]}" "${args[@]}" ) > "${RUNS_ROOT}/lane_${lane}.log" 2>&1 &
+    lane_pids+=($!)
+    PIDS+=($!)
+    echo "lane ${lane}: ${lane_styles[lane-1]} (cores $(lane_cores "${lane}"), GPU memory cap ${LANE_MEMORY_GB} GB) -> ${RUNS_ROOT}/lane_${lane}.log"
+  done
+  for lane in 1 2; do
+    code=0
+    wait_for "${lane_pids[lane-1]}" || code=$?
+    if (( code == 0 )); then
+      echo "== lane ${lane} done (${lane_styles[lane-1]})"
+    else
+      echo "== lane ${lane} stopped with ${code}: see ${RUNS_ROOT}/lane_${lane}.log; run the same command again to continue" >&2
+      failed=${code}
+    fi
+  done
+  (( failed == 0 )) || exit "${failed}"
+  echo "== all styles done (${RUN_LABEL}, 2 lanes)"
+}
+
 train_main() {
   require_settings
   cd "${REPO_ROOT}"                               # relative paths are taken from the repository root
+  if [[ " $* " == *" --style all "* ]]; then
+    train_all_styles "$@"
+    return
+  fi
   parse_args "$@"
   preflight
 
@@ -207,6 +399,11 @@ train_main() {
   if (( code != 0 )); then
     echo "== ${STYLE} ${RUN_LABEL}: sft.py exited with ${code} (re-run the same command to resume)" >&2
     exit "${code}"
+  fi
+  # Ctrl-C makes sft.py save a resumable checkpoint and exit normally; that is a stop, not a finished run.
+  if [[ "$(run_status "${RUN_DIR}")" == "interrupted" ]]; then
+    echo "== ${STYLE} ${RUN_LABEL}: interrupted after a checkpoint was saved (re-run the same command to resume)" >&2
+    exit 130
   fi
   echo "== $(date '+%F %T') ${STYLE} ${RUN_LABEL}: done -> ${RUN_DIR}/final"
 }

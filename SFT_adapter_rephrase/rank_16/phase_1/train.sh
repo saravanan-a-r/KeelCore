@@ -3,6 +3,8 @@
 # on the style's phase-1 teacher data, on the GPU. Settings: recipe.yml next to this file.
 #
 # Usage (inside tmux -- a style takes many hours):
+#   bash SFT_adapter_rephrase/rank_16/phase_1/train.sh --style all --lanes 2   # the five, two at a time on the one GPU
+#   bash SFT_adapter_rephrase/rank_16/phase_1/train.sh --style all             # the five, one after another
 #   bash SFT_adapter_rephrase/rank_16/phase_1/train.sh
 #   bash SFT_adapter_rephrase/rank_16/phase_1/train.sh --style concise
 #   bash SFT_adapter_rephrase/rank_16/phase_1/train.sh --style friendly --input /path/to/friendly \
@@ -10,7 +12,9 @@
 #   DRY_RUN=1 bash SFT_adapter_rephrase/rank_16/phase_1/train.sh --style grammar   # checks only
 #
 # Options:
-#   --style S          professional | elaborate | concise | friendly | grammar (default professional)
+#   --style S          professional | elaborate | concise | friendly | grammar (default professional);
+#                      `all` trains the five in that order, skips finished ones, resumes an interrupted one
+#   --lanes N          with --style all: 2 = two styles at a time on the one GPU (default 1); see scripts/train_run.sh
 #   --input DIR        holds train/ and evals/ (default
 #                      /home/admin1/projects/REPHRASE_MODEL/rephrase_dataset/final/<style>;
 #                      friendly: final/friendly_sft). Every *.jsonl under train/ is trained on,

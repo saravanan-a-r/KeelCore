@@ -6,12 +6,14 @@
 # Usage (inside tmux; one style is about 25-40 minutes on the A100):
 #   bash SFT_adapter_rephrase/rank_16/phase_2/train.sh                       # professional
 #   bash SFT_adapter_rephrase/rank_16/phase_2/train.sh --style grammar
-#   for s in professional concise elaborate friendly grammar; do
-#     bash SFT_adapter_rephrase/rank_16/phase_2/train.sh --style $s || break; done
+#   bash SFT_adapter_rephrase/rank_16/phase_2/train.sh --style all             # the five, one after another
+#   bash SFT_adapter_rephrase/rank_16/phase_2/train.sh --style all --lanes 2   # the five, two at a time
 #   DRY_RUN=1 bash SFT_adapter_rephrase/rank_16/phase_2/train.sh --style grammar   # checks only
 #
 # Options:
-#   --style S          professional | elaborate | concise | friendly | grammar (default professional)
+#   --style S          professional | elaborate | concise | friendly | grammar (default professional);
+#                      `all` trains the five in that order, skips finished ones, resumes an interrupted one
+#   --lanes N          with --style all: 2 = two styles at a time on the one GPU (default 1); see scripts/train_run.sh
 #   --input DIR        the style's phase-2 folder, laid out like phase 1 (default
 #                      /home/admin1/projects/REPHRASE_MODEL/rephrase_dataset/final/phase_2/<style>).
 #                      Every *.jsonl under DIR/train is trained on (phase_2_part_01, phase_2_part_02,
