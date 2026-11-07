@@ -1,0 +1,12 @@
+# Rank 16, phase 3 (professional only): a short repair pass on the finished rank-16 phase-2 adapter.
+# Data: REPHRASE_MODEL/rephrase_dataset/final/phase_3/professional (data_prep/build_phase_3_dataset.py, see its README).
+# Read by scripts/make_run_config.py; everything not set here comes from adapter_config.yml
+# and the shared data and GPU rules in that script.
+rank: 16                 # must equal the phase-2 adapter's rank: continuing keeps the shape
+every_steps: 50          # ~325 steps in all: an evaluation + checkpoint every 50 picks the best one closely
+training:
+  epochs: 1              # 4,400 new rows next to 6,000 replay rows, seen once
+  learning_rate: 3.0e-5  # below phase 2's 5e-5: a narrow fix that must not move anything else
+  lr_schedule: cosine
+  warmup_steps: 20
+  min_lr_ratio: 0.1

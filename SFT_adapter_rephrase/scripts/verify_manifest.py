@@ -5,7 +5,7 @@ the same files in train/ and evals/, byte for byte (SHA-256).
     python scripts/verify_manifest.py <data_dir>
 
 Exit 0 and one summary line when it matches, 1 with the first difference otherwise.
-The manifest is written by data_prep/build_phase_2_dataset.py.
+The manifest is written by data_prep/build_phase_2_dataset.py or build_phase_3_dataset.py.
 """
 
 import hashlib
@@ -36,6 +36,8 @@ def verify(data_dir: Path) -> str:
         if file_sha256(data_dir / name) != info["sha256"]:
             raise ValueError(f"{name}: sha256 differs from the manifest")
     counts = manifest["counts"]
+    if "phase_2_train" not in counts:                # a later phase names its own parts
+        return "data ok: " + ", ".join(f"{name} {n}" for name, n in counts.items())
     return (f"data ok: phase-2 train {counts['phase_2_train']} + phase-1 replay {counts['phase_1_replay']}; "
             f"evals: phase-2 held-out {counts['phase_2_heldout']} + phase-1 {counts['phase_1_eval']}")
 
