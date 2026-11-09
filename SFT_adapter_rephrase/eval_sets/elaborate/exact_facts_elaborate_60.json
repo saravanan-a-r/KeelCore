@@ -1,0 +1,542 @@
+[
+ {
+  "id": 0,
+  "kind": "key_value",
+  "position": "start",
+  "input": "QUEUE_DEPTH=40 is what we agreed on.",
+  "keep": [
+   "QUEUE_DEPTH=40"
+  ]
+ },
+ {
+  "id": 1,
+  "kind": "key_value",
+  "position": "middle",
+  "input": "pls double check QUEUE_DEPTH=40 before the call",
+  "keep": [
+   "QUEUE_DEPTH=40"
+  ]
+ },
+ {
+  "id": 2,
+  "kind": "key_value",
+  "position": "end",
+  "input": "the value in the sheet should be QUEUE_DEPTH=40",
+  "keep": [
+   "QUEUE_DEPTH=40"
+  ]
+ },
+ {
+  "id": 3,
+  "kind": "key_value",
+  "position": "start",
+  "input": "keepalive=15s is what we agreed on.",
+  "keep": [
+   "keepalive=15s"
+  ]
+ },
+ {
+  "id": 4,
+  "kind": "key_value",
+  "position": "middle",
+  "input": "pls double check keepalive=15s before the call",
+  "keep": [
+   "keepalive=15s"
+  ]
+ },
+ {
+  "id": 5,
+  "kind": "key_value",
+  "position": "end",
+  "input": "the value in the sheet should be keepalive=15s",
+  "keep": [
+   "keepalive=15s"
+  ]
+ },
+ {
+  "id": 6,
+  "kind": "key_value",
+  "position": "start",
+  "input": "MIN_REPLICAS=3 is what we agreed on.",
+  "keep": [
+   "MIN_REPLICAS=3"
+  ]
+ },
+ {
+  "id": 7,
+  "kind": "key_value",
+  "position": "middle",
+  "input": "pls double check MIN_REPLICAS=3 before the call",
+  "keep": [
+   "MIN_REPLICAS=3"
+  ]
+ },
+ {
+  "id": 8,
+  "kind": "key_value",
+  "position": "end",
+  "input": "the value in the sheet should be MIN_REPLICAS=3",
+  "keep": [
+   "MIN_REPLICAS=3"
+  ]
+ },
+ {
+  "id": 9,
+  "kind": "version",
+  "position": "start",
+  "input": "v6.2.0-beta1 is what we agreed on.",
+  "keep": [
+   "v6.2.0-beta1"
+  ]
+ },
+ {
+  "id": 10,
+  "kind": "version",
+  "position": "middle",
+  "input": "pls double check v6.2.0-beta1 before the call",
+  "keep": [
+   "v6.2.0-beta1"
+  ]
+ },
+ {
+  "id": 11,
+  "kind": "version",
+  "position": "end",
+  "input": "the value in the sheet should be v6.2.0-beta1",
+  "keep": [
+   "v6.2.0-beta1"
+  ]
+ },
+ {
+  "id": 12,
+  "kind": "version",
+  "position": "start",
+  "input": "v3.14.7 is what we agreed on.",
+  "keep": [
+   "v3.14.7"
+  ]
+ },
+ {
+  "id": 13,
+  "kind": "version",
+  "position": "middle",
+  "input": "pls double check v3.14.7 before the call",
+  "keep": [
+   "v3.14.7"
+  ]
+ },
+ {
+  "id": 14,
+  "kind": "version",
+  "position": "end",
+  "input": "the value in the sheet should be v3.14.7",
+  "keep": [
+   "v3.14.7"
+  ]
+ },
+ {
+  "id": 15,
+  "kind": "version",
+  "position": "start",
+  "input": "v0.9.12 is what we agreed on.",
+  "keep": [
+   "v0.9.12"
+  ]
+ },
+ {
+  "id": 16,
+  "kind": "version",
+  "position": "middle",
+  "input": "pls double check v0.9.12 before the call",
+  "keep": [
+   "v0.9.12"
+  ]
+ },
+ {
+  "id": 17,
+  "kind": "version",
+  "position": "end",
+  "input": "the value in the sheet should be v0.9.12",
+  "keep": [
+   "v0.9.12"
+  ]
+ },
+ {
+  "id": 18,
+  "kind": "number",
+  "position": "start",
+  "input": "74000 is what we agreed on.",
+  "keep": [
+   "74000"
+  ]
+ },
+ {
+  "id": 19,
+  "kind": "number",
+  "position": "middle",
+  "input": "pls double check 74000 before the call",
+  "keep": [
+   "74000"
+  ]
+ },
+ {
+  "id": 20,
+  "kind": "number",
+  "position": "end",
+  "input": "the value in the sheet should be 74000",
+  "keep": [
+   "74000"
+  ]
+ },
+ {
+  "id": 21,
+  "kind": "number",
+  "position": "start",
+  "input": "315000 is what we agreed on.",
+  "keep": [
+   "315000"
+  ]
+ },
+ {
+  "id": 22,
+  "kind": "number",
+  "position": "middle",
+  "input": "pls double check 315000 before the call",
+  "keep": [
+   "315000"
+  ]
+ },
+ {
+  "id": 23,
+  "kind": "number",
+  "position": "end",
+  "input": "the value in the sheet should be 315000",
+  "keep": [
+   "315000"
+  ]
+ },
+ {
+  "id": 24,
+  "kind": "number",
+  "position": "start",
+  "input": "00981 is what we agreed on.",
+  "keep": [
+   "00981"
+  ]
+ },
+ {
+  "id": 25,
+  "kind": "number",
+  "position": "middle",
+  "input": "pls double check 00981 before the call",
+  "keep": [
+   "00981"
+  ]
+ },
+ {
+  "id": 26,
+  "kind": "number",
+  "position": "end",
+  "input": "the value in the sheet should be 00981",
+  "keep": [
+   "00981"
+  ]
+ },
+ {
+  "id": 27,
+  "kind": "number",
+  "position": "start",
+  "input": "2750000 is what we agreed on.",
+  "keep": [
+   "2750000"
+  ]
+ },
+ {
+  "id": 28,
+  "kind": "number",
+  "position": "middle",
+  "input": "pls double check 2750000 before the call",
+  "keep": [
+   "2750000"
+  ]
+ },
+ {
+  "id": 29,
+  "kind": "number",
+  "position": "end",
+  "input": "the value in the sheet should be 2750000",
+  "keep": [
+   "2750000"
+  ]
+ },
+ {
+  "id": 30,
+  "kind": "number",
+  "position": "start",
+  "input": "6443 is what we agreed on.",
+  "keep": [
+   "6443"
+  ]
+ },
+ {
+  "id": 31,
+  "kind": "number",
+  "position": "middle",
+  "input": "pls double check 6443 before the call",
+  "keep": [
+   "6443"
+  ]
+ },
+ {
+  "id": 32,
+  "kind": "number",
+  "position": "end",
+  "input": "the value in the sheet should be 6443",
+  "keep": [
+   "6443"
+  ]
+ },
+ {
+  "id": 33,
+  "kind": "email",
+  "position": "start",
+  "input": "priya.raman@stonebridge.co is what we agreed on.",
+  "keep": [
+   "priya.raman@stonebridge.co"
+  ]
+ },
+ {
+  "id": 34,
+  "kind": "email",
+  "position": "middle",
+  "input": "pls double check priya.raman@stonebridge.co before the call",
+  "keep": [
+   "priya.raman@stonebridge.co"
+  ]
+ },
+ {
+  "id": 35,
+  "kind": "email",
+  "position": "end",
+  "input": "the value in the sheet should be priya.raman@stonebridge.co",
+  "keep": [
+   "priya.raman@stonebridge.co"
+  ]
+ },
+ {
+  "id": 36,
+  "kind": "email",
+  "position": "start",
+  "input": "noc-alerts@ferrylane.io is what we agreed on.",
+  "keep": [
+   "noc-alerts@ferrylane.io"
+  ]
+ },
+ {
+  "id": 37,
+  "kind": "email",
+  "position": "middle",
+  "input": "pls double check noc-alerts@ferrylane.io before the call",
+  "keep": [
+   "noc-alerts@ferrylane.io"
+  ]
+ },
+ {
+  "id": 38,
+  "kind": "email",
+  "position": "end",
+  "input": "the value in the sheet should be noc-alerts@ferrylane.io",
+  "keep": [
+   "noc-alerts@ferrylane.io"
+  ]
+ },
+ {
+  "id": 39,
+  "kind": "command",
+  "position": "start",
+  "input": "git cherry-pick -x is what we agreed on.",
+  "keep": [
+   "git cherry-pick -x"
+  ]
+ },
+ {
+  "id": 40,
+  "kind": "command",
+  "position": "middle",
+  "input": "pls double check git cherry-pick -x before the call",
+  "keep": [
+   "git cherry-pick -x"
+  ]
+ },
+ {
+  "id": 41,
+  "kind": "command",
+  "position": "end",
+  "input": "the value in the sheet should be git cherry-pick -x",
+  "keep": [
+   "git cherry-pick -x"
+  ]
+ },
+ {
+  "id": 42,
+  "kind": "command",
+  "position": "start",
+  "input": "pnpm run build is what we agreed on.",
+  "keep": [
+   "pnpm run build"
+  ]
+ },
+ {
+  "id": 43,
+  "kind": "command",
+  "position": "middle",
+  "input": "pls double check pnpm run build before the call",
+  "keep": [
+   "pnpm run build"
+  ]
+ },
+ {
+  "id": 44,
+  "kind": "command",
+  "position": "end",
+  "input": "the value in the sheet should be pnpm run build",
+  "keep": [
+   "pnpm run build"
+  ]
+ },
+ {
+  "id": 45,
+  "kind": "command",
+  "position": "start",
+  "input": "kubectl rollout status deploy/web is what we agreed on.",
+  "keep": [
+   "kubectl rollout status deploy/web"
+  ]
+ },
+ {
+  "id": 46,
+  "kind": "command",
+  "position": "middle",
+  "input": "pls double check kubectl rollout status deploy/web before the call",
+  "keep": [
+   "kubectl rollout status deploy/web"
+  ]
+ },
+ {
+  "id": 47,
+  "kind": "command",
+  "position": "end",
+  "input": "the value in the sheet should be kubectl rollout status deploy/web",
+  "keep": [
+   "kubectl rollout status deploy/web"
+  ]
+ },
+ {
+  "id": 48,
+  "kind": "path",
+  "position": "start",
+  "input": "/opt/ferry/conf/app.toml is what we agreed on.",
+  "keep": [
+   "/opt/ferry/conf/app.toml"
+  ]
+ },
+ {
+  "id": 49,
+  "kind": "path",
+  "position": "middle",
+  "input": "pls double check /opt/ferry/conf/app.toml before the call",
+  "keep": [
+   "/opt/ferry/conf/app.toml"
+  ]
+ },
+ {
+  "id": 50,
+  "kind": "path",
+  "position": "end",
+  "input": "the value in the sheet should be /opt/ferry/conf/app.toml",
+  "keep": [
+   "/opt/ferry/conf/app.toml"
+  ]
+ },
+ {
+  "id": 51,
+  "kind": "path",
+  "position": "start",
+  "input": "E:\\exports\\q3\\ledger.csv is what we agreed on.",
+  "keep": [
+   "E:\\exports\\q3\\ledger.csv"
+  ]
+ },
+ {
+  "id": 52,
+  "kind": "path",
+  "position": "middle",
+  "input": "pls double check E:\\exports\\q3\\ledger.csv before the call",
+  "keep": [
+   "E:\\exports\\q3\\ledger.csv"
+  ]
+ },
+ {
+  "id": 53,
+  "kind": "path",
+  "position": "end",
+  "input": "the value in the sheet should be E:\\exports\\q3\\ledger.csv",
+  "keep": [
+   "E:\\exports\\q3\\ledger.csv"
+  ]
+ },
+ {
+  "id": 54,
+  "kind": "host",
+  "position": "start",
+  "input": "db-replica-2.ferrylane.io is what we agreed on.",
+  "keep": [
+   "db-replica-2.ferrylane.io"
+  ]
+ },
+ {
+  "id": 55,
+  "kind": "host",
+  "position": "middle",
+  "input": "pls double check db-replica-2.ferrylane.io before the call",
+  "keep": [
+   "db-replica-2.ferrylane.io"
+  ]
+ },
+ {
+  "id": 56,
+  "kind": "host",
+  "position": "end",
+  "input": "the value in the sheet should be db-replica-2.ferrylane.io",
+  "keep": [
+   "db-replica-2.ferrylane.io"
+  ]
+ },
+ {
+  "id": 57,
+  "kind": "id",
+  "position": "start",
+  "input": "TCK-88213 is what we agreed on.",
+  "keep": [
+   "TCK-88213"
+  ]
+ },
+ {
+  "id": 58,
+  "kind": "id",
+  "position": "middle",
+  "input": "pls double check TCK-88213 before the call",
+  "keep": [
+   "TCK-88213"
+  ]
+ },
+ {
+  "id": 59,
+  "kind": "id",
+  "position": "end",
+  "input": "the value in the sheet should be TCK-88213",
+  "keep": [
+   "TCK-88213"
+  ]
+ }
+]

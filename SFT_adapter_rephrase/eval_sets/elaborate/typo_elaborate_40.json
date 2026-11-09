@@ -1,0 +1,697 @@
+[
+ {
+  "id": 0,
+  "tier": "easy",
+  "base": 0,
+  "input": "Ordr #48213 hasn't arived yet.",
+  "typos": {
+   "Ordr": [
+    "Order"
+   ],
+   "arived": [
+    "arrived"
+   ]
+  },
+  "keep": [
+   "#48213"
+  ]
+ },
+ {
+  "id": 1,
+  "tier": "hard",
+  "base": 0,
+  "input": "ordr #48213 hasn't arived yett.",
+  "typos": {
+   "ordr": [
+    "Order"
+   ],
+   "arived": [
+    "arrived"
+   ],
+   "yett": [
+    "yet"
+   ]
+  },
+  "keep": [
+   "#48213"
+  ]
+ },
+ {
+  "id": 2,
+  "tier": "easy",
+  "base": 1,
+  "input": "The meating is tommorow at 3pm in the conference room.",
+  "typos": {
+   "tommorow": [
+    "tomorrow"
+   ],
+   "meating": [
+    "meeting"
+   ]
+  },
+  "keep": [
+   "3pm"
+  ]
+ },
+ {
+  "id": 3,
+  "tier": "hard",
+  "base": 1,
+  "input": "the meating is tommorow at 3pm in the confrence room.",
+  "typos": {
+   "tommorow": [
+    "tomorrow"
+   ],
+   "meating": [
+    "meeting"
+   ],
+   "confrence": [
+    "conference"
+   ]
+  },
+  "keep": [
+   "3pm"
+  ]
+ },
+ {
+  "id": 4,
+  "tier": "easy",
+  "base": 2,
+  "input": "Please send the invioce befor Friday.",
+  "typos": {
+   "invioce": [
+    "invoice"
+   ],
+   "befor": [
+    "before"
+   ]
+  },
+  "keep": [
+   "Friday"
+  ]
+ },
+ {
+  "id": 5,
+  "tier": "hard",
+  "base": 2,
+  "input": "pleas send the invioce befor Friday.",
+  "typos": {
+   "invioce": [
+    "invoice"
+   ],
+   "befor": [
+    "before"
+   ],
+   "pleas": [
+    "Please"
+   ]
+  },
+  "keep": [
+   "Friday"
+  ]
+ },
+ {
+  "id": 6,
+  "tier": "easy",
+  "base": 3,
+  "input": "I recieved the wrong package yesterdy.",
+  "typos": {
+   "recieved": [
+    "received"
+   ],
+   "yesterdy": [
+    "yesterday"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 7,
+  "tier": "hard",
+  "base": 3,
+  "input": "i recieved the wrong pakage yesterdy.",
+  "typos": {
+   "recieved": [
+    "received"
+   ],
+   "yesterdy": [
+    "yesterday"
+   ],
+   "pakage": [
+    "package"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 8,
+  "tier": "easy",
+  "base": 4,
+  "input": "The sever was down for two hours last nite.",
+  "typos": {
+   "sever": [
+    "server"
+   ],
+   "nite": [
+    "night"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 9,
+  "tier": "hard",
+  "base": 4,
+  "input": "the sever was down for two hrs last nite.",
+  "typos": {
+   "sever": [
+    "server"
+   ],
+   "nite": [
+    "night"
+   ],
+   "hrs": [
+    "hours"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 10,
+  "tier": "easy",
+  "base": 5,
+  "input": "Our refnd was aproved on 12 March.",
+  "typos": {
+   "refnd": [
+    "refund"
+   ],
+   "aproved": [
+    "approved"
+   ]
+  },
+  "keep": [
+   "12 March"
+  ]
+ },
+ {
+  "id": 11,
+  "tier": "hard",
+  "base": 5,
+  "input": "ur refnd was aproved on 12 March.",
+  "typos": {
+   "refnd": [
+    "refund"
+   ],
+   "aproved": [
+    "approved"
+   ],
+   "ur": [
+    "Our"
+   ]
+  },
+  "keep": [
+   "12 March"
+  ]
+ },
+ {
+  "id": 12,
+  "tier": "easy",
+  "base": 6,
+  "input": "Can you reschedual the apointment to next Tuesday?",
+  "typos": {
+   "reschedual": [
+    "reschedule"
+   ],
+   "apointment": [
+    "appointment"
+   ]
+  },
+  "keep": [
+   "Tuesday"
+  ]
+ },
+ {
+  "id": 13,
+  "tier": "hard",
+  "base": 6,
+  "input": "can you reschedual the apointment to next Tuesdy?",
+  "typos": {
+   "reschedual": [
+    "reschedule"
+   ],
+   "apointment": [
+    "appointment"
+   ],
+   "tuesdy": [
+    "Tuesday"
+   ]
+  },
+  "keep": [
+   "Tuesday"
+  ]
+ },
+ {
+  "id": 14,
+  "tier": "easy",
+  "base": 7,
+  "input": "The deploymnet failed because the databse was unreachable.",
+  "typos": {
+   "deploymnet": [
+    "deployment"
+   ],
+   "databse": [
+    "database"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 15,
+  "tier": "hard",
+  "base": 7,
+  "input": "the deploymnet failed because the databse was unreachble.",
+  "typos": {
+   "deploymnet": [
+    "deployment"
+   ],
+   "databse": [
+    "database"
+   ],
+   "unreachble": [
+    "unreachable"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 16,
+  "tier": "easy",
+  "base": 8,
+  "input": "Thank you for your quik responce.",
+  "typos": {
+   "responce": [
+    "response"
+   ],
+   "quik": [
+    "quick"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 17,
+  "tier": "hard",
+  "base": 8,
+  "input": "thnak you for your quik responce.",
+  "typos": {
+   "responce": [
+    "response"
+   ],
+   "quik": [
+    "quick"
+   ],
+   "thnak": [
+    "Thank"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 18,
+  "tier": "easy",
+  "base": 9,
+  "input": "We definately need more time to finnish the report.",
+  "typos": {
+   "definately": [
+    "definitely"
+   ],
+   "finnish": [
+    "finish"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 19,
+  "tier": "hard",
+  "base": 9,
+  "input": "we definately need more time to finnish the reprot.",
+  "typos": {
+   "definately": [
+    "definitely"
+   ],
+   "finnish": [
+    "finish"
+   ],
+   "reprot": [
+    "report"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 20,
+  "tier": "easy",
+  "base": 10,
+  "input": "The custmer was very unhapy with the delivery.",
+  "typos": {
+   "custmer": [
+    "customer"
+   ],
+   "unhapy": [
+    "unhappy"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 21,
+  "tier": "hard",
+  "base": 10,
+  "input": "the custmer was very unhapy with the delievery.",
+  "typos": {
+   "custmer": [
+    "customer"
+   ],
+   "unhapy": [
+    "unhappy"
+   ],
+   "delievery": [
+    "delivery"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 22,
+  "tier": "easy",
+  "base": 11,
+  "input": "My pasword expiered and I cannot log in.",
+  "typos": {
+   "pasword": [
+    "password"
+   ],
+   "expiered": [
+    "expired"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 23,
+  "tier": "hard",
+  "base": 11,
+  "input": "my pasword expiered and i canot log in.",
+  "typos": {
+   "pasword": [
+    "password"
+   ],
+   "expiered": [
+    "expired"
+   ],
+   "canot": [
+    "cannot",
+    "can't"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 24,
+  "tier": "easy",
+  "base": 12,
+  "input": "Lunch is at noon, please confrim your attendence.",
+  "typos": {
+   "confrim": [
+    "confirm"
+   ],
+   "attendence": [
+    "attendance"
+   ]
+  },
+  "keep": [
+   "noon"
+  ]
+ },
+ {
+  "id": 25,
+  "tier": "hard",
+  "base": 12,
+  "input": "lunsh is at noon, please confrim your attendence.",
+  "typos": {
+   "confrim": [
+    "confirm"
+   ],
+   "attendence": [
+    "attendance"
+   ],
+   "lunsh": [
+    "Lunch"
+   ]
+  },
+  "keep": [
+   "noon"
+  ]
+ },
+ {
+  "id": 26,
+  "tier": "easy",
+  "base": 13,
+  "input": "The warrenty covers repares for one year.",
+  "typos": {
+   "warrenty": [
+    "warranty"
+   ],
+   "repares": [
+    "repairs"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 27,
+  "tier": "hard",
+  "base": 13,
+  "input": "the warrenty coverz repares for one year.",
+  "typos": {
+   "warrenty": [
+    "warranty"
+   ],
+   "repares": [
+    "repairs"
+   ],
+   "coverz": [
+    "covers"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 28,
+  "tier": "easy",
+  "base": 14,
+  "input": "I'm writing to complian about the brokn heater.",
+  "typos": {
+   "complian": [
+    "complain"
+   ],
+   "brokn": [
+    "broken"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 29,
+  "tier": "hard",
+  "base": 14,
+  "input": "i'm writting to complian about the brokn heater.",
+  "typos": {
+   "complian": [
+    "complain"
+   ],
+   "brokn": [
+    "broken"
+   ],
+   "writting": [
+    "writing"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 30,
+  "tier": "easy",
+  "base": 15,
+  "input": "Paymnt of $250 is dew on the 5th of next month.",
+  "typos": {
+   "Paymnt": [
+    "Payment"
+   ],
+   "dew": [
+    "due"
+   ]
+  },
+  "keep": [
+   "$250",
+   "5th"
+  ]
+ },
+ {
+  "id": 31,
+  "tier": "hard",
+  "base": 15,
+  "input": "paymnt of $250 is dew on the 5th of next mnth.",
+  "typos": {
+   "paymnt": [
+    "Payment"
+   ],
+   "dew": [
+    "due"
+   ],
+   "mnth": [
+    "month"
+   ]
+  },
+  "keep": [
+   "$250",
+   "5th"
+  ]
+ },
+ {
+  "id": 32,
+  "tier": "easy",
+  "base": 16,
+  "input": "The new employe statrs on Monday.",
+  "typos": {
+   "employe": [
+    "employee"
+   ],
+   "statrs": [
+    "starts"
+   ]
+  },
+  "keep": [
+   "Monday"
+  ]
+ },
+ {
+  "id": 33,
+  "tier": "hard",
+  "base": 16,
+  "input": "the new employe statrs on Mondy.",
+  "typos": {
+   "employe": [
+    "employee"
+   ],
+   "statrs": [
+    "starts"
+   ],
+   "mondy": [
+    "Monday"
+   ]
+  },
+  "keep": [
+   "Monday"
+  ]
+ },
+ {
+  "id": 34,
+  "tier": "easy",
+  "base": 17,
+  "input": "Unfortunatly the flight was cancled this morning.",
+  "typos": {
+   "Unfortunatly": [
+    "Unfortunately"
+   ],
+   "cancled": [
+    "cancelled"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 35,
+  "tier": "hard",
+  "base": 17,
+  "input": "unfortunatly the flght was cancled this morning.",
+  "typos": {
+   "unfortunatly": [
+    "Unfortunately"
+   ],
+   "cancled": [
+    "cancelled"
+   ],
+   "flght": [
+    "flight"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 36,
+  "tier": "easy",
+  "base": 18,
+  "input": "Could you recomend a good resturant near the office?",
+  "typos": {
+   "recomend": [
+    "recommend"
+   ],
+   "resturant": [
+    "restaurant"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 37,
+  "tier": "hard",
+  "base": 18,
+  "input": "could you recomend a good resturant near the ofice?",
+  "typos": {
+   "recomend": [
+    "recommend"
+   ],
+   "resturant": [
+    "restaurant"
+   ],
+   "ofice": [
+    "office"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 38,
+  "tier": "easy",
+  "base": 19,
+  "input": "The pritner on the second floor is not wroking.",
+  "typos": {
+   "pritner": [
+    "printer"
+   ],
+   "wroking": [
+    "working"
+   ]
+  },
+  "keep": []
+ },
+ {
+  "id": 39,
+  "tier": "hard",
+  "base": 19,
+  "input": "the pritner on the secnd floor is not wroking.",
+  "typos": {
+   "pritner": [
+    "printer"
+   ],
+   "wroking": [
+    "working"
+   ],
+   "secnd": [
+    "second"
+   ]
+  },
+  "keep": []
+ }
+]
