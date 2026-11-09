@@ -81,6 +81,26 @@ def test_typos_change_only_input_words_the_target_has():
     assert p3.typo_row(_row("short text", "Short text."), KEY) is None
 
 
+def test_the_elaborate_pools_hold_no_eval_string(monkeypatch):
+    keeps, _ = p3.eval_strings()
+    monkeypatch.setattr(p3, "STYLE", "elaborate")
+    p3.clean_pool(keeps)                                  # raises SystemExit on a leak
+    pool = p3.token_pool()
+    assert set(p3.ELABORATE_KEY_VALUES) <= set(pool["key_value"]) and set(p3.ELABORATE_VERSIONS) <= set(pool["version"])
+    assert not set(p3.ELABORATE_KEY_VALUES) & set(p3.token_pool("professional")["key_value"])
+
+
+def test_number_row_swaps_one_plain_number_in_input_and_target_alike():
+    row = _row("the quote was 18000 for 2019 pls confirm", "The quote was 18000 for 2019; please confirm.")
+    out = p3.number_row(row, KEY, p3.number_pool())
+    new = next(n for n in p3.number_pool() if n in out["input"])
+    assert "18000" not in out["input"] + out["output"] and "2019" in out["input"] and "2019" in out["output"]
+    assert out["output"] == row["output"].replace("18000", new) and "," not in new
+    assert p3.number_row(_row("back in 2019 it was", "Back in 2019, it was."), KEY, p3.number_pool()) is None
+    assert p3.number_row(_row("pay 18000 now", "Pay 18,000 now."), KEY, p3.number_pool()) is None
+    assert p3.number_row(_row("see v1.18000 and 12:18000", "See v1.18000 and 12:18000."), KEY, p3.number_pool()) is None
+
+
 def test_the_manifest_check_reads_a_phase_3_manifest(tmp_path):
     for part, name in (("train", "phase_3_exact_copy.jsonl"), ("evals", "phase_3_heldout.jsonl")):
         (tmp_path / part).mkdir()
