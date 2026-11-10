@@ -90,6 +90,19 @@ def test_the_elaborate_pools_hold_no_eval_string(monkeypatch):
     assert not set(p3.ELABORATE_KEY_VALUES) & set(p3.token_pool("professional")["key_value"])
 
 
+def test_the_concise_pool_and_shorthand_hold_no_eval_string(monkeypatch):
+    keeps, _ = p3.eval_strings()
+    monkeypatch.setattr(p3, "STYLE", "concise")
+    p3.clean_pool(keeps)
+    assert set(p3.CONCISE_COMMANDS) <= set(p3.token_pool()["command"])
+    assert not set(p3.CONCISE_COMMANDS) & set(p3.token_pool("professional")["command"])
+    row = {"row_index": 1, "input": "I don't know, I'm working from home right now", "style": "concise",
+           "output": "I don't know; I'm working from home right now.", "cleanup": "KEEP"}
+    assert p3.shorthand_row(row, "0" * 64)["input"] == "idk, I'm wfh rn"
+    monkeypatch.setattr(p3, "STYLE", "professional")
+    assert p3.shorthand_row(row, "0" * 64) is None
+
+
 def test_number_row_swaps_one_plain_number_in_input_and_target_alike():
     row = _row("the quote was 18000 for 2019 pls confirm", "The quote was 18000 for 2019; please confirm.")
     out = p3.number_row(row, KEY, p3.number_pool())
