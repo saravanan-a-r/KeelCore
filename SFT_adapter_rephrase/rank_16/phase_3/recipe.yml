@@ -1,4 +1,4 @@
-# Rank 16, phase 3 (professional, elaborate): a short repair pass on the finished rank-16 phase-2 adapter.
+# Rank 16, phase 3 (professional, elaborate, concise): a short repair pass on the finished rank-16 phase-2 adapter.
 # Data: REPHRASE_MODEL/rephrase_dataset/final/phase_3/<style> (data_prep/build_phase_3_dataset.py, see its README).
 # Read by scripts/make_run_config.py; everything not set here comes from adapter_config.yml
 # and the shared data and GPU rules in that script.
