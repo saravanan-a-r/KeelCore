@@ -1,0 +1,664 @@
+[
+ {
+  "id": 0,
+  "input": "just wanted to let you know that the client has cancled the order for the chairs",
+  "typos": {
+   "cancled": [
+    "cancelled",
+    "canceled"
+   ]
+  },
+  "expect": [
+   [
+    "cancel",
+    "called off"
+   ]
+  ],
+  "forbid": [
+   "closed",
+   "banned"
+  ]
+ },
+ {
+  "id": 1,
+  "input": "i am writing to ask if it would be possible to get a refnd for the broken lamp",
+  "typos": {
+   "refnd": [
+    "refund"
+   ]
+  },
+  "expect": [
+   [
+    "refund"
+   ]
+  ],
+  "forbid": [
+   "repair"
+  ]
+ },
+ {
+  "id": 2,
+  "input": "please note that the office will be closed untill the 3rd of next month",
+  "typos": {
+   "untill": [
+    "until"
+   ]
+  },
+  "expect": [
+   [
+    "until",
+    "till",
+    "through"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 3,
+  "input": "i wanted to confirm that i have recieved the package that you sent last week",
+  "typos": {
+   "recieved": [
+    "received"
+   ]
+  },
+  "expect": [
+   [
+    "received",
+    "got",
+    "arrived"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 4,
+  "input": "i just wanted to say that the budget has been aproved by the finance team",
+  "typos": {
+   "aproved": [
+    "approved"
+   ]
+  },
+  "expect": [
+   [
+    "approv"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 5,
+  "input": "could you please let me know the delivry date for the new desks at your earliest convenience",
+  "typos": {
+   "delivry": [
+    "delivery"
+   ]
+  },
+  "expect": [
+   [
+    "deliver"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 6,
+  "input": "i think we need to update the shipping adress for this order before it goes out",
+  "typos": {
+   "adress": [
+    "address"
+   ]
+  },
+  "expect": [
+   [
+    "address"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 7,
+  "input": "just a quick note to say the parts were shiped yesterday afternoon",
+  "typos": {
+   "shiped": [
+    "shipped"
+   ]
+  },
+  "expect": [
+   [
+    "shipped",
+    "sent",
+    "dispatched"
+   ]
+  ],
+  "forbid": [
+   "shopped"
+  ]
+ },
+ {
+  "id": 8,
+  "input": "as you may already know, the software lisence expires at the end of this month",
+  "typos": {
+   "lisence": [
+    "license",
+    "licence"
+   ]
+  },
+  "expect": [
+   [
+    "licen"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 9,
+  "input": "i would like to ask whether we can reschedual the interview to some time next week",
+  "typos": {
+   "reschedual": [
+    "reschedule"
+   ]
+  },
+  "expect": [
+   [
+    "reschedul",
+    "move",
+    "postpone"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 10,
+  "input": "the manufacturer has said that there is a two year garantee on the machine",
+  "typos": {
+   "garantee": [
+    "guarantee"
+   ]
+  },
+  "expect": [
+   [
+    "guarantee",
+    "warranty"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 11,
+  "input": "i noticed that there is a wierd noise coming from the printer on the second floor",
+  "typos": {
+   "wierd": [
+    "weird"
+   ]
+  },
+  "expect": [
+   [
+    "weird",
+    "strange",
+    "odd",
+    "unusual"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 12,
+  "input": "i would like to report that an error occured during the nightly backup job",
+  "typos": {
+   "occured": [
+    "occurred"
+   ]
+  },
+  "expect": [
+   [
+    "error",
+    "fail"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 13,
+  "input": "could you please send the two invoices as seperate files rather than one",
+  "typos": {
+   "seperate": [
+    "separate"
+   ]
+  },
+  "expect": [
+   [
+    "separate"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 14,
+  "input": "i wanted to check if the hotel accomodation for the conference has been booked",
+  "typos": {
+   "accomodation": [
+    "accommodation"
+   ]
+  },
+  "expect": [
+   [
+    "accommodation",
+    "hotel"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 15,
+  "input": "the comittee is going to vote on the proposal at the meeting on friday",
+  "typos": {
+   "comittee": [
+    "committee"
+   ]
+  },
+  "expect": [
+   [
+    "committee"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 16,
+  "input": "i would strongly reccomend that we test the update before we roll it out",
+  "typos": {
+   "reccomend": [
+    "recommend"
+   ]
+  },
+  "expect": [
+   [
+    "recommend",
+    "suggest",
+    "should"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 17,
+  "input": "i am happy to tell you that the product launch was a big sucess",
+  "typos": {
+   "sucess": [
+    "success"
+   ]
+  },
+  "expect": [
+   [
+    "success",
+    "succeeded"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 18,
+  "input": "i wanted to let you know the meating with the vendor has been moved to tuesday",
+  "typos": {
+   "meating": [
+    "meeting"
+   ]
+  },
+  "expect": [
+   [
+    "meeting"
+   ]
+  ],
+  "forbid": [
+   "meal",
+   "eating"
+  ]
+ },
+ {
+  "id": 19,
+  "input": "please make sure you submit the timesheet befor the end of the day today",
+  "typos": {
+   "befor": [
+    "before"
+   ]
+  },
+  "expect": [
+   [
+    "before",
+    "by"
+   ]
+  ],
+  "forbid": [
+   "after"
+  ]
+ },
+ {
+  "id": 20,
+  "input": "i would like to know if the payment was recieved by your accounts team",
+  "typos": {
+   "recieved": [
+    "received"
+   ]
+  },
+  "expect": [
+   [
+    "received",
+    "got",
+    "arrived"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 21,
+  "input": "i am sorry to say that the shipment has been delayd by about three days",
+  "typos": {
+   "delayd": [
+    "delayed"
+   ]
+  },
+  "expect": [
+   [
+    "delay",
+    "late"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 22,
+  "input": "we have decided that we will not renu the contract when it ends in june",
+  "typos": {
+   "renu": [
+    "renew"
+   ]
+  },
+  "expect": [
+   [
+    "renew",
+    "extend"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 23,
+  "input": "just checking whether you had a chance to reveiw the draft i sent on monday",
+  "typos": {
+   "reveiw": [
+    "review"
+   ]
+  },
+  "expect": [
+   [
+    "review",
+    "read",
+    "look"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 24,
+  "input": "i wanted to let you know that the elevator is out of order and is being repaird",
+  "typos": {
+   "repaird": [
+    "repaired"
+   ]
+  },
+  "expect": [
+   [
+    "repair",
+    "fix"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 25,
+  "input": "please be aware that the parking lot will be closd for cleaning on saturday",
+  "typos": {
+   "closd": [
+    "closed"
+   ]
+  },
+  "expect": [
+   [
+    "closed",
+    "shut"
+   ]
+  ],
+  "forbid": [
+   "open"
+  ]
+ },
+ {
+  "id": 26,
+  "input": "i think we should postpon the team dinner until everyone is back from leave",
+  "typos": {
+   "postpon": [
+    "postpone"
+   ]
+  },
+  "expect": [
+   [
+    "postpone",
+    "delay",
+    "move",
+    "push"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 27,
+  "input": "it looks like the customer was charged twice so we need to issu a refund",
+  "typos": {
+   "issu": [
+    "issue"
+   ]
+  },
+  "expect": [
+   [
+    "refund"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 28,
+  "input": "i would like to request two days of anual leave at the end of the month",
+  "typos": {
+   "anual": [
+    "annual"
+   ]
+  },
+  "expect": [
+   [
+    "annual",
+    "leave",
+    "vacation",
+    "time off"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 29,
+  "input": "i wanted to remind everyone that attendence at the safety training is mandatory",
+  "typos": {
+   "attendence": [
+    "attendance"
+   ]
+  },
+  "expect": [
+   [
+    "attend"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 30,
+  "input": "i am writing to complane about the noise from the construction next door",
+  "typos": {
+   "complane": [
+    "complain"
+   ]
+  },
+  "expect": [
+   [
+    "complain",
+    "complaint"
+   ]
+  ],
+  "forbid": [
+   "plane"
+  ]
+ },
+ {
+  "id": 31,
+  "input": "could you please confirm whether the new hire has signed the agrement yet",
+  "typos": {
+   "agrement": [
+    "agreement"
+   ]
+  },
+  "expect": [
+   [
+    "agreement",
+    "contract"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 32,
+  "input": "just so you know, the warrenty does not cover any accidental damage",
+  "typos": {
+   "warrenty": [
+    "warranty"
+   ]
+  },
+  "expect": [
+   [
+    "warranty",
+    "guarantee"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 33,
+  "input": "please let me know if you would like me to resched the call to a later time",
+  "typos": {
+   "resched": [
+    "reschedule"
+   ]
+  },
+  "expect": [
+   [
+    "reschedul",
+    "move",
+    "later"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 34,
+  "input": "i wanted to ask if you could aprove my expense report from last week",
+  "typos": {
+   "aprove": [
+    "approve"
+   ]
+  },
+  "expect": [
+   [
+    "approv"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 35,
+  "input": "i am afraid the train was cancled so i will be about an hour late",
+  "typos": {
+   "cancled": [
+    "cancelled",
+    "canceled"
+   ]
+  },
+  "expect": [
+   [
+    "cancel"
+   ]
+  ],
+  "forbid": [
+   "closed"
+  ]
+ },
+ {
+  "id": 36,
+  "input": "it seems that the subscription was renewd automatically without my consent",
+  "typos": {
+   "renewd": [
+    "renewed"
+   ]
+  },
+  "expect": [
+   [
+    "renew"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 37,
+  "input": "i need to inform you that the server will be rebooted for maintanance tonight",
+  "typos": {
+   "maintanance": [
+    "maintenance"
+   ]
+  },
+  "expect": [
+   [
+    "maintenance"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 38,
+  "input": "i hope you can help me because my password was resett and i cannot log in",
+  "typos": {
+   "resett": [
+    "reset"
+   ]
+  },
+  "expect": [
+   [
+    "reset",
+    "changed"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 39,
+  "input": "i would be grateful if you could send me a copy of the recipt for my records",
+  "typos": {
+   "recipt": [
+    "receipt"
+   ]
+  },
+  "expect": [
+   [
+    "receipt"
+   ]
+  ],
+  "forbid": [
+   "recipe"
+  ]
+ }
+]
