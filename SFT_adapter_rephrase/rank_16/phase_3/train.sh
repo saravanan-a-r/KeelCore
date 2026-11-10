@@ -40,7 +40,7 @@ INIT_RUNS_ROOT="${SFT}/runs/adapters_phase_2"
 REQUIRE_MANIFEST=1
 REQUIRED_TRAIN_FILES=(phase_3_exact_copy.jsonl phase_2_replay.jsonl phase_1_replay.jsonl)
 CONFIG_DIR="${SFT}/logs/run_configs/rank_16/phase_3"
-TB_TITLE="KeelCore SFT adapters, phase 3"
+TB_TITLE="Thelivu SFT adapters, phase 3"
 STEP_ZERO="the phase-2 adapter this run starts from"
 
 source "${SFT}/scripts/train_run.sh"

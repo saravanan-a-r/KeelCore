@@ -43,7 +43,7 @@ export function setupCopy(setup: SetupState): { title: string; body: string } {
       return model
         ? {
             title: 'Download the writing model',
-            body: `EchoMeBetter rewrites text privately on your device, so it needs its writing model, KeelCore, first. ${includes(view.styles)}`,
+            body: `EchoMeBetter rewrites text privately on your device, so it needs its writing model, Thelivu, first. ${includes(view.styles)}`,
           }
         : { title: `Download the ${name} style`, body: 'Rewriting in this style needs it on your device. This is a one-time download that stays on this device.' };
     case 'downloading': {

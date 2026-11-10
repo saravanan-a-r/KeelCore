@@ -16,7 +16,7 @@ import { HOLD_MENU_DESCRIPTION, KEEP_AWAKE_NOTE, LIVE_PREVIEW_DESCRIPTION, Setti
 import { PopupView, REMOVED_NOTICE } from '../../../ui/popup/PopupApp';
 import { WELCOME_HOLD_HINT, WelcomeView } from '../../../ui/welcome/WelcomeApp';
 
-const summary: ModelSummary = { id: 'keelcore-int8', displayName: 'KeelCore', precision: 'int8', sizeBytes: 790_000_000 };
+const summary: ModelSummary = { id: 'thelivu-int8', displayName: 'Thelivu', precision: 'int8', sizeBytes: 790_000_000 };
 /** What a model.json offers: adapters for `adapters`, every other style falling back to professional. */
 const catalogWith = (adapters: StyleId[]): ModelCatalog => ({
   base: 'base-1',
@@ -85,12 +85,12 @@ describe('popup with the model downloaded', () => {
 
   test('ready names the model and what it runs on', () => {
     renderPopup(ready);
-    expect(screen.getByText('KeelCore · 790 MB · on-device GPU')).toBeInTheDocument();
-    expect(screen.getByText('Powered by', { exact: false })).toHaveTextContent('Powered by KeelCore');
-    // KeelCore is the link to the model's page, opened in a tab of its own.
-    const model = screen.getByRole('link', { name: 'KeelCore on Hugging Face (opens in a new tab)' });
-    expect(model).toHaveTextContent('KeelCore');
-    expect(model).toHaveAttribute('href', 'https://huggingface.co/KeelCore');
+    expect(screen.getByText('Thelivu · 790 MB · on-device GPU')).toBeInTheDocument();
+    expect(screen.getByText('Powered by', { exact: false })).toHaveTextContent('Powered by Thelivu');
+    // Thelivu is the link to the model's page, opened in a tab of its own.
+    const model = screen.getByRole('link', { name: 'Thelivu on Hugging Face (opens in a new tab)' });
+    expect(model).toHaveTextContent('Thelivu');
+    expect(model).toHaveAttribute('href', 'https://huggingface.co/Thelivu');
     expect(model).toHaveAttribute('target', '_blank');
     expect(model).toHaveAttribute('rel', 'noopener');
     expect(screen.queryByRole('button', { name: 'Load now' })).not.toBeInTheDocument();
@@ -381,18 +381,18 @@ describe('popup without the model', () => {
     const { onDownload } = renderPopup({ state: 'unloaded' }, missing());
     const card = screen.getByRole('region', { name: 'Writing model download' });
     expect(within(card).getByText('Set up EchoMeBetter')).toBeInTheDocument();
-    expect(within(card).getByText(/Download the KeelCore writing model and the Professional style once/)).toBeInTheDocument();
+    expect(within(card).getByText(/Download the Thelivu writing model and the Professional style once/)).toBeInTheDocument();
     expect(screen.queryByText(MODEL_SOURCE_URL)).not.toBeInTheDocument();
     const included = screen.getByRole('list', { name: 'Included in this download' });
     expect(within(included).getByText('Writing model')).toBeInTheDocument();
     expect(within(included).getByText('Professional style')).toBeInTheDocument();
     expect(screen.getByText('Also powers Grammar, Friendly, Concise and Elaborate')).toBeInTheDocument();
     // Nothing to choose: the one box is the license agreement.
-    expect(screen.getAllByRole('checkbox')).toEqual([screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ })]);
+    expect(screen.getAllByRole('checkbox')).toEqual([screen.getByRole('checkbox', { name: /I agree to the Thelivu License/ })]);
     // The styles come after the setup: no list, and no download icons, until the model is here.
     expect(screen.queryByText('Styles')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Load now' })).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the Thelivu License/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Download · 863 MB' }));
     expect(onDownload).toHaveBeenCalledWith(['professional'], true);
   });
@@ -402,7 +402,7 @@ describe('popup without the model', () => {
     const { onDownload } = renderPopup({ state: 'unloaded' }, missing(), { catalog: served(more) });
     expect(screen.getByText('Additional styles (Grammar and Concise) are optional and can be downloaded on demand after setup.')).toBeInTheDocument();
     expect(screen.getByText('Also powers Friendly and Elaborate')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the Thelivu License/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Download · 863 MB' }));
     expect(onDownload).toHaveBeenCalledWith(['professional'], true);
   });
@@ -459,7 +459,7 @@ describe('popup without the model', () => {
     );
     expect(screen.getByText('Download stopped')).toBeInTheDocument();
     expect(screen.getByText(/Free up 300 MB and try again/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the Thelivu License/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(onDownload).toHaveBeenCalledWith(['professional'], true);
     fireEvent.click(screen.getByRole('button', { name: 'Dismiss' }));
@@ -496,7 +496,7 @@ describe('welcome page', () => {
   test('offers the download next to the practice box until the model is there', () => {
     render(<WelcomeView {...props} model={missing()} />);
     expect(screen.getByText(/Download the model, then select text below/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the Thelivu License/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Download · 863 MB' }));
     expect(props.onDownload).toHaveBeenCalledWith(['professional'], true);
   });
@@ -594,11 +594,11 @@ test('rewrite durations', () => {
 describe('the license agreement before a download', () => {
   test('first download: the box starts unticked, the download waits for it, then carries the agreement', () => {
     const { onDownload } = renderPopup({ state: 'unloaded' }, missing(), { licenseAccepted: false });
-    const box = screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ });
+    const box = screen.getByRole('checkbox', { name: /I agree to the Thelivu License/ });
     expect(box).not.toBeChecked();
     const button = screen.getByRole('button', { name: 'Download · 863 MB' });
     expect(button).toBeDisabled();
-    expect(button).toHaveAttribute('title', 'Agree to the KeelCore License first');
+    expect(button).toHaveAttribute('title', 'Agree to the Thelivu License first');
     fireEvent.click(button);
     expect(onDownload).not.toHaveBeenCalled();
     fireEvent.click(box);
@@ -609,7 +609,7 @@ describe('the license agreement before a download', () => {
 
   test('the license opens in a tab of its own, and following the link does not tick the box', () => {
     renderPopup({ state: 'unloaded' }, missing(), { licenseAccepted: false });
-    const link = screen.getByRole('link', { name: 'KeelCore License' });
+    const link = screen.getByRole('link', { name: 'Thelivu License' });
     expect(link).toHaveAttribute('href', '../../ui/license/license.html');
     expect(link).toHaveAttribute('target', '_blank');
     fireEvent.click(link);
@@ -626,7 +626,7 @@ describe('the license agreement before a download', () => {
   test('downloading the model again (after removing it) asks again, even with an agreement on record', () => {
     const { onDownload } = renderPopup({ state: 'unloaded' }, missing(), { licenseAccepted: true, modelRemoved: true });
     const button = screen.getByRole('button', { name: 'Download · 863 MB' });
-    expect(screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ })).not.toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /I agree to the Thelivu License/ })).not.toBeChecked();
     expect(button).toBeDisabled();
     fireEvent.click(screen.getByRole('checkbox'));
     fireEvent.click(button);
@@ -649,7 +649,7 @@ describe('the license agreement before a download', () => {
     const list = screen.getByRole('region', { name: 'Styles' });
     const add = within(list).getByRole('button', { name: 'Download the Grammar style (73 MB)' });
     expect(add).toBeDisabled();
-    expect(within(row('Grammar')).getByRole('tooltip')).toHaveTextContent('Agree to the KeelCore License first (above), then download · 73 MB.');
+    expect(within(row('Grammar')).getByRole('tooltip')).toHaveTextContent('Agree to the Thelivu License first (above), then download · 73 MB.');
     fireEvent.click(within(list).getByRole('checkbox', { name: /I agree/ }));
     fireEvent.click(add);
     expect(onDownload).toHaveBeenCalledWith(['grammar'], true);
@@ -702,7 +702,7 @@ describe('the license agreement before a download', () => {
     );
     const button = screen.getByRole('button', { name: 'Download · 863 MB' });
     expect(button).toBeDisabled();
-    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the KeelCore License/ }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /I agree to the Thelivu License/ }));
     fireEvent.click(button);
     expect(onDownload).toHaveBeenCalledWith(['professional'], true);
     expect(screen.getByRole('link', { name: 'License' })).toHaveAttribute('href', '../../ui/license/license.html');

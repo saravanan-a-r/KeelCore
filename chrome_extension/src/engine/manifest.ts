@@ -1,7 +1,7 @@
 /**
  * `model.json`: everything model-specific, as data.
  *
- * KeelCore is a base model plus one LoRA adapter per writing style. The
+ * Thelivu is a base model plus one LoRA adapter per writing style. The
  * extension's code knows how to run an encoder-decoder that honours
  * the model's cached-attention I/O contract (`ioContract`, see the runner in
  * onnx/) with an adapter
@@ -136,7 +136,7 @@ function file(value: unknown, where: string): ModelFile {
   if (!/^[0-9a-f]{64}$/.test(sha256)) throw new ManifestError(`${where}.sha256 must be 64 lowercase hex characters`);
   const parsed = { path, bytes: integer(json.bytes, `${where}.bytes`, 1), sha256 };
   if (json.source === undefined) return parsed;
-  if (typeof json.source !== 'string' || !isPinnedSource(json.source)) throw new ManifestError(`${where}.source must be a folder at one commit of a KeelCore repository`);
+  if (typeof json.source !== 'string' || !isPinnedSource(json.source)) throw new ManifestError(`${where}.source must be a folder at one commit of a Thelivu repository`);
   return { ...parsed, source: json.source };
 }
 
@@ -145,7 +145,7 @@ function isRelativePath(path: string): boolean {
 }
 
 /** The only place outside the model's folder files may come from: one commit, so what it names cannot change. */
-const PINNED_SOURCE = /^https:\/\/huggingface\.co\/KeelCore\/[A-Za-z0-9][A-Za-z0-9._-]*\/resolve\/[0-9a-f]{40}\/(?:[A-Za-z0-9._-]+\/)*$/;
+const PINNED_SOURCE = /^https:\/\/huggingface\.co\/Thelivu\/[A-Za-z0-9][A-Za-z0-9._-]*\/resolve\/[0-9a-f]{40}\/(?:[A-Za-z0-9._-]+\/)*$/;
 
 function isPinnedSource(source: string): boolean {
   return PINNED_SOURCE.test(source) && !source.split('/').some((part) => part === '.' || part === '..');
@@ -154,7 +154,7 @@ function isPinnedSource(source: string): boolean {
 function adapterSource(value: unknown, where: string): string {
   const source = string(value, where);
   if (isPinnedSource(source) || (source.endsWith('/') && isRelativePath(source))) return source;
-  throw new ManifestError(`${where} must be a folder inside the model folder, or at one commit of a KeelCore repository`);
+  throw new ManifestError(`${where} must be a folder inside the model folder, or at one commit of a Thelivu repository`);
 }
 
 function prompt(value: unknown): PromptSegment[] {

@@ -177,21 +177,21 @@ describe('downloadFiles', () => {
 });
 
 describe('countInstall', () => {
-  const HUB = 'https://huggingface.co/KeelCore/KeelCore-750M-Professional/resolve/b9fcb2a87d6b579bfa9a714e6ad5ce16645e938e/onnx/';
+  const HUB = 'https://huggingface.co/Thelivu/Thelivu-750M-Professional/resolve/b9fcb2a87d6b579bfa9a714e6ad5ce16645e938e/onnx/';
   const transportFor = (fetch: DownloadTransport['fetch']): DownloadTransport => ({ fetch, estimate: async () => ({}), digest: sha256Hex, now: () => 0 });
 
   test('asks for the config.json of the repository on main with one HEAD, so the Hub counts the install, whichever commit is pinned', async () => {
     const calls: Array<[string, RequestInit | undefined]> = [];
     await countInstall(transportFor(async (url, init) => (calls.push([url, init]), new Response(null, { status: 200 }))), HUB);
     expect(calls).toHaveLength(1);
-    expect(calls[0]![0]).toBe('https://huggingface.co/KeelCore/KeelCore-750M-Professional/resolve/main/config.json');
+    expect(calls[0]![0]).toBe('https://huggingface.co/Thelivu/Thelivu-750M-Professional/resolve/main/config.json');
     expect(calls[0]![1]).toMatchObject({ method: 'HEAD', cache: 'no-store' });
   });
 
   test('does nothing for a model that is not served from a Hugging Face repository', async () => {
     const fetch = jest.fn(async () => new Response(null, { status: 200 }));
     await countInstall(transportFor(fetch), FIXTURE_URL);
-    await countInstall(transportFor(fetch), 'https://example.test/KeelCore/x/resolve/main/onnx/');
+    await countInstall(transportFor(fetch), 'https://example.test/Thelivu/x/resolve/main/onnx/');
     expect(fetch).not.toHaveBeenCalled();
   });
 

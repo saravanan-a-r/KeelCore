@@ -1,18 +1,18 @@
-KeelCore License
+Thelivu License
 Version 1.0 (Personal and Research Use)
 Version Date: October 28, 2026
 
 Copyright (c) 2026 Saravanan A R. All rights reserved.
-https://github.com/saravanan-a-r/KeelCore
+https://github.com/saravanan-a-r/Thelivu
 
-This license covers the KeelCore model, the EchoMeBetter browser extension
+This license covers the Thelivu model, the EchoMeBetter browser extension
 that runs it, and the source code and documentation of both.
 
 -------------------------------------------------------------------------------
 SUMMARY (for convenience only; it is not part of the license, and the numbered
 sections below control if anything here seems different)
 
-  * You may use KeelCore, as one individual, for your own writing,
+  * You may use Thelivu, as one individual, for your own writing,
     including writing you do for your own job or studies, through the
     official EchoMeBetter browser extension only.
   * You may use it for noncommercial research, and you must cite this project
@@ -57,7 +57,7 @@ In this license:
     all updates, copies, and parts of any of them. Third-Party Components are
     not Materials.
 
-2.3 "Model" means the machine learning model named KeelCore and everything
+2.3 "Model" means the machine learning model named Thelivu and everything
     that makes it work, including its weights and parameters, adapters,
     tokenizer, and configuration and manifest files (such as model.json), in
     any format, precision, or packaging.
@@ -113,7 +113,7 @@ In this license:
 2.12 "Including" means "including without limitation". Headings are for
      convenience only.
 
-2.13 "Marks" means the names "KeelCore" and "EchoMeBetter", the Licensor's
+2.13 "Marks" means the names "Thelivu" and "EchoMeBetter", the Licensor's
      logos, and any other name or logo the Licensor uses for the Materials.
 
 3. LICENSE GRANT
@@ -152,16 +152,16 @@ In this license:
     slides, and talks) cites this project in a reasonably prominent place,
     using this citation or an equivalent one with the same information:
 
-      KeelCore (2026) by Saravanan A R.
-      https://github.com/saravanan-a-r/KeelCore
+      Thelivu (2026) by Saravanan A R.
+      https://github.com/saravanan-a-r/Thelivu
 
     BibTeX:
 
-      @software{keelcore2026,
+      @software{thelivu2026,
         author = {Saravanan A R},
-        title  = {KeelCore: A 752M Encoder-Decoder Base Model for LoRA Adapters},
+        title  = {Thelivu: A 752M Encoder-Decoder Base Model for LoRA Adapters},
         year   = {2026},
-        url    = {https://github.com/saravanan-a-r/KeelCore}
+        url    = {https://github.com/saravanan-a-r/Thelivu}
       }
 
 4.2 Research Use is allowed only through the Official Extension, like every

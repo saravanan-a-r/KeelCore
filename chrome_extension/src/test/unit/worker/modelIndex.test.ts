@@ -20,7 +20,7 @@ import { FIXTURE_URL, indexedModelFiles, modelServer } from '../../helpers/model
 
 const resolved = tinyManifest('tiny-echo-int8');
 const COMMIT = 'a'.repeat(40);
-const HUB = (name: string) => `https://huggingface.co/KeelCore/${name}/resolve/${COMMIT}/onnx/`;
+const HUB = (name: string) => `https://huggingface.co/Thelivu/${name}/resolve/${COMMIT}/onnx/`;
 const decode = (bytes: Uint8Array) => JSON.parse(new TextDecoder().decode(bytes)) as Record<string, any>;
 const encode = (value: unknown) => new TextEncoder().encode(JSON.stringify(value));
 const signal = () => new AbortController().signal;
@@ -28,7 +28,7 @@ const signal = () => new AbortController().signal;
 /** Serves the model folder, and each hub folder as that adapter's folder, recording what was asked for. */
 function hubFetch(base: (url: string, init?: RequestInit) => Promise<Response>) {
   return (url: string, init?: RequestInit) => {
-    const hub = /^https:\/\/huggingface\.co\/KeelCore\/([^/]+)\/resolve\/[0-9a-f]{40}\/onnx\/(.+)$/.exec(url);
+    const hub = /^https:\/\/huggingface\.co\/Thelivu\/([^/]+)\/resolve\/[0-9a-f]{40}\/onnx\/(.+)$/.exec(url);
     return base(hub ? `${FIXTURE_URL}adapters/${hub[1]}/${hub[2]}` : url, init);
   };
 }
@@ -62,11 +62,11 @@ describe('a published model.json', () => {
   });
 
   test.each([
-    ['another host', `https://evil.example/KeelCore/x/resolve/${COMMIT}/`],
+    ['another host', `https://evil.example/Thelivu/x/resolve/${COMMIT}/`],
     ['another organization', `https://huggingface.co/Other/x/resolve/${COMMIT}/`],
-    ['a branch instead of a commit', 'https://huggingface.co/KeelCore/x/resolve/main/'],
-    ['plain http', `http://huggingface.co/KeelCore/x/resolve/${COMMIT}/`],
-    ['escaping the commit', `https://huggingface.co/KeelCore/x/resolve/${COMMIT}/../../`],
+    ['a branch instead of a commit', 'https://huggingface.co/Thelivu/x/resolve/main/'],
+    ['plain http', `http://huggingface.co/Thelivu/x/resolve/${COMMIT}/`],
+    ['escaping the commit', `https://huggingface.co/Thelivu/x/resolve/${COMMIT}/../../`],
     ['escaping the model folder', '../adapters/'],
     ['an absolute path', '/adapters/'],
     ['a protocol-relative trick', '\\\\evil.example/'],
@@ -78,8 +78,8 @@ describe('a published model.json', () => {
   });
 
   test('accepts a source pinned to one commit of one of our repositories', () => {
-    const raw = decode(indexedModelFiles(() => HUB('KeelCore-750M-Professional')).get('model.json')!);
-    expect(parseModelIndex(raw).adapters.professional!.source).toBe(HUB('KeelCore-750M-Professional'));
+    const raw = decode(indexedModelFiles(() => HUB('Thelivu-750M-Professional')).get('model.json')!);
+    expect(parseModelIndex(raw).adapters.professional!.source).toBe(HUB('Thelivu-750M-Professional'));
   });
 
   test('still needs an adapter, and a fallback that is one of them', () => {
@@ -197,7 +197,7 @@ describe('ModelLibrary with adapters in their own repositories', () => {
 });
 
 describe('the manifests kept in this repository', () => {
-  const folder = new URL('../../../../models/keelcore-int8/', import.meta.url);
+  const folder = new URL('../../../../models/thelivu-int8/', import.meta.url);
   const present = existsSync(new URL('adapters/professional/adapter.json', folder));
   (present ? test : test.skip)('model.json and adapter.json agree', () => {
     const modelRaw = JSON.parse(readFileSync(new URL('model.json', folder), 'utf8')) as unknown;

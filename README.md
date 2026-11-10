@@ -1,22 +1,21 @@
-# KeelCore
+# Thelivu
 
 **A compact base model for LoRA adapters, built to run in your web browser.**
 
-A keel is the spine of a ship, the part everything else is fitted to. KeelCore
-plays that role for text models. It is a 752-million-parameter encoder–decoder
+Thelivu (தெளிவு, Tamil for "clarity") is a shared base for text models. It is a 752-million-parameter encoder–decoder
 Transformer, pretrained once from scratch on English prose, source code and
 command-line text. Each capability is then added on top as a small **LoRA
 adapter**, so a new task is a small download rather than a new model.
 
-**Read the technical report (thesis): <https://saravanan-a-r.github.io/KeelCore/>**. It covers the
+**Read the technical report (thesis): <https://saravanan-a-r.github.io/Thelivu/>**. It covers the
 architecture, the training data and recipe, and the full comparison with 13 open models.
 
 <!-- ECHOMEBETTER-HIDDEN 1/3 (restore next week, when the EchoMeBetter extension and the adapters are announced): uncomment this whole block; it is the "EchoMeBetter is not the only use case" box.
 
-> ### EchoMeBetter is not the only use case of KeelCore. It is a by-product.
+> ### EchoMeBetter is not the only use case of Thelivu. It is a by-product.
 >
-> **KeelCore is a general base model for LoRA adapters.** EchoMeBetter, the
-> browser extension, is the first product built on it: it runs KeelCore's
+> **Thelivu is a general base model for LoRA adapters.** EchoMeBetter, the
+> browser extension, is the first product built on it: it runs Thelivu's
 > text-rewriting adapters on your device. That is one application of the base,
 > not its purpose. More adapters, for different use cases, are in progress,
 > and each one is added to the same base.
@@ -29,7 +28,7 @@ architecture, the training data and recipe, and the full comparison with 13 open
 
 ```
                      ┌───────────────────────────────┐
-                     │   KeelCore base  ·  752M      │   downloaded once
+                     │   Thelivu base  ·  752M      │   downloaded once
                      └───────────────┬───────────────┘
               ┌──────────────────────┼──────────────────────┐
       ┌───────▼───────┐      ┌───────▼───────┐      ┌───────▼───────┐
@@ -58,14 +57,14 @@ architecture, the training data and recipe, and the full comparison with 13 open
 - More adapters for different use cases, such as legal or marketing writing,
   are in progress. Each will be added to the same base and offered in a list
   that users choose from.
-- One repository per adapter in the KeelCore organization, with each adapter
+- One repository per adapter in the Thelivu organization, with each adapter
   offered at more than one LoRA rank where there is time to train them.
 
 ---
 
 ## Runs in the browser
 
-KeelCore is meant to run inside a web browser together with its adapters.
+Thelivu is meant to run inside a web browser together with its adapters.
 <!-- ECHOMEBETTER-HIDDEN 3/3 (restore next week): uncomment this sentence.
 EchoMeBetter, the browser extension, runs the text-rewriting adapters.
 -->
@@ -89,7 +88,7 @@ Inference happens on your device, in a worker, through ONNX Runtime Web:
 
 ---
 
-## KeelCore at a glance
+## Thelivu at a glance
 
 | | |
 |---|---|
@@ -180,12 +179,12 @@ synthetic textbooks, 2.9 on source code, 3.7 on command-line pages.
 
 - **Data.** Seven public datasets covering educational and general web text,
   synthetic textbooks, source code, public-domain books and two small
-  command-line references: 63.05 billion raw tokens under KeelCore's own
+  command-line references: 63.05 billion raw tokens under Thelivu's own
   tokenizer, 68.48 billion processed tokens once sentinels and objective
   formatting are added. Through step 81,000 each file is read once; the
   cooldown revisits the small command-line sets, capped at about eight passes
   each. The datasets and their token counts are listed in section 2 of the
-  [technical report](https://saravanan-a-r.github.io/KeelCore/).
+  [technical report](https://saravanan-a-r.github.io/Thelivu/).
 - **Optimizer.** AdamW, β = (0.9, 0.95), ε = 1e-8, weight decay 0.1, global
   gradient-norm clip 1.0. Peak learning rate 3e-4, with the position-bias
   tables at ×100 and the attention queries at ×0.1.
@@ -205,7 +204,7 @@ synthetic textbooks, 2.9 on source code, 3.7 on command-line pages.
 
 The run was instrumented end to end: every checkpoint went through CPU probes
 while training continued on the GPU. The full history, including every issue
-found and how it was handled, is in the [technical report](https://saravanan-a-r.github.io/KeelCore/).
+found and how it was handled, is in the [technical report](https://saravanan-a-r.github.io/Thelivu/).
 
 ---
 
@@ -281,14 +280,14 @@ Capability probes on held-out text at step 90,000:
 
 ### Comparison with open models
 
-KeelCore-752M, a base model with no instruction tuning, against 13 open models
+Thelivu-752M, a base model with no instruction tuning, against 13 open models
 from 355M to 1.3B parameters. Every model is evaluated with one harness, the
 same questions and full test sets, zero-shot: each answer option is scored by
 its log-likelihood, with the prompt wrapper chosen per model family. Where a
-family has several formats (KeelCore: prefix, regular and extreme denoising;
+family has several formats (Thelivu: prefix, regular and extreme denoising;
 T5 and Flan-T5: span or plain), the best format on each task is shown. The
 average is the plain mean over the 15 benchmarks. **Every result is shown,
-including those where KeelCore does not lead.**
+including those where Thelivu does not lead.**
 
 #### Zero-shot accuracy, 15 benchmarks
 
@@ -303,23 +302,23 @@ including those where KeelCore does not lead.**
 | 7 | gpt2-large | 46.4 | not stated |
 | 8 | bart-large | 46.1 | not stated |
 | 9 | pythia-410m | 45.3 | 300B |
-| 10 | KeelCore | 45.3 | 69B |
+| 10 | Thelivu | 45.3 | 69B |
 | 11 | t5-v1_1-large | 44.7 | ~1T |
 | 12 | gpt2-medium | 44.0 | not stated |
 | 13 | opt-350m | 42.8 | 180B |
 | 14 | bloom-560m | 41.6 | 366B |
 
-KeelCore ranks **10 of 14** by average accuracy (45.3). It is ahead of
+Thelivu ranks **10 of 14** by average accuracy (45.3). It is ahead of
 t5-v1_1-large, gpt2-medium, opt-350m and bloom-560m, and behind flan-t5-large,
 smollm2-360m, qwen2.5-0.5b, opt-1.3b, pythia-1b, t5-large, gpt2-large,
 bart-large and pythia-410m. It gets there on a 69B-token budget: the models
-that score clearly higher saw 2.6× to 261× as many tokens, and KeelCore is
+that score clearly higher saw 2.6× to 261× as many tokens, and Thelivu is
 level with models trained on 4.3× and 14× more. The results are promising for
 a first run at this budget.
 
-Where KeelCore ranks on each benchmark:
+Where Thelivu ranks on each benchmark:
 
-| Benchmark | KeelCore rank (of 14) | KeelCore score | Best model | Best score | Chance |
+| Benchmark | Thelivu rank (of 14) | Thelivu score | Best model | Best score | Chance |
 |---|---:|---:|---:|---:|---:|
 | ARC-Easy | 6 | 56.1 | smollm2-360m | 70.4 | 25 |
 | ARC-Chall. | 7 | 26.6 | smollm2-360m | 38.7 | 25 |
@@ -337,7 +336,7 @@ Where KeelCore ranks on each benchmark:
 | SocialIQA | 8 | 39.7 | flan-t5-large | 50.1 | 33.3 |
 | Winogrande | 14 | 52.2 | flan-t5-large | 62.7 | 50 |
 
-With 69B pretraining tokens, KeelCore is in the top ten of 14 on ten of the 15
+With 69B pretraining tokens, Thelivu is in the top ten of 14 on ten of the 15
 benchmarks (ARC-Easy, ARC-Challenge, HellaSwag, MMLU, OpenBookQA, PIQA, QASC,
 RACE-high, SciQ, SocialIQA), and its best result is 4th of 14 on MMLU. It
 ranks below 10th on five (BoolQ, CommonsenseQA, COPA, LAMBADA, Winogrande). Several tasks sit close to
@@ -357,7 +356,7 @@ chance for every model of this size, so small gaps there are within noise.
 | gpt2-large | 53.2 | 25.0 | 60.9 | 36.3 | 70.0 | 45.3 | 47.7 | 23.2 | 29.0 | 69.3 | 29.8 | 30.7 | 80.4 | 39.6 | 55.3 | 46.4 |
 | bart-large | 45.5 | 22.2 | 63.1 | 36.1 | 68.0 | 36.7 | 61.6 | 23.1 | 27.0 | 60.9 | 31.0 | 32.7 | 86.8 | 40.2 | 55.8 | 46.1 |
 | pythia-410m | 51.9 | 24.4 | 60.2 | 32.8 | 67.2 | 40.5 | 51.6 | 23.1 | 29.4 | 67.1 | 28.2 | 29.3 | 81.2 | 38.9 | 53.3 | 45.3 |
-| **KeelCore** | **56.1** | **26.6** | **55.3** | **30.9** | **62.6** | **44.1** | **40.4** | **25.5** | **31.0** | **66.4** | **27.2** | **32.6** | **88.4** | **39.7** | **52.2** | **45.3** |
+| **Thelivu** | **56.1** | **26.6** | **55.3** | **30.9** | **62.6** | **44.1** | **40.4** | **25.5** | **31.0** | **66.4** | **27.2** | **32.6** | **88.4** | **39.7** | **52.2** | **45.3** |
 | t5-v1_1-large | 44.3 | 27.0 | 68.3 | 39.6 | 53.4 | 28.6 | 58.1 | 24.4 | 28.4 | 52.9 | 26.6 | 35.7 | 89.3 | 38.9 | 54.4 | 44.7 |
 | gpt2-medium | 49.1 | 25.2 | 59.0 | 32.6 | 65.4 | 39.4 | 43.0 | 22.9 | 29.4 | 66.4 | 27.4 | 30.4 | 77.1 | 39.1 | 53.1 | 44.0 |
 | opt-350m | 45.4 | 23.6 | 56.7 | 31.5 | 65.6 | 36.9 | 47.0 | 23.1 | 27.4 | 64.4 | 22.7 | 28.4 | 76.7 | 39.9 | 52.3 | 42.8 |
@@ -367,15 +366,15 @@ chance for every model of this size, so small gaps there are within noise.
 
 #### Score for the training budget
 
-KeelCore saw 69B tokens in pretraining. This table lists every model whose
+Thelivu saw 69B tokens in pretraining. This table lists every model whose
 budget is stated, from smallest to largest, with the budget as a multiple of
-KeelCore's and its average accuracy against KeelCore's (45.3). Budgets are as
+Thelivu's and its average accuracy against Thelivu's (45.3). Budgets are as
 stated in each model's published description (approximate); GPT-2 and BART do
 not state a token count.
 
-| Model | Pretraining tokens | Tokens vs KeelCore | Avg accuracy | vs KeelCore |
+| Model | Pretraining tokens | Tokens vs Thelivu | Avg accuracy | vs Thelivu |
 |---|---:|---:|---:|---:|
-| **KeelCore** | **69B** | **1x** | **45.3** | **+0.0** |
+| **Thelivu** | **69B** | **1x** | **45.3** | **+0.0** |
 | opt-1.3b | 180B | 2.6x | 50.1 | +4.8 |
 | opt-350m | 180B | 2.6x | 42.8 | -2.5 |
 | pythia-1b | 300B | 4.3x | 47.6 | +2.4 |
@@ -387,22 +386,22 @@ not state a token count.
 | smollm2-360m | 4T | 58x | 54.0 | +8.7 |
 | qwen2.5-0.5b | 18T | 261x | 52.9 | +7.6 |
 
-- **Level with models trained on several times more.** KeelCore is within 1.5
+- **Level with models trained on several times more.** Thelivu is within 1.5
   points of pythia-410m (4.3× the tokens) and t5-large (14× the tokens), and
   ahead of opt-350m (2.6×), bloom-560m (5.3×) and t5-v1_1-large (14×), all of
   which saw more tokens.
 - **Every clearly stronger model had a larger budget.** The models more than
   1.5 points ahead saw 2.6× (opt-1.3b), 4.3× (pythia-1b), 14× (flan-t5-large),
-  58× (smollm2-360m) and 261× (qwen2.5-0.5b) as many tokens as KeelCore. The two
+  58× (smollm2-360m) and 261× (qwen2.5-0.5b) as many tokens as Thelivu. The two
   closest in budget, opt-1.3b and pythia-1b, are also larger models (about 1.3B
   and 1B parameters), and flan-t5-large was additionally instruction-tuned.
 - **Nothing here points to the architecture as the limit.** Two other
-  encoder–decoder models, trained on about 14× the tokens, bracket KeelCore
-  (44.7 and 46.6 against 45.3). KeelCore's held-out loss was still improving at
+  encoder–decoder models, trained on about 14× the tokens, bracket Thelivu
+  (44.7 and 46.6 against 45.3). Thelivu's held-out loss was still improving at
   the end of the stable phase (master loss 2.56 at step 40,000 and 2.45 at step
   80,000, before the decay began), so the run ended because the token budget
   did.
-- **What this does not show.** KeelCore was trained once, at one budget. That a
+- **What this does not show.** Thelivu was trained once, at one budget. That a
   larger budget would close the gap is a reading of these results, and testing
   it needs a longer run.
 
@@ -412,7 +411,7 @@ Each model predicts the second half of documents published in August–October
 2026, after every model's training data was collected: 483 Wikipedia articles,
 381 arXiv abstracts and 377 source files. Bits per byte, lower is better,
 ordered by the mean; bits per byte is comparable across tokenizers.
-KeelCore ranks 8 of 14 on Wikipedia, 8 of 14 on arXiv and 6 of 14 on code.
+Thelivu ranks 8 of 14 on Wikipedia, 8 of 14 on arXiv and 6 of 14 on code.
 
 | Model | Wikipedia | arXiv | Code | Mean |
 |---|---:|---:|---:|---:|
@@ -422,7 +421,7 @@ KeelCore ranks 8 of 14 on Wikipedia, 8 of 14 on arXiv and 6 of 14 on code.
 | pythia-410m | 0.836 | 0.931 | 0.823 | 0.863 |
 | bloom-560m | 0.926 | 0.976 | 0.894 | 0.932 |
 | opt-1.3b | 0.770 | 0.965 | 1.133 | 0.956 |
-| **KeelCore** | **0.883** | **1.002** | **1.086** | **0.990** |
+| **Thelivu** | **0.883** | **1.002** | **1.086** | **0.990** |
 | gpt2-medium | 0.878 | 1.032 | 1.340 | 1.084 |
 | gpt2-large | 0.837 | 0.998 | 1.527 | 1.120 |
 | opt-350m | 0.890 | 1.088 | 1.385 | 1.121 |
@@ -432,7 +431,7 @@ KeelCore ranks 8 of 14 on Wikipedia, 8 of 14 on arXiv and 6 of 14 on code.
 | t5-v1_1-large | 4.505 | 4.100 | 7.454 | 5.353 |
 
 The full methodology, every figure and the complete training history are in the
-[technical report](https://saravanan-a-r.github.io/KeelCore/).
+[technical report](https://saravanan-a-r.github.io/Thelivu/).
 
 ---
 

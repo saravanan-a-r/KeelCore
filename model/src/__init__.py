@@ -1,5 +1,5 @@
 """
-The KeelCore model: an encoder-decoder Transformer (RMSNorm, gated-GELU,
+The Thelivu model: an encoder-decoder Transformer (RMSNorm, gated-GELU,
 relative position bias).
 
 Scope

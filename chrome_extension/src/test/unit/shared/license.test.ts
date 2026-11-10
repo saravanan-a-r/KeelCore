@@ -1,5 +1,5 @@
 /**
- * The agreement to the KeelCore License: what is kept, and the one place
+ * The agreement to the Thelivu License: what is kept, and the one place
  * a download is allowed to start (the service worker's gate).
  */
 import { describe, expect, jest, test } from '@jest/globals';
@@ -116,7 +116,7 @@ describe('the download gate', () => {
   });
 
   test('the refusal says what to do', () => {
-    expect(describeError({ code: 'LICENSE_REQUIRED' })).toContain('Agree to the KeelCore License');
+    expect(describeError({ code: 'LICENSE_REQUIRED' })).toContain('Agree to the Thelivu License');
   });
 });
 

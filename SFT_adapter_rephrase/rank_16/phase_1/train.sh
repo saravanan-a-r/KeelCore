@@ -44,7 +44,7 @@ DATA_ROOT="/home/admin1/projects/REPHRASE_MODEL/rephrase_dataset/final"
 declare -A DATA_DIR_OF=([friendly]=friendly_sft)
 RUNS_ROOT="${SFT}/runs/adapters"
 CONFIG_DIR="${SFT}/logs/run_configs/rank_16/phase_1"
-TB_TITLE="KeelCore SFT adapters"
+TB_TITLE="Thelivu SFT adapters"
 STEP_ZERO="the untouched base: the adapter starts as an exact no-op"
 
 source "${SFT}/scripts/train_run.sh"

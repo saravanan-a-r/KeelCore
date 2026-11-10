@@ -6,7 +6,7 @@
  *   {"styleToken": true}  the style marker of the adapter that will run
  *   {"input": true}       the user's text
  *
- * KeelCore's frame is `<style:X> <text_to_rewrite> text </text_to_rewrite> </s>`,
+ * Thelivu's frame is `<style:X> <text_to_rewrite> text </text_to_rewrite> </s>`,
  * exactly as the adapters were trained (SFT_adapter_rephrase/src/codec.py).
  * Control pieces are ordinary vocabulary entries, so user text that spells
  * one would encode to it and break the frame; such text is refused, as the

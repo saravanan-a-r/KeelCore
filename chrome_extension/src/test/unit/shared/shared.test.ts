@@ -146,30 +146,30 @@ test('engine status guard', () => {
 describe('model source', () => {
   const COMMIT = '8b23ea682a8d2feb6c31f89518b5139067c9a95f';
 
-  test('the configured URL is valid, and is the published KeelCore model', () => {
+  test('the configured URL is valid, and is the published Thelivu model', () => {
     expect(parseModelSourceUrl(MODEL_SOURCE_URL)).toBe(MODEL_SOURCE_URL);
-    expect(MODEL_SOURCE_URL).toBe('https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/');
+    expect(MODEL_SOURCE_URL).toBe('https://huggingface.co/Thelivu/Thelivu-750M/resolve/main/onnx/int8/');
   });
 
   test.each([
-    ['a folder that follows the repository', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/'],
-    ['a folder pinned to one commit', `https://huggingface.co/KeelCore/KeelCore-750M/resolve/${COMMIT}/onnx/int8/`],
-    ['the top of a repository', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/'],
+    ['a folder that follows the repository', 'https://huggingface.co/Thelivu/Thelivu-750M/resolve/main/onnx/int8/'],
+    ['a folder pinned to one commit', `https://huggingface.co/Thelivu/Thelivu-750M/resolve/${COMMIT}/onnx/int8/`],
+    ['the top of a repository', 'https://huggingface.co/Thelivu/Thelivu-750M/resolve/main/'],
   ])('accepts %s', (_label, raw) => {
     expect(parseModelSourceUrl(raw)).toBe(raw);
   });
 
   test.each([
-    ['plain http', 'http://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/', /https/],
-    ['a local server', 'http://localhost:47615/keelcore-int8/', /https/],
-    ['another host', 'https://cdn.example.com/models/keelcore-v1/', /KeelCore repository on Hugging Face/],
-    ['another organization', 'https://huggingface.co/Other/KeelCore-750M/resolve/main/onnx/int8/', /KeelCore repository on Hugging Face/],
-    ['a branch that is not main', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/dev/onnx/int8/', /KeelCore repository on Hugging Face/],
-    ['a short commit', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/8b23ea6/onnx/int8/', /KeelCore repository on Hugging Face/],
-    ['a path that climbs out of the folder', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/../../', /KeelCore repository on Hugging Face/],
-    ['a file rather than a folder', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/model.json', /end with "\/"/],
-    ['a query string', 'https://huggingface.co/KeelCore/KeelCore-750M/resolve/main/onnx/int8/?download=true', /query/],
-    ['not a URL', 'models/keelcore/', /not a valid URL/],
+    ['plain http', 'http://huggingface.co/Thelivu/Thelivu-750M/resolve/main/onnx/int8/', /https/],
+    ['a local server', 'http://localhost:47615/thelivu-int8/', /https/],
+    ['another host', 'https://cdn.example.com/models/thelivu-v1/', /Thelivu repository on Hugging Face/],
+    ['another organization', 'https://huggingface.co/Other/Thelivu-750M/resolve/main/onnx/int8/', /Thelivu repository on Hugging Face/],
+    ['a branch that is not main', 'https://huggingface.co/Thelivu/Thelivu-750M/resolve/dev/onnx/int8/', /Thelivu repository on Hugging Face/],
+    ['a short commit', 'https://huggingface.co/Thelivu/Thelivu-750M/resolve/8b23ea6/onnx/int8/', /Thelivu repository on Hugging Face/],
+    ['a path that climbs out of the folder', 'https://huggingface.co/Thelivu/Thelivu-750M/resolve/main/onnx/../../', /Thelivu repository on Hugging Face/],
+    ['a file rather than a folder', 'https://huggingface.co/Thelivu/Thelivu-750M/resolve/main/onnx/int8/model.json', /end with "\/"/],
+    ['a query string', 'https://huggingface.co/Thelivu/Thelivu-750M/resolve/main/onnx/int8/?download=true', /query/],
+    ['not a URL', 'models/thelivu/', /not a valid URL/],
     ['not a string', 42, /non-empty string/],
   ])('rejects %s', (_label, raw, message) => {
     expect(() => parseModelSourceUrl(raw)).toThrow(message);

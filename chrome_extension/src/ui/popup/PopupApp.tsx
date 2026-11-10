@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { KEELCORE_NAME, KEELCORE_URL } from '../../shared/keelcore';
+import { THELIVU_NAME, THELIVU_URL } from '../../shared/thelivu';
 import type { EngineStatus } from '../../shared/status';
 import type { StyleId } from '../../shared/styles';
 import { Wordmark } from '../brand/Logo';
@@ -144,13 +144,13 @@ export function PopupView(props: PopupViewProps) {
             <span className="_echo_$_whitespace-nowrap">
               Powered by{' '}
               <a
-                href={KEELCORE_URL}
+                href={THELIVU_URL}
                 target="_blank"
                 rel="noopener"
-                aria-label={`${KEELCORE_NAME} on Hugging Face (opens in a new tab)`}
+                aria-label={`${THELIVU_NAME} on Hugging Face (opens in a new tab)`}
                 className="_echo_$_inline-flex _echo_$_items-center _echo_$_gap-0.5 _echo_$_align-baseline _echo_$_font-semibold _echo_$_text-accent-fg hover:_echo_$_underline"
               >
-                {KEELCORE_NAME}
+                {THELIVU_NAME}
                 <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="_echo_$_shrink-0">
                   <path d="M4.5 2.5h5v5M9.5 2.5l-7 7" />
                 </svg>

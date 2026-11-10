@@ -54,7 +54,7 @@ class Seq2SeqOutput:
 
 
 class RephraseSeq2Seq(nn.Module):
-    """The KeelCore encoder-decoder: RMSNorm, gated-GELU, relative position bias."""
+    """The Thelivu encoder-decoder: RMSNorm, gated-GELU, relative position bias."""
 
     def __init__(self, config: ModelConfig) -> None:
         super().__init__()
