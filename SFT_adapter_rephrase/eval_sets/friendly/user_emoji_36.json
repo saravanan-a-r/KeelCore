@@ -1,0 +1,349 @@
+[
+ {
+  "id": 0,
+  "position": "end",
+  "input": "thanks for covering my shift yesterday 🙌",
+  "user_emoji": [
+   "🙌"
+  ],
+  "keep": []
+ },
+ {
+  "id": 1,
+  "position": "end",
+  "input": "the new coffee machine finally works ☕",
+  "user_emoji": [
+   "☕"
+  ],
+  "keep": []
+ },
+ {
+  "id": 2,
+  "position": "end",
+  "input": "we moved into the new flat on saturday 🏠",
+  "user_emoji": [
+   "🏠"
+  ],
+  "keep": []
+ },
+ {
+  "id": 3,
+  "position": "end",
+  "input": "my flight lands at 6pm, see you at the gate ✈️",
+  "user_emoji": [
+   "✈️"
+  ],
+  "keep": [
+   "6pm"
+  ]
+ },
+ {
+  "id": 4,
+  "position": "end",
+  "input": "finished the marathon in under 4 hours 🏃",
+  "user_emoji": [
+   "🏃"
+  ],
+  "keep": [
+   "4"
+  ]
+ },
+ {
+  "id": 5,
+  "position": "end",
+  "input": "the puppy chewed my charger again 🐶",
+  "user_emoji": [
+   "🐶"
+  ],
+  "keep": []
+ },
+ {
+  "id": 6,
+  "position": "end",
+  "input": "its raining again so the picnic is off ☔",
+  "user_emoji": [
+   "☔"
+  ],
+  "keep": []
+ },
+ {
+  "id": 7,
+  "position": "end",
+  "input": "got the job offer today 🎉",
+  "user_emoji": [
+   "🎉"
+  ],
+  "keep": []
+ },
+ {
+  "id": 8,
+  "position": "end",
+  "input": "dont forget your umbrella tomorrow 🌂",
+  "user_emoji": [
+   "🌂"
+  ],
+  "keep": []
+ },
+ {
+  "id": 9,
+  "position": "end",
+  "input": "the server is back up, thanks for the quick fix 🔧",
+  "user_emoji": [
+   "🔧"
+  ],
+  "keep": []
+ },
+ {
+  "id": 10,
+  "position": "end",
+  "input": "we won the quiz night 🏆",
+  "user_emoji": [
+   "🏆"
+  ],
+  "keep": []
+ },
+ {
+  "id": 11,
+  "position": "end",
+  "input": "baked bread for the first time 🍞",
+  "user_emoji": [
+   "🍞"
+  ],
+  "keep": []
+ },
+ {
+  "id": 12,
+  "position": "start",
+  "input": "🎁 your parcel is at the front desk",
+  "user_emoji": [
+   "🎁"
+  ],
+  "keep": []
+ },
+ {
+  "id": 13,
+  "position": "start",
+  "input": "🔥 the new release is fast, nice work",
+  "user_emoji": [
+   "🔥"
+  ],
+  "keep": []
+ },
+ {
+  "id": 14,
+  "position": "start",
+  "input": "📌 reminder: timesheets are due friday",
+  "user_emoji": [
+   "📌"
+  ],
+  "keep": []
+ },
+ {
+  "id": 15,
+  "position": "start",
+  "input": "🌞 good morning, the standup starts at 9",
+  "user_emoji": [
+   "🌞"
+  ],
+  "keep": [
+   "9"
+  ]
+ },
+ {
+  "id": 16,
+  "position": "start",
+  "input": "⚠️ the lift on floor 3 is out of order",
+  "user_emoji": [
+   "⚠️"
+  ],
+  "keep": [
+   "3"
+  ]
+ },
+ {
+  "id": 17,
+  "position": "start",
+  "input": "📦 the shipment left the warehouse today",
+  "user_emoji": [
+   "📦"
+  ],
+  "keep": []
+ },
+ {
+  "id": 18,
+  "position": "middle",
+  "input": "happy anniversary 💐 hope dinner is lovely",
+  "user_emoji": [
+   "💐"
+  ],
+  "keep": []
+ },
+ {
+  "id": 19,
+  "position": "middle",
+  "input": "the tests pass ✅ merging the branch now",
+  "user_emoji": [
+   "✅"
+  ],
+  "keep": []
+ },
+ {
+  "id": 20,
+  "position": "middle",
+  "input": "saw your photos 📸 the view looks amazing",
+  "user_emoji": [
+   "📸"
+  ],
+  "keep": []
+ },
+ {
+  "id": 21,
+  "position": "middle",
+  "input": "the pizza is here 🍕 come to the kitchen",
+  "user_emoji": [
+   "🍕"
+  ],
+  "keep": []
+ },
+ {
+  "id": 22,
+  "position": "middle",
+  "input": "my cat is sick 😿 i will work from home today",
+  "user_emoji": [
+   "😿"
+  ],
+  "keep": []
+ },
+ {
+  "id": 23,
+  "position": "middle",
+  "input": "the slides look great 👌 just fix the title",
+  "user_emoji": [
+   "👌"
+  ],
+  "keep": []
+ },
+ {
+  "id": 24,
+  "position": "two",
+  "input": "welcome to the team 👋 lunch is on us today 🥗",
+  "user_emoji": [
+   "👋",
+   "🥗"
+  ],
+  "keep": []
+ },
+ {
+  "id": 25,
+  "position": "two",
+  "input": "the beach was perfect 🌊 we got so much sun ☀️",
+  "user_emoji": [
+   "🌊",
+   "☀️"
+  ],
+  "keep": []
+ },
+ {
+  "id": 26,
+  "position": "two",
+  "input": "passed my driving test 🚗 so happy 😁",
+  "user_emoji": [
+   "🚗",
+   "😁"
+  ],
+  "keep": []
+ },
+ {
+  "id": 27,
+  "position": "two",
+  "input": "the concert was amazing 🎸 my ears are still ringing 🎶",
+  "user_emoji": [
+   "🎸",
+   "🎶"
+  ],
+  "keep": []
+ },
+ {
+  "id": 28,
+  "position": "two",
+  "input": "the garden is full of tomatoes 🍅 come pick some 🧺",
+  "user_emoji": [
+   "🍅",
+   "🧺"
+  ],
+  "keep": []
+ },
+ {
+  "id": 29,
+  "position": "two",
+  "input": "new laptop arrived 💻 setting it up now ⚙️",
+  "user_emoji": [
+   "💻",
+   "⚙️"
+  ],
+  "keep": []
+ },
+ {
+  "id": 30,
+  "position": "two",
+  "input": "first snow of the year ❄️ the kids built a snowman ⛄",
+  "user_emoji": [
+   "❄️",
+   "⛄"
+  ],
+  "keep": []
+ },
+ {
+  "id": 31,
+  "position": "two",
+  "input": "we hit 1,000 users 📈 thanks everyone 🙏",
+  "user_emoji": [
+   "📈",
+   "🙏"
+  ],
+  "keep": [
+   "1,000"
+  ]
+ },
+ {
+  "id": 32,
+  "position": "two",
+  "input": "the bakery has fresh croissants 🥐 grab one before 10 ⏰",
+  "user_emoji": [
+   "🥐"
+  ],
+  "keep": [
+   "10"
+  ]
+ },
+ {
+  "id": 33,
+  "position": "two",
+  "input": "the movie was scary 👻 i didnt sleep 😅",
+  "user_emoji": [
+   "👻",
+   "😅"
+  ],
+  "keep": []
+ },
+ {
+  "id": 34,
+  "position": "two",
+  "input": "road trip starts tomorrow 🚙 bring snacks 🍪",
+  "user_emoji": [
+   "🚙",
+   "🍪"
+  ],
+  "keep": []
+ },
+ {
+  "id": 35,
+  "position": "two",
+  "input": "the plants survived the holiday 🌱 thanks for watering them 💧",
+  "user_emoji": [
+   "🌱",
+   "💧"
+  ],
+  "keep": []
+ }
+]

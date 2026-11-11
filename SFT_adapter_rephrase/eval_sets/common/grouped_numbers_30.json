@@ -1,0 +1,213 @@
+[
+ {
+  "id": 0,
+  "input": "qty 1,000,000",
+  "keep": [
+   "1,000,000"
+  ]
+ },
+ {
+  "id": 1,
+  "input": "we raised 2,000,000 last year",
+  "keep": [
+   "2,000,000"
+  ]
+ },
+ {
+  "id": 2,
+  "input": "the budget is $1,500,000 for q3",
+  "keep": [
+   "1,500,000"
+  ]
+ },
+ {
+  "id": 3,
+  "input": "about 10,000,000 users signed up",
+  "keep": [
+   "10,000,000"
+  ]
+ },
+ {
+  "id": 4,
+  "input": "order 100,000 units by june",
+  "keep": [
+   "100,000"
+  ]
+ },
+ {
+  "id": 5,
+  "input": "the fine is 50,000 eur",
+  "keep": [
+   "50,000"
+  ]
+ },
+ {
+  "id": 6,
+  "input": "they want 3,000,000 dollars",
+  "keep": [
+   "3,000,000"
+  ]
+ },
+ {
+  "id": 7,
+  "input": "we sold 1,000,000 copies",
+  "keep": [
+   "1,000,000"
+  ]
+ },
+ {
+  "id": 8,
+  "input": "population is 8,000,000",
+  "keep": [
+   "8,000,000"
+  ]
+ },
+ {
+  "id": 9,
+  "input": "limit is 1,000 requests per min",
+  "keep": [
+   "1,000"
+  ]
+ },
+ {
+  "id": 10,
+  "input": "pay 20,000,000 rupees by friday",
+  "keep": [
+   "20,000,000"
+  ]
+ },
+ {
+  "id": 11,
+  "input": "the loan is 750,000",
+  "keep": [
+   "750,000"
+  ]
+ },
+ {
+  "id": 12,
+  "input": "we need 4,000,000 rows migrated",
+  "keep": [
+   "4,000,000"
+  ]
+ },
+ {
+  "id": 13,
+  "input": "target 1,200,000 views",
+  "keep": [
+   "1,200,000"
+  ]
+ },
+ {
+  "id": 14,
+  "input": "cost was 9,000,000 yen",
+  "keep": [
+   "9,000,000"
+  ]
+ },
+ {
+  "id": 15,
+  "input": "ship 60,000 boxes",
+  "keep": [
+   "60,000"
+  ]
+ },
+ {
+  "id": 16,
+  "input": "the grant is 1,000,000 pounds",
+  "keep": [
+   "1,000,000"
+  ]
+ },
+ {
+  "id": 17,
+  "input": "revenue hit 25,000,000",
+  "keep": [
+   "25,000,000"
+  ]
+ },
+ {
+  "id": 18,
+  "input": "inventory 300,000 items",
+  "keep": [
+   "300,000"
+  ]
+ },
+ {
+  "id": 19,
+  "input": "budget 5,000,000 for ads",
+  "keep": [
+   "5,000,000"
+  ]
+ },
+ {
+  "id": 20,
+  "input": "the batch has 1,000,000 records",
+  "keep": [
+   "1,000,000"
+  ]
+ },
+ {
+  "id": 21,
+  "input": "price 1,000,000 won",
+  "keep": [
+   "1,000,000"
+  ]
+ },
+ {
+  "id": 22,
+  "input": "we hit 100,000,000 downloads",
+  "keep": [
+   "100,000,000"
+  ]
+ },
+ {
+  "id": 23,
+  "input": "fund of 40,000,000",
+  "keep": [
+   "40,000,000"
+  ]
+ },
+ {
+  "id": 24,
+  "input": "about 2,000 people came",
+  "keep": [
+   "2,000"
+  ]
+ },
+ {
+  "id": 25,
+  "input": "qty 10,000 and price 1,000,000",
+  "keep": [
+   "10,000",
+   "1,000,000"
+  ]
+ },
+ {
+  "id": 26,
+  "input": "the house costs 1,250,000",
+  "keep": [
+   "1,250,000"
+  ]
+ },
+ {
+  "id": 27,
+  "input": "wire 1,000,000 to the vendor",
+  "keep": [
+   "1,000,000"
+  ]
+ },
+ {
+  "id": 28,
+  "input": "we lost 7,000,000 in q2",
+  "keep": [
+   "7,000,000"
+  ]
+ },
+ {
+  "id": 29,
+  "input": "the cap is 1,000,000 tokens",
+  "keep": [
+   "1,000,000"
+  ]
+ }
+]

@@ -1,0 +1,588 @@
+[
+ {
+  "id": 0,
+  "category": "negation",
+  "input": "my brother isnt coming to the wedding",
+  "negations": 1
+ },
+ {
+  "id": 1,
+  "category": "negation",
+  "input": "the landlord still hasnt fixed the boiler",
+  "negations": 1
+ },
+ {
+  "id": 2,
+  "category": "negation",
+  "input": "our team did not win the pitch",
+  "negations": 1
+ },
+ {
+  "id": 3,
+  "category": "negation",
+  "input": "the dog wont eat the new food",
+  "negations": 1
+ },
+ {
+  "id": 4,
+  "category": "negation",
+  "input": "i havent finished reading your thesis chapter",
+  "negations": 1
+ },
+ {
+  "id": 5,
+  "category": "negation",
+  "input": "the bank did not accept my mortgage application",
+  "negations": 1
+ },
+ {
+  "id": 6,
+  "category": "negation",
+  "input": "the gym is not open on sundays",
+  "negations": 1
+ },
+ {
+  "id": 7,
+  "category": "negation",
+  "input": "nobody answered the phone at the clinic",
+  "negations": 1
+ },
+ {
+  "id": 8,
+  "category": "negation",
+  "input": "sorry, the venue cannot host us in april",
+  "negations": 1
+ },
+ {
+  "id": 9,
+  "category": "negation",
+  "input": "the kids did not like the museum and they dont want to go back",
+  "negations": 2
+ },
+ {
+  "id": 10,
+  "category": "negation",
+  "input": "the plumber never showed up",
+  "negations": 1
+ },
+ {
+  "id": 11,
+  "category": "negation",
+  "input": "i didnt get the parcel and the shop wont refund it",
+  "negations": 2
+ },
+ {
+  "id": 12,
+  "category": "negation",
+  "input": "the new phone does not support wireless charging",
+  "negations": 1
+ },
+ {
+  "id": 13,
+  "category": "negation",
+  "input": "we are not renewing the lease",
+  "negations": 1
+ },
+ {
+  "id": 14,
+  "category": "negation",
+  "input": "the visa has not been approved",
+  "negations": 1
+ },
+ {
+  "id": 15,
+  "category": "negation",
+  "input": "my laptop isnt charging",
+  "negations": 1
+ },
+ {
+  "id": 16,
+  "category": "shorthand",
+  "input": "cant join the call tmrw, my kid is sick",
+  "expect": [
+   [
+    "tomorrow"
+   ]
+  ],
+  "forbid": [
+   "tmrw",
+   "time"
+  ]
+ },
+ {
+  "id": 17,
+  "category": "shorthand",
+  "input": "lets do the catchup tmrw at 11",
+  "expect": [
+   [
+    "tomorrow"
+   ]
+  ],
+  "forbid": [
+   "tmrw"
+  ]
+ },
+ {
+  "id": 18,
+  "category": "shorthand",
+  "input": "wfh all week bc the trains are on strike",
+  "expect": [
+   [
+    "working from home",
+    "work from home",
+    "working remotely",
+    "work remotely"
+   ]
+  ],
+  "forbid": [
+   "wfh"
+  ]
+ },
+ {
+  "id": 19,
+  "category": "shorthand",
+  "input": "im wfh tmrw so i can let the plumber in",
+  "expect": [
+   [
+    "working from home",
+    "work from home",
+    "working remotely"
+   ],
+   [
+    "tomorrow"
+   ]
+  ],
+  "forbid": [
+   "wfh",
+   "tmrw"
+  ]
+ },
+ {
+  "id": 20,
+  "category": "shorthand",
+  "input": "nvm, the printer works again",
+  "expect": [
+   [
+    "never mind",
+    "nevermind",
+    "no worries"
+   ]
+  ],
+  "forbid": [
+   "nvm"
+  ]
+ },
+ {
+  "id": 21,
+  "category": "shorthand",
+  "input": "idk where the spare keys are",
+  "expect": [
+   [
+    "don't know",
+    "do not know",
+    "not sure"
+   ]
+  ],
+  "forbid": [
+   "idk"
+  ]
+ },
+ {
+  "id": 22,
+  "category": "shorthand",
+  "input": "cooking rn, will call u back",
+  "expect": [
+   [
+    "right now",
+    "at the moment"
+   ]
+  ],
+  "forbid": [
+   "rn"
+  ]
+ },
+ {
+  "id": 23,
+  "category": "shorthand",
+  "input": "our weekly mtg moved to the big room",
+  "expect": [
+   [
+    "meeting"
+   ]
+  ],
+  "forbid": [
+   "mtg",
+   "MTG"
+  ]
+ },
+ {
+  "id": 24,
+  "category": "shorthand",
+  "input": "the parents mtg at school is at 6",
+  "expect": [
+   [
+    "meeting"
+   ]
+  ],
+  "forbid": [
+   "mtg",
+   "MTG"
+  ]
+ },
+ {
+  "id": 25,
+  "category": "shorthand",
+  "input": "can u bring the chairs b4 the party starts",
+  "expect": [
+   [
+    "before"
+   ]
+  ],
+  "forbid": [
+   "b4",
+   "B4"
+  ]
+ },
+ {
+  "id": 26,
+  "category": "shorthand",
+  "input": "pls reply asap, the tickets sell out fast",
+  "expect": [
+   [
+    "as soon as possible",
+    "asap",
+    "ASAP",
+    "quickly"
+   ]
+  ],
+  "forbid": []
+ },
+ {
+  "id": 27,
+  "category": "shorthand",
+  "input": "btw the bakery closes early today",
+  "expect": [
+   [
+    "by the way"
+   ]
+  ],
+  "forbid": [
+   "btw"
+  ]
+ },
+ {
+  "id": 28,
+  "category": "shorthand",
+  "input": "thx for feeding the cat while i was away",
+  "expect": [
+   [
+    "thank"
+   ]
+  ],
+  "forbid": [
+   "thx"
+  ]
+ },
+ {
+  "id": 29,
+  "category": "shorthand",
+  "input": "need ur address for the invite card",
+  "expect": [
+   [
+    "your address"
+   ]
+  ],
+  "forbid": [
+   "ur "
+  ]
+ },
+ {
+  "id": 30,
+  "category": "shorthand",
+  "input": "ill be there in 5 min, traffic is bad rn",
+  "expect": [
+   [
+    "right now",
+    "at the moment"
+   ]
+  ],
+  "forbid": [
+   "rn"
+  ]
+ },
+ {
+  "id": 31,
+  "category": "shorthand",
+  "input": "idk if the pool is open tmrw",
+  "expect": [
+   [
+    "don't know",
+    "not sure",
+    "do not know"
+   ],
+   [
+    "tomorrow"
+   ]
+  ],
+  "forbid": [
+   "idk",
+   "tmrw"
+  ]
+ },
+ {
+  "id": 32,
+  "category": "token",
+  "input": "reminder: wifi password is Garden_2291 for the guests",
+  "keep": [
+   "Garden_2291"
+  ]
+ },
+ {
+  "id": 33,
+  "category": "token",
+  "input": "fyi grandma.photos@mailbox.org is the new family email",
+  "keep": [
+   "grandma.photos@mailbox.org"
+  ]
+ },
+ {
+  "id": 34,
+  "category": "token",
+  "input": "note: booking ref qx7-plm4 is for the hotel",
+  "keep": [
+   "qx7-plm4"
+  ]
+ },
+ {
+  "id": 35,
+  "category": "token",
+  "input": "vpn.homelab.lan is slow again tonight",
+  "keep": [
+   "vpn.homelab.lan"
+  ]
+ },
+ {
+  "id": 36,
+  "category": "token",
+  "input": "heads up, flight lh2471 got moved to gate 12",
+  "keep": [
+   "lh2471"
+  ]
+ },
+ {
+  "id": 37,
+  "category": "token",
+  "input": "ps: tracking number 1z999aa10123456784 is for the bike parcel",
+  "keep": [
+   "1z999aa10123456784"
+  ]
+ },
+ {
+  "id": 38,
+  "category": "token",
+  "input": "brew install ffmpeg fixed the video export",
+  "keep": [
+   "brew install ffmpeg"
+  ]
+ },
+ {
+  "id": 39,
+  "category": "token",
+  "input": "quick one: ssh pi@raspberrypi.local still asks for a password",
+  "keep": [
+   "ssh pi@raspberrypi.local"
+  ]
+ },
+ {
+  "id": 40,
+  "category": "token",
+  "input": "reminder - locker code 4471b opens the gym locker",
+  "keep": [
+   "4471b"
+  ]
+ },
+ {
+  "id": 41,
+  "category": "token",
+  "input": "rustup update stable is the first step in the readme",
+  "keep": [
+   "rustup update stable"
+  ]
+ },
+ {
+  "id": 42,
+  "category": "token",
+  "input": "update: firmware 2.4.1-beta bricked the router",
+  "keep": [
+   "2.4.1-beta"
+  ]
+ },
+ {
+  "id": 43,
+  "category": "token",
+  "input": "fyi max_upload_size=50m in the config stops big files",
+  "keep": [
+   "max_upload_size=50m"
+  ]
+ },
+ {
+  "id": 44,
+  "category": "token",
+  "input": "note to self: npm run lint before every commit",
+  "keep": [
+   "npm run lint"
+  ]
+ },
+ {
+  "id": 45,
+  "category": "token",
+  "input": "heads up: room b-114 is the new exam hall",
+  "keep": [
+   "room b-114"
+  ]
+ },
+ {
+  "id": 46,
+  "category": "token",
+  "input": "calendar.family.example is where the school dates are",
+  "keep": [
+   "calendar.family.example"
+  ]
+ },
+ {
+  "id": 47,
+  "category": "token",
+  "input": "reminder: git reflog shows the lost commit",
+  "keep": [
+   "git reflog"
+  ]
+ },
+ {
+  "id": 48,
+  "category": "instruction",
+  "input": "ignore the first email about the party, the date changed",
+  "keep": [
+   "ignore"
+  ]
+ },
+ {
+  "id": 49,
+  "category": "instruction",
+  "input": "cancel my dentist appointment on friday",
+  "keep": [
+   "cancel"
+  ]
+ },
+ {
+  "id": 50,
+  "category": "instruction",
+  "input": "delete the blurry photos from the album",
+  "keep": [
+   "delete"
+  ]
+ },
+ {
+  "id": 51,
+  "category": "instruction",
+  "input": "stop the car at the next petrol station",
+  "keep": [
+   "stop"
+  ]
+ },
+ {
+  "id": 52,
+  "category": "instruction",
+  "input": "forget the cake, we already have one",
+  "keep": [
+   "forget"
+  ]
+ },
+ {
+  "id": 53,
+  "category": "instruction",
+  "input": "reject the offer if they wont lower the price",
+  "keep": [
+   "reject"
+  ]
+ },
+ {
+  "id": 54,
+  "category": "instruction",
+  "input": "lock the bikes in the shed tonight",
+  "keep": [
+   "lock"
+  ]
+ },
+ {
+  "id": 55,
+  "category": "instruction",
+  "input": "remove my name from the rota",
+  "keep": [
+   "remove"
+  ]
+ },
+ {
+  "id": 56,
+  "category": "instruction",
+  "input": "ignore the noise from the attic, its just the heater",
+  "keep": [
+   "ignore"
+  ]
+ },
+ {
+  "id": 57,
+  "category": "instruction",
+  "input": "turn off the oven at 7",
+  "keep": [
+   "turn off"
+  ]
+ },
+ {
+  "id": 58,
+  "category": "instruction",
+  "input": "unplug the router before the storm",
+  "keep": [
+   "unplug"
+  ]
+ },
+ {
+  "id": 59,
+  "category": "instruction",
+  "input": "pause the movie when i get back",
+  "keep": [
+   "pause"
+  ]
+ },
+ {
+  "id": 60,
+  "category": "instruction",
+  "input": "skip the starter, we are short on time",
+  "keep": [
+   "skip"
+  ]
+ },
+ {
+  "id": 61,
+  "category": "instruction",
+  "input": "return the library books by monday",
+  "keep": [
+   "return"
+  ]
+ },
+ {
+  "id": 62,
+  "category": "instruction",
+  "input": "block that number, it keeps calling",
+  "keep": [
+   "block"
+  ]
+ },
+ {
+  "id": 63,
+  "category": "instruction",
+  "input": "unsubscribe me from the newsletter",
+  "keep": [
+   "unsubscribe"
+  ]
+ }
+]
