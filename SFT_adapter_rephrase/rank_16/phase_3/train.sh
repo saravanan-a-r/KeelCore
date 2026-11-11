@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Rank 16, phase 3 (professional, elaborate, concise): continue a finished rank-16 phase-2 adapter on its frozen phase-3
+# Rank 16, phase 3 (professional, elaborate, concise, friendly): continue a finished rank-16 phase-2 adapter on its frozen phase-3
 # data set. Read REPHRASE_MODEL/rephrase_dataset/final/phase_3/README.md first: it says what the
 # data is and why. Settings: recipe.yml next to this file.
 #
@@ -10,7 +10,7 @@
 #   DRY_RUN=1 bash SFT_adapter_rephrase/rank_16/phase_3/train.sh             # checks only
 #
 # Options:
-#   --style S          professional | elaborate | concise (the styles with phase-3 data; another one stops at the data check)
+#   --style S          professional | elaborate | concise | friendly (the styles with phase-3 data; another one stops at the data check)
 #   --input DIR        the phase-3 folder (default
 #                      /home/admin1/projects/REPHRASE_MODEL/rephrase_dataset/final/phase_3/professional).
 #                      Every *.jsonl under DIR/train is trained on (phase_3_exact_copy, phase_3_shorthand,
