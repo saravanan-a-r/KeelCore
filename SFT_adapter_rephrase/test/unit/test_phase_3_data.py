@@ -1,6 +1,7 @@
 """
 data_prep/build_phase_3_dataset.py: the row builders keep every target as it is, and the token pool never
-holds a string of eval_sets/. scripts/verify_manifest.py reads a phase-3 manifest.
+holds a string of eval_sets/; the friendly emoji and negation rows keep the
+writer's emoji and negations. scripts/verify_manifest.py reads a phase-3 manifest.
 """
 
 from __future__ import annotations
@@ -102,6 +103,37 @@ def test_the_concise_pool_and_shorthand_hold_no_eval_string(monkeypatch):
     monkeypatch.setattr(p3, "STYLE", "professional")
     assert p3.shorthand_row(row, "0" * 64) is None
 
+
+def test_the_friendly_emoji_pool_holds_no_eval_emoji():
+    _, inputs = p3.eval_strings()
+    assert p3.clean_emoji_pool(inputs)                    # raises SystemExit on a leak
+    with pytest.raises(SystemExit, match="emoji_pool"):
+        p3.clean_emoji_pool({"well done \U0001F44F"})
+
+
+def test_emoji_row_puts_the_same_emoji_at_the_same_place(monkeypatch):
+    monkeypatch.setattr(p3, "STYLE", "friendly")
+    pool = p3.emoji_pool()
+    row = _row("the demo went well. thanks for the help", "The demo went well! Thanks so much for the help.")
+    seen = set()
+    for i in range(40):
+        key = p3.sha_hex(str(i))
+        out = p3.emoji_row(row, key, pool)
+        got_in, got_out = p3.EMOJI_RE.findall(out["input"]), p3.EMOJI_RE.findall(out["output"])
+        assert got_in == got_out and 1 <= len(got_in) <= 2 and set(got_in) <= set(pool)
+        assert p3.EMOJI_RE.sub("", out["output"]).split() == row["output"].split()
+        seen.add(len(got_in))
+    assert seen == {1, 2}
+    assert p3.emoji_row(_row("so happy \U0001F600 today", "So happy \U0001F600 today!"), KEY, pool) is None
+
+
+def test_faithful_refuses_invented_feelings_lost_negations_and_yet():
+    assert p3.faithful(_row("we did not approve it", "We didn't approve it."))
+    assert not p3.faithful(_row("we did not approve it", "We haven't approved it yet."))
+    assert not p3.faithful(_row("i dont want the blue one", "I'd like a different one."))
+    assert not p3.faithful(_row("the server is down", "The server is down. Hope you have a great day!"))
+    assert p3.negation_row(_row("please do not share this", "Please don't share this!"), KEY) is not None
+    assert p3.negation_row(_row("please share this", "Please share this!"), KEY) is None
 
 def test_number_row_swaps_one_plain_number_in_input_and_target_alike():
     row = _row("the quote was 18000 for 2019 pls confirm", "The quote was 18000 for 2019; please confirm.")

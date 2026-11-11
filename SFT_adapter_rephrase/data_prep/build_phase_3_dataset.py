@@ -1,8 +1,9 @@
-"""Freeze the phase-3 training set of an adapter (professional, elaborate, concise): a short repair pass on top of phase 2.
+"""Freeze the phase-3 training set of an adapter (professional, elaborate, concise, friendly): a short repair pass on top of phase 2.
 
     /root/venv/bin/python SFT_adapter_rephrase/data_prep/build_phase_3_dataset.py                    # professional
     /root/venv/bin/python SFT_adapter_rephrase/data_prep/build_phase_3_dataset.py --style elaborate
     /root/venv/bin/python SFT_adapter_rephrase/data_prep/build_phase_3_dataset.py --style concise
+    /root/venv/bin/python SFT_adapter_rephrase/data_prep/build_phase_3_dataset.py --style friendly
 
 Phase 2 left three habits in the professional adapter (measured on eval_sets/, see the README of the output folder):
 it changes the case of strings that must be copied (`C:\\Users\\anna` -> `Anna`, `npm install` -> `NPM Install`, a
@@ -59,6 +60,29 @@ less than 10 times each), and misread short key words in short messages, so conc
                                    misspelled by misspell() in a few ways and the target spells it right
   quoted commands                  (v3) the command kind also comes in “curly quotes”, and pnpm commands are added
 
+Friendly gets the three kinds of professional plus two, and a filter: its phase 2 swaps or drops the writer's own
+emoji (`🍕` -> `🎁`, `☕` gone), because almost no training input holds one (1,347 of 2.3M phase-1 rows), and it
+softens negations (`we did not approve` -> "haven't ... yet"), so it also gets
+
+  train/phase_3_emoji.jsonl     short one-paragraph rows with no emoji in input or target; one or two emoji of
+                                emoji_pool() go into the input (at the end, at the start, or after the first sentence,
+                                sometimes in place of its full stop, as people type them) and at the same place in the
+                                target, which gets no other emoji
+  train/phase_3_negation.jsonl  short rows whose input holds a negation that the target keeps (negation_row), unchanged
+
+and, from the second pass on, after the first one still read `tmrw`/`mtg`/`wfh` as letters, softened "not ready"
+to "not ready yet", turned "Ignore" into "Skip" and capitalised a token after "Just a reminder:",
+
+  train/phase_3_chat.jsonl      short messages from FRIENDLY_CHAT (shorthand, firm negations, instructions to keep,
+                                a token of START_KINDS after a lead-in), slots filled from FRIENDLY_SLOTS; written for
+                                this set, none of them an eval_sets/ input (checked at build time)
+  shorthand                     CONCISE_SHORTHAND (wfh, idk, rn, nvm, asap, btw ...) as well
+
+and every base and replay row must pass faithful(): its target adds no feeling the writer did not express
+("Hope you have a great time!"), keeps at least as many negations as the input and adds no "yet". The emoji and "!"
+the friendly targets add on their own are its intended style and stay. No emoji of emoji_pool() appears in
+eval_sets/ (checked at build time).
+
 Every base row comes from final/phase_2/<style> (checked against its manifest first) and is never one of its
 evals, so nothing held out by phase 2 is trained on here. Selection is by SHA-256 of a salt + the input, never by
 order or a random generator: rerunning on the same sources writes byte-identical files. No token of the pool is,
@@ -93,7 +117,11 @@ STYLES = {
     "concise": {"exact_copy": 3600, "numbers": 0, "shorthand": 2200, "typos": 1800, "chat": 1000, "short_typos": 1400,
                 "key_typos": 1150, "word_chat": 1200, "replay": 5600,
                 "heldout": {"exact_copy": 150, "shorthand": 75, "typos": 75, "chat": 50, "short_typos": 50, "key_typos": 50,
-                            "word_chat": 50}},
+                            "word_chat": 50}, "start_repeat": True},
+    "friendly": {"exact_copy": 2400, "numbers": 0, "shorthand": 2000, "typos": 2000, "short_typos": 1400, "key_typos": 1150,
+                 "emoji": 2000, "negation": 1000, "friendly_chat": 1500, "replay": 5000, "start_repeat": True, "start_room": True,
+                 "heldout": {"exact_copy": 150, "shorthand": 50, "typos": 75, "short_typos": 50, "key_typos": 50,
+                             "emoji": 75, "negation": 50, "friendly_chat": 50}},
 }
 PHASE2_REPLAY = 3700
 PHASE1_REPLAY = 3700
@@ -238,6 +266,69 @@ CHAT_SLOTS = {"thing": "invoice contract payment report slides quote budget orde
               "person": ["priya", "the vendor", "my manager", "the landlord", "IT", "the courier", "sam", "the client"],
               "team": "sales legal design HR ops marketing".split(),
               "day": "monday tuesday wednesday thursday friday".split()}
+# friendly's chat rows: (input, target); {person} values read the same in lower case, {tok} is a START_KINDS token
+FRIENDLY_SLOTS = {"thing": CHAT_SLOTS["thing"], "team": CHAT_SLOTS["team"], "day": CHAT_SLOTS["day"],
+                  "person": ["the vendor", "my manager", "the landlord", "the courier", "the client", "the auditor"]}
+FRIENDLY_CHAT = [
+    # firm negations: kept, never turned into a delay with "yet"
+    ("the {thing} is not ready", "The {thing} isn't ready."),
+    ("{person} has not paid the {thing}", "{Person} hasn't paid the {thing}."),
+    ("we have not sent the {thing} and we will not send it before {day}",
+     "We haven't sent the {thing}, and we won't send it before {Day}."),
+    ("{person} did not sign the {thing}", "{Person} didn't sign the {thing}."),
+    ("the {team} team has not approved the {thing}", "The {team} team hasn't approved the {thing}."),
+    ("we did not agree to change the {thing}", "We didn't agree to change the {thing}."),
+    ("the {thing} is not finished and will not be done by {day}", "The {thing} isn't finished, and it won't be done by {Day}."),
+    ("{person} never got the {thing}", "{Person} never got the {thing}."),
+    ("no one has checked the {thing}", "No one has checked the {thing}."),
+    ("dont forward the {thing} to {person}", "Please don't forward the {thing} to {person}."),
+    ("we wont pay for the {thing}", "We won't pay for the {thing}."),
+    ("the {thing} hasnt arrived", "The {thing} hasn't arrived."),
+    ("{person} cant come on {day}", "{Person} can't come on {Day}."),
+    ("the {thing} was not approved by {person}", "The {thing} wasn't approved by {person}."),
+    # instructions: the verb stays
+    ("ignore the old {thing}, use the new one", "Please ignore the old {thing} and use the new one."),
+    ("ignore my last message about the {thing}", "Please ignore my last message about the {thing}."),
+    ("forget the {thing} for now, we can do it on {day}", "Let's forget the {thing} for now; we can do it on {Day}."),
+    ("delete the {thing} draft from the folder", "Could you delete the {thing} draft from the folder?"),
+    ("cancel the {thing} with {person}", "Could you cancel the {thing} with {person}?"),
+    ("stop the {thing} until {day}", "Please stop the {thing} until {Day}."),
+    ("reject the {thing} if {person} has not signed it", "Please reject the {thing} if {person} hasn't signed it."),
+    # a token after a lead-in or opening the text keeps its case
+    ("reminder: {tok} has to be in the {thing} by {day}", "Just a reminder: {tok} has to be in the {thing} by {Day}."),
+    ("fyi {tok} is broken again", "Just a heads-up: {tok} is broken again."),
+    ("{tok} is down since this morning, can u check", "{tok} has been down since this morning. Could you check?"),
+    ("note: {tok} goes in the {thing}", "Quick note: {tok} goes in the {thing}."),
+    ("heads up, {tok} changed for the {team} team", "Heads-up: {tok} changed for the {team} team."),
+    ("pls use {tok} for the {thing}", "Could you please use {tok} for the {thing}?"),
+    ("{tok} needs an update before {day}", "{tok} needs an update before {Day}."),
+    ("update: {tok} is fixed now", "Update: {tok} is fixed now!"),
+    # chat shorthand
+    ("im wfh on {day}, call me if u need the {thing}", "I'm working from home on {Day}, so call me if you need the {thing}."),
+    ("wfh tmrw, {person} has the {thing}", "I'm working from home tomorrow; {person} has the {thing}."),
+    ("nvm about the {thing}, {person} sorted it", "Never mind about the {thing}; {person} sorted it."),
+    ("idk if the {thing} is ready", "I don't know if the {thing} is ready."),
+    ("busy rn, will send the {thing} later", "I'm busy right now, but I'll send the {thing} later."),
+    ("the {team} mtg is on {day}", "The {team} meeting is on {Day}."),
+    ("can we have the {team} mtg tmrw instead", "Can we have the {team} meeting tomorrow instead?"),
+    ("tmrw is fine for the {thing}", "Tomorrow is fine for the {thing}."),
+    ("pls send the {thing} asap", "Could you please send the {thing} as soon as possible?"),
+    ("send me the {thing} b4 the {team} mtg", "Could you send me the {thing} before the {team} meeting?"),
+    ("cant make the {team} mtg tmrw", "I can't make the {team} meeting tomorrow."),
+    ("btw the {thing} is in the {team} folder", "By the way, the {thing} is in the {team} folder."),
+]
+TOKEN_DRAWS = 8                                   # a {tok} template is filled this many times, each with its own token
+# the writer's emoji of friendly's emoji rows; none of them is in eval_sets/ (clean_emoji_pool checks)
+EMOJI = ("😀 😃 😄 😆 😂 🤣 😊 😇 🙂 😉 😍 🤩 😎 🤓 🤔 😬 😮 😲 😭 😤 🤯 🥶 🤗 🤞 ✌️ 👏 🤝 💯 ⭐ 🌟 ✨ 💡 📅 📎 📝 "
+         "📚 🎯 🎈 🎊 🎵 🎤 🎮 ⚽ 🏀 🚲 🚌 🚆 🛫 🌴 🌈 🌙 ⚡ 🍎 🍌 🍓 🍔 🍜 🍣 🍩 🍫 🍷 🍺 🧁 🥂 🐱 🐕 🐦 🦊 🌻 "
+         "🌹 🍁 🎃 🎄 💼 💰 💳 🛒 📱 🔑 🔒 🧹 🧪 ❤️ 💙 💚 💜 🧡 👀 💬 📣").split()
+EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B50\u2B55\u2300-\u23FF]\ufe0f?")
+SENTENCE_END = re.compile(r"(?<=[a-z0-9)])[.!?](?= +[A-Za-z])")
+INVENTED = re.compile(r"\bhope (?:you|it|this|that|everyone)\b[^.!?\n]{0,40}\b(?:great|good|wonderful|fun|lovely|enjoy\w*|works|helps)\b"
+                      r"|\bhave a (?:great|good|wonderful|lovely|fantastic) (?:time|day|one|weekend|evening)\b"
+                      r"|\benjoy\b|\bcan't wait\b|\bexcited\b|\bthrilled\b", re.I)
+NEGATION = re.compile(r"\b(?:not|no|never|nobody|none|nothing|without|cannot|(?:do|did|does|is|are|was|were|have|has|had"
+                      r"|ca|wo|should|would|could)nt)\b|n't\b", re.I)     # casual "dont", "cant", "wont" count too
 NOUN_ONLY = {"meeting"}                           # `mtg` is the noun: only after a determiner, never "meeting people"
 DETERMINER = "(?:" + "|".join(rf"(?<=\b{d} )" for d in "a an the this that our my your next weekly team board".split()) + ")"
 
@@ -325,6 +416,26 @@ def clean_pool(keeps):
     return pool
 
 
+def emoji_pool():
+    return sorted(set(EMOJI))
+
+
+def clean_emoji_pool(eval_inputs):
+    seen = {e.replace("\ufe0f", "") for t in eval_inputs for e in EMOJI_RE.findall(t)}
+    bad = [e for e in emoji_pool() if e.replace("\ufe0f", "") in seen]
+    if bad:
+        raise SystemExit(f"emoji_pool() holds emoji of eval_sets/: {bad}")
+    return emoji_pool()
+
+
+def faithful(r):
+    """False when the target adds a feeling the input does not have, loses a negation, or adds a "yet"."""
+    src, out = r["input"].replace("\u2019", "'"), r["output"].replace("\u2019", "'")
+    return not ((INVENTED.search(out) and not INVENTED.search(src))
+                or len(NEGATION.findall(out)) < len(NEGATION.findall(src))
+                or (re.search(r"\byet\b", out, re.I) and not re.search(r"\byet\b", src, re.I)))
+
+
 def single_link(r):
     """The row's one link when input and target each hold it exactly once and the row is a real rewrite."""
     urls = URL_RE.findall(r["input"])
@@ -355,7 +466,7 @@ def shorthand_pattern(word):
 
 
 def shorthand_words():
-    return {**SHORTHAND, **CONCISE_SHORTHAND} if STYLE == "concise" else SHORTHAND
+    return {**SHORTHAND, **CONCISE_SHORTHAND} if STYLE in ("concise", "friendly") else SHORTHAND
 
 
 def shorthand_row(r, key):
@@ -446,6 +557,28 @@ def chat_rows():
     return rows
 
 
+def friendly_chat_rows(pool, eval_inputs):
+    """Every FRIENDLY_CHAT template with every FRIENDLY_SLOTS combination; {tok} gets a START_KINDS token picked by
+    the filled text and the draw (TOKEN_DRAWS draws). Rows whose input is an eval_sets/ input are refused."""
+    rows = []
+    for t, (inp, out) in enumerate(FRIENDLY_CHAT):
+        names = sorted(set(re.findall(r"{(\w+)}", inp + out.lower())) - {"tok"})
+        combos = [{}]
+        for n in names:
+            combos = [dict(c, **{n: v}) for c in combos for v in FRIENDLY_SLOTS[n]]
+        for c in combos:
+            text = fill(inp, dict(c, tok="{tok}"))
+            for n in range(TOKEN_DRAWS if "{tok}" in inp else 1):
+                key = sha_hex(f"{text}#{n}")
+                token = pick(pool[pick(START_KINDS, key)], key, 8)
+                row = {"row_index": -201 - t, "input": text.replace("{tok}", token), "style": STYLE,
+                       "output": fill(out, dict(c, tok="{tok}")).replace("{tok}", token), "cleanup": "KEEP"}
+                if row["input"].strip() in eval_inputs:
+                    raise SystemExit(f"FRIENDLY_CHAT writes an eval_sets/ input: {row['input']!r}")
+                rows.append(row)
+    return rows
+
+
 def word_chat_rows():
     """TYPO_CHAT with every slot combination and the key word misspelled (the misspelling picked by the filled text)."""
     rows = []
@@ -514,6 +647,44 @@ def number_row(r, key, numbers):
             "output": re.sub(pattern, new, r["output"], count=1), "cleanup": "KEEP"}
 
 
+def emoji_row(r, key, emojis):
+    """One or two of `emojis` put into the input and at the same place in the target: at the end, at the start, or
+    after the first sentence (in the input sometimes in place of its full stop); None unless the row is one short
+    paragraph without emoji whose input and target have the same number of sentences."""
+    src, out = r["input"].strip(), r["output"].strip()
+    if len(src) > 300 or "\n" in src or "\n" in out or EMOJI_RE.search(src + out) or src == out:
+        return None
+    first, second = pick(emojis, key, 8), pick(emojis, key, 16)
+    if second == first:
+        second = emojis[(emojis.index(first) + 1) % len(emojis)]
+    where = pick(("end", "end", "start", "middle", "two", "two"), key)
+    cuts_in, cuts_out = list(SENTENCE_END.finditer(src)), list(SENTENCE_END.finditer(out))
+    if where in ("middle", "two") and not (cuts_in and len(cuts_in) == len(cuts_out)):
+        where = "end"
+    if where == "start":
+        return {"row_index": r["row_index"], "input": f"{first} {src}", "style": STYLE, "output": f"{first} {out}",
+                "cleanup": "KEEP"}
+    if where in ("middle", "two"):
+        a, b = cuts_in[0], cuts_out[0]
+        stop = "" if int(key[2:4], 16) % 2 else src[a.start()]          # people often type the emoji for the full stop
+        src = f"{src[:a.start()]}{stop} {first}{src[a.end():]}"
+        out = f"{out[:b.end()]} {first}{out[b.end():]}"
+        if where == "middle":
+            return {"row_index": r["row_index"], "input": src, "style": STYLE, "output": out, "cleanup": "KEEP"}
+        first = second
+    return {"row_index": r["row_index"], "input": f"{src} {first}", "style": STYLE, "output": f"{out} {first}",
+            "cleanup": "KEEP"}
+
+
+def negation_row(r, key):
+    """The row unchanged when it is one paragraph of at most 300 characters whose input holds a negation and whose
+    target keeps every one of them, with no emoji and no added "yet"; else None."""
+    src, out = r["input"].strip(), r["output"].strip()
+    if len(src) > 300 or "\n" in src or EMOJI_RE.search(src + out) or not NEGATION.search(src.replace("\u2019", "'")):
+        return None
+    return dict(r) if faithful(r) else None
+
+
 def ranked(rows, salt):
     return sorted(rows, key=lambda r: sha_hex(salt + r["input"]))
 
@@ -543,12 +714,13 @@ def build(keeps, eval_inputs, out_root=PHASE3):
     src = PHASE2 / STYLE
     print(verify_manifest.verify(src), flush=True)
     pool = clean_pool(keeps)
+    emojis = clean_emoji_pool(eval_inputs) if cfg.get("emoji") else []
     p2_evals = {r["input"].strip() for f in sorted((src / "evals").glob("*.jsonl")) for r in read_jsonl(f)}
     banned = p2_evals | eval_inputs
 
     def usable(path):
         return [r for r in read_jsonl(path) if r["input"].strip() not in banned and r["input"].strip() != r["output"].strip()
-                and r.get("style") == STYLE and r.get("cleanup", "KEEP") == "KEEP"]
+                and r.get("style") == STYLE and r.get("cleanup", "KEEP") == "KEEP" and (STYLE != "friendly" or faithful(r))]
 
     url_rows = usable(src / "train" / f"phase_2_part_02_{STYLE}.jsonl")
     date_rows = usable(src / "train" / f"phase_2_part_01_{STYLE}.jsonl")
@@ -561,10 +733,13 @@ def build(keeps, eval_inputs, out_root=PHASE3):
     held_first = round(heldout_rows["exact_copy"] * len(first) / len(linked))
     exact, exact_held, exact_bases = make_rows(first, len(first), held_first, f"{SALT}-exact",
                                                lambda r, k: exact_copy_row(r, k, pool))
-    rest = make_rows([r for r in linked if not opens_with_link(r)], exact_rows - len(exact),
+    held_first_inputs = {r["input"] for r in exact_bases}
+    room = (START_REPEAT - 1) * sum(r["input"] not in held_first_inputs for r in first) if cfg.get("start_room") else 0
+    rest = make_rows([r for r in linked if not opens_with_link(r)], exact_rows - len(exact) - room,
                      heldout_rows["exact_copy"] - held_first, f"{SALT}-exact", lambda r, k: exact_copy_row(r, k, pool))
     exact, exact_held, exact_bases = exact + rest[0], exact_held + rest[1], exact_bases + rest[2]
-    if cfg.get("chat"):     # concise: the opening rows again, with start-prone tokens
+    # concise, friendly: the opening rows again, with start-prone tokens (start_room: the other rows leave room for them)
+    if cfg.get("start_repeat"):
         held_inputs = {r["input"] for r in exact_bases}
         for n in range(1, START_REPEAT):
             exact += [start_copy_row(r, sha_hex(f"{SALT}-start{n}" + r["input"]), pool)
@@ -584,30 +759,46 @@ def build(keeps, eval_inputs, out_root=PHASE3):
     typo_base = [r for r in casual + p1_rows if (r["row_index"], r["output"]) not in used_bases]
     typos, typo_held, typo_bases = make_rows(typo_base, typo_rows, heldout_rows["typos"], f"{SALT}-typo", typo_row)
     chat, chat_held, styps, styp_held, styp_bases, ktyps, wchat = [], [], [], [], [], [], []
+    taken = used_bases | {(r["row_index"], r["output"]) for r in typos + typo_bases}
     if cfg.get("chat"):
         chat, chat_held, _ = make_rows(chat_rows(), cfg["chat"], heldout_rows["chat"], f"{SALT}-chat", lambda r, k: r)
-        taken = used_bases | {(r["row_index"], r["output"]) for r in typos + typo_bases}
+    if cfg.get("short_typos"):
         styps, styp_held, styp_bases = make_rows([r for r in typo_base if (r["row_index"], r["output"]) not in taken],
                                                  cfg["short_typos"], heldout_rows["short_typos"], f"{SALT}-styp", short_typo_row)
         taken |= {(r["row_index"], r["output"]) for r in styps + styp_bases}
         ktyps, ktyp_held, ktyp_bases = make_rows([r for r in typo_base if (r["row_index"], r["output"]) not in taken],
                                                  cfg["key_typos"], heldout_rows["key_typos"], f"{SALT}-ktyp", key_typo_row)
+        taken |= {(r["row_index"], r["output"]) for r in ktyps + ktyp_bases}
         styps, styp_held, styp_bases = styps, styp_held + ktyp_held, styp_bases + ktyp_bases
+    if cfg.get("friendly_chat"):
+        chat, chat_held, _ = make_rows(friendly_chat_rows(pool, eval_inputs), cfg["friendly_chat"],
+                                       heldout_rows["friendly_chat"], f"{SALT}-fchat", lambda r, k: r)
+    if cfg.get("word_chat"):
         wchat, wchat_held, _ = make_rows(word_chat_rows(), cfg["word_chat"], heldout_rows["word_chat"], f"{SALT}-wchat",
                                          lambda r, k: r)
         chat, chat_held = chat + wchat, chat_held + wchat_held
+    emo, emo_held, emo_bases, negs, neg_held, neg_bases = [], [], [], [], [], []
+    if cfg.get("emoji"):
+        emo, emo_held, emo_bases = make_rows([r for r in typo_base if (r["row_index"], r["output"]) not in taken],
+                                             cfg["emoji"], heldout_rows["emoji"], f"{SALT}-emoji",
+                                             lambda r, k: emoji_row(r, k, emojis))
+        taken |= {(r["row_index"], r["output"]) for r in emo + emo_bases}
+        negs, neg_held, neg_bases = make_rows([r for r in typo_base if (r["row_index"], r["output"]) not in taken],
+                                              cfg["negation"], heldout_rows["negation"], f"{SALT}-negation", negation_row)
     replay_p2 = replay_p1 = cfg.get("replay", PHASE2_REPLAY)
 
     skip = ({r["input"].strip() for r in exact + nums + short + typos + exact_held + num_held + short_held + typo_held
-             + styps + styp_held + ktyps}
-            | {r["input"].strip() for r in exact_bases + num_bases + short_bases + typo_bases + styp_bases})
+             + styps + styp_held + ktyps + emo + emo_held + negs + neg_held}
+            | {r["input"].strip() for r in exact_bases + num_bases + short_bases + typo_bases + styp_bases + emo_bases
+               + neg_bases})
     p2_replay = [r for r in ranked(date_rows + url_rows + augment, f"{SALT}-p2replay")
                  if r["input"].strip() not in skip][:replay_p2]
     p1_replay = [r for r in ranked(p1_rows, f"{SALT}-p1replay") if r["input"].strip() not in skip][:replay_p1]
     for name, got, wanted in (("exact_copy", exact, exact_rows), ("numbers", nums, number_rows), ("shorthand", short, shorthand_rows),
                               ("typos", typos, typo_rows),
-                              ("chat", chat, cfg.get("chat", 0) + cfg.get("word_chat", 0)), ("short_typos", styps, cfg.get("short_typos", 0)),
+                              ("chat", chat, cfg.get("chat", 0) + cfg.get("word_chat", 0) + cfg.get("friendly_chat", 0)), ("short_typos", styps, cfg.get("short_typos", 0)),
                               ("key_typos", ktyps, cfg.get("key_typos", 0)),
+                              ("emoji", emo, cfg.get("emoji", 0)), ("negation", negs, cfg.get("negation", 0)),
                               ("phase_2_replay", p2_replay, replay_p2), ("phase_1_replay", p1_replay, replay_p1)):
         assert len(got) == wanted, (name, len(got), wanted)
 
@@ -617,11 +808,13 @@ def build(keeps, eval_inputs, out_root=PHASE3):
         files["train/phase_3_numbers.jsonl"] = nums
     files.update({
         "train/phase_3_shorthand.jsonl": short, "train/phase_3_typos.jsonl": typos,
-        **({"train/phase_3_chat.jsonl": chat[:len(chat) - len(wchat)],
-            "train/phase_3_word_chat.jsonl": wchat, "train/phase_3_short_typos.jsonl": styps,
-            "train/phase_3_key_typos.jsonl": ktyps} if chat else {}),
+        **({"train/phase_3_chat.jsonl": chat[:len(chat) - len(wchat)]} if chat else {}),
+        **({"train/phase_3_word_chat.jsonl": wchat} if wchat else {}),
+        **({"train/phase_3_short_typos.jsonl": styps, "train/phase_3_key_typos.jsonl": ktyps} if styps else {}),
+        **({"train/phase_3_emoji.jsonl": emo, "train/phase_3_negation.jsonl": negs} if emo else {}),
         "train/phase_2_replay.jsonl": p2_replay, "train/phase_1_replay.jsonl": p1_replay,
-        "evals/phase_3_heldout.jsonl": exact_held + num_held + short_held + typo_held + chat_held + styp_held,
+        "evals/phase_3_heldout.jsonl": exact_held + num_held + short_held + typo_held + chat_held + styp_held
+                                       + emo_held + neg_held,
         "evals/phase_2_heldout.jsonl": read_jsonl(src / "evals" / "phase_2_heldout.jsonl"),
         "evals/phase_1_eval.jsonl": read_jsonl(src / "evals" / "phase_1_eval.jsonl"),
     })
@@ -639,8 +832,10 @@ def build(keeps, eval_inputs, out_root=PHASE3):
         "eval_files": {n: entry(n) for n in files if n.startswith("evals/")},
         "counts": {"phase_3_exact_copy": len(exact), **({"phase_3_numbers": len(nums)} if number_rows else {}),
                    "phase_3_shorthand": len(short), "phase_3_typos": len(typos),
-                   **({"phase_3_chat": len(chat) - len(wchat), "phase_3_word_chat": len(wchat), "phase_3_short_typos": len(styps),
-                       "phase_3_key_typos": len(ktyps)} if chat else {}),
+                   **({"phase_3_chat": len(chat) - len(wchat)} if chat else {}),
+                   **({"phase_3_word_chat": len(wchat)} if wchat else {}),
+                   **({"phase_3_short_typos": len(styps), "phase_3_key_typos": len(ktyps)} if styps else {}),
+                   **({"phase_3_emoji": len(emo), "phase_3_negation": len(negs)} if emo else {}),
                    "phase_2_replay": len(p2_replay), "phase_1_replay": len(p1_replay),
                    "phase_3_heldout": len(files["evals/phase_3_heldout.jsonl"]),
                    "phase_2_heldout": len(files["evals/phase_2_heldout.jsonl"]),
@@ -661,15 +856,27 @@ def build(keeps, eval_inputs, out_root=PHASE3):
                      "has get a hard misspelling (an inner vowel dropped, last letter dropped or two letters swapped) "
                      "with wordfreq zipf 0 (not a word).",
             **({"chat": f"{len(CONCISE_CHAT)} CONCISE_CHAT templates x CHAT_SLOTS combinations, ranked by "
-                        f"sha256('{SALT}-chat' + input)",
-                "short_typos": "rows not used above of at most 25 words; 1-2 lowercase words of 4+ letters the target "
-                               "also has get a hard misspelling (as typos)",
-                "word_chat": f"{len(TYPO_CHAT)} TYPO_CHAT templates x CHAT_SLOTS, key word misspelled by misspell(), "
-                             f"ranked by sha256('{SALT}-wchat' + input)",
-                "key_typos": "rows not used above of at most 40 words; one KEY_WORDS word the target also has gets a hard "
-                             "misspelling",
-                "start_repeat": f"rows opening with their link are used {START_REPEAT} times, the extra times with a "
-                                f"token of {START_KINDS}"} if chat else {}),
+                        f"sha256('{SALT}-chat' + input)"} if cfg.get("chat") else {}),
+            **({"chat": f"{len(FRIENDLY_CHAT)} FRIENDLY_CHAT templates x FRIENDLY_SLOTS combinations ({{tok}}: a "
+                        f"START_KINDS token picked by the text's hash), ranked by sha256('{SALT}-fchat' + input)"}
+               if cfg.get("friendly_chat") else {}),
+            **({"short_typos": "rows not used above of at most 25 words; 1-2 lowercase words of 4+ letters the target "
+                               "also has get a hard misspelling (as typos)"} if styps else {}),
+            **({"word_chat": f"{len(TYPO_CHAT)} TYPO_CHAT templates x CHAT_SLOTS, key word misspelled by misspell(), "
+                             f"ranked by sha256('{SALT}-wchat' + input)"} if wchat else {}),
+            **({"key_typos": "rows not used above of at most 40 words; one KEY_WORDS word the target also has gets a hard "
+                             "misspelling"} if ktyps else {}),
+            **({"start_repeat": f"rows opening with their link are used {START_REPEAT} times, the extra times with a "
+                                f"token of {START_KINDS}"} if cfg.get("start_repeat") else {}),
+            **({"emoji": "rows not used above, phase-1 replay included, of one paragraph up to 300 characters with no "
+                         "emoji in input or target; one or two emoji of emoji_pool() picked by the row's hash go at the "
+                         "end, at the start, or after the first sentence (when input and target have the same number of "
+                         "sentences) of both; in the input the full stop before the emoji is dropped in about half of "
+                         "those rows.",
+                "negation": "rows not used above, phase-1 replay included, that negation_row() accepts, unchanged.",
+                "faithful": "friendly only: every base and replay row passes faithful(): the target adds no feeling the "
+                            "input does not have (INVENTED), keeps at least as many negations (NEGATION) and adds no "
+                            "'yet'."} if emo else {}),
             "phase_2_replay": f"the first {replay_p2} rows of both phase-2 parts and the augment file by "
                               f"sha256('{SALT}-p2replay' + input), new-row inputs and the bases of held-out rows excluded.",
             "phase_1_replay": f"the first {replay_p1} rows of the phase-2 folder's phase_1_dataset.jsonl by "
@@ -678,6 +885,7 @@ def build(keeps, eval_inputs, out_root=PHASE3):
         },
         "token_pool": {kind: len(tokens) for kind, tokens in pool.items()},
         **({"number_pool": len(number_pool())} if number_rows else {}),
+        **({"emoji_pool": len(emojis)} if emo else {}),
         "sources": {"phase_2_manifest_sha256": verify_manifest.file_sha256(src / "manifest.json"),
                     "eval_sets_keep_strings_checked": len(keeps)},
     }
