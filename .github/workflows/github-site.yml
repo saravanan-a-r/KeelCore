@@ -28,6 +28,13 @@ jobs:
         run: |
           mkdir _site
           cp -r github_site/index.html github_site/privacy.html github_site/echomebetter.html github_site/404.html github_site/favicon.svg github_site/.nojekyll github_site/assets _site/
+      - name: Check the Add to Chrome links
+        run: |
+          if grep -n "chromewebstore.google.com/search" _site/*.html; then
+            echo "::error::An Add to Chrome link points at a store search, not the EchoMeBetter listing"
+            exit 1
+          fi
+          test "$(grep -c 'chromewebstore.google.com/detail/echomebetter/ngmjdbmigpaoljglgknnedkklhfjfakl' _site/echomebetter.html)" -ge 3
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
