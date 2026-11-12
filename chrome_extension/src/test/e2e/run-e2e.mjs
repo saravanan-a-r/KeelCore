@@ -781,10 +781,43 @@ try {
   check(await downloadButton.isVisible(), 'popup offers the download again');
 
   await strictCspPageScenario(context);
+  await modalDialogPageScenario(context);
   console.log('E2E passed');
 } finally {
   await context.close();
   rmSync(profile, { recursive: true, force: true });
+}
+
+/**
+ * Puts dist/foreground.js on `page` with a stand-in `chrome.runtime` whose job
+ * port answers like the service worker does. Jobs whose id is in `watched`
+ * stream a partial rewrite first (live preview on), so their finished rewrite
+ * waits for Replace or Discard.
+ */
+async function injectForeground(page, watched) {
+  await page.evaluate((watchedJobs) => {
+    globalThis.chrome = {
+      runtime: {
+        id: 'e2e',
+        connect() {
+          const listeners = [];
+          return {
+            postMessage(message) {
+              if (message.kind !== 'job/request') return;
+              setTimeout(() => listeners.forEach((l) => l({ kind: 'job/phase', jobId: message.jobId, phase: 'rewriting' })), 50);
+              if (watchedJobs.includes(message.jobId)) setTimeout(() => listeners.forEach((l) => l({ kind: 'job/partial', jobId: message.jobId, text: 'Please fix' })), 200);
+              setTimeout(() => listeners.forEach((l) => l({ kind: 'job/done', jobId: message.jobId, text: 'Please fix this sentence for me. Thanks!' })), 400);
+            },
+            disconnect() {},
+            onMessage: { addListener: (listener) => listeners.push(listener) },
+            onDisconnect: { addListener() {} },
+          };
+        },
+        onMessage: { addListener: (listener) => (globalThis.__echoDeliver = listener) },
+      },
+    };
+  }, watched);
+  await page.evaluate(readFileSync(join(dist, 'foreground.js'), 'utf8'));
 }
 
 /**
@@ -810,30 +843,8 @@ async function strictCspPageScenario(context) {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
 
-  await page.evaluate(() => {
-    globalThis.chrome = {
-      runtime: {
-        id: 'e2e',
-        connect() {
-          const listeners = [];
-          return {
-            postMessage(message) {
-              if (message.kind !== 'job/request') return;
-              setTimeout(() => listeners.forEach((l) => l({ kind: 'job/phase', jobId: message.jobId, phase: 'rewriting' })), 50);
-              // The second job is watched as it is written (live preview on); the first is not.
-              if (message.jobId === 'csp-2') setTimeout(() => listeners.forEach((l) => l({ kind: 'job/partial', jobId: message.jobId, text: 'Please fix' })), 200);
-              setTimeout(() => listeners.forEach((l) => l({ kind: 'job/done', jobId: message.jobId, text: 'Please fix this sentence for me. Thanks!' })), 400);
-            },
-            disconnect() {},
-            onMessage: { addListener: (listener) => listeners.push(listener) },
-            onDisconnect: { addListener() {} },
-          };
-        },
-        onMessage: { addListener: (listener) => (globalThis.__echoDeliver = listener) },
-      },
-    };
-  });
-  await page.evaluate(readFileSync(join(dist, 'foreground.js'), 'utf8'));
+  // The second job is watched as it is written (live preview on); the first is not.
+  await injectForeground(page, ['csp-2']);
 
   await page.evaluate(() => {
     const editor = document.getElementById('editor');
@@ -884,6 +895,74 @@ async function strictCspPageScenario(context) {
     }),
     'Enter replaced the text in the contenteditable editor without adding a line break',
   );
+  check(errors.length === 0, `no page errors${errors.length ? `: ${errors.join(' | ')}` : ''}`);
+  await page.close();
+}
+
+/**
+ * A page that composes in a modal <dialog> (LinkedIn's "Start a post" box is
+ * one). The browser makes everything outside an open modal dialog inert, so an
+ * overlay left on the document would show its Replace and Discard buttons but
+ * never receive a click. Real mouse clicks on both buttons are the proof.
+ */
+async function modalDialogPageScenario(context) {
+  console.log('modal dialog page:');
+  const page = await context.newPage();
+  await page.route('https://echomebetter.test/**', (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<!doctype html><html><body><button id="open">Start a post</button><dialog id="composer"><div id="editor" contenteditable="true" style="min-width:420px;min-height:120px">please   fix this sentense for me thanks</div></dialog></body></html>',
+    }),
+  );
+  await page.goto('https://echomebetter.test/feed');
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await injectForeground(page, ['modal-1', 'modal-2']);
+  await page.evaluate(() => document.getElementById('composer').showModal());
+
+  const start = async (jobId) => {
+    await page.evaluate(() => {
+      const editor = document.getElementById('editor');
+      editor.focus();
+      const range = document.createRange();
+      range.selectNodeContents(editor);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+    });
+    await page.evaluate((id) => new Promise((resolve) => globalThis.__echoDeliver({ kind: 'echo/start-job', jobId: id, style: 'grammar' }, {}, resolve)), jobId);
+    await page.locator('echomebetter-overlay').getByRole('button', { name: 'Replace' }).waitFor({ timeout: 5000 });
+  };
+  const original = 'please   fix this sentense for me thanks';
+  const editorText = () => page.evaluate(() => document.getElementById('editor').textContent);
+
+  await start('modal-1');
+  check(await page.evaluate(() => document.querySelector('echomebetter-overlay').parentElement.id === 'composer'), 'the overlay sits inside the open modal dialog');
+  await page.locator('echomebetter-overlay').getByRole('button', { name: 'Discard' }).click({ timeout: 5000 });
+  await page.locator('echomebetter-overlay').getByRole('button', { name: 'Discard' }).waitFor({ state: 'detached', timeout: 5000 });
+  check((await editorText()) === original, 'a mouse click on Discard worked in the modal dialog and left the text alone');
+
+  await start('modal-2');
+  await page.locator('echomebetter-overlay').getByRole('button', { name: 'Replace' }).click({ timeout: 5000 });
+  await page.waitForFunction(() => document.getElementById('editor').textContent.startsWith('Please fix'), null, { timeout: 5000 });
+  check((await editorText()) === 'Please fix this sentence for me. Thanks!', 'a mouse click on Replace worked in the modal dialog and replaced the text');
+
+  // With the dialog closed the overlay is back on the document.
+  await page.evaluate(() => document.getElementById('composer').close());
+  await page.evaluate(() => {
+    const open = document.createElement('div');
+    open.id = 'plain';
+    open.contentEditable = 'true';
+    open.textContent = 'please   fix this sentense for me thanks';
+    document.body.append(open);
+    open.focus();
+    const range = document.createRange();
+    range.selectNodeContents(open);
+    getSelection().removeAllRanges();
+    getSelection().addRange(range);
+  });
+  await page.evaluate(() => new Promise((resolve) => globalThis.__echoDeliver({ kind: 'echo/start-job', jobId: 'plain-1', style: 'grammar' }, {}, resolve)));
+  await page.waitForFunction(() => document.getElementById('plain').textContent.startsWith('Please fix'), null, { timeout: 5000 });
+  check(await page.evaluate(() => document.querySelector('echomebetter-overlay').parentElement === document.documentElement), 'once the dialog is closed the overlay is back on the document');
   check(errors.length === 0, `no page errors${errors.length ? `: ${errors.join(' | ')}` : ''}`);
   await page.close();
 }
