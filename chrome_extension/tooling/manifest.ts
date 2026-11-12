@@ -6,7 +6,10 @@ export function createManifest(version: string): chrome.runtime.ManifestV3 {
   const icons = { 16: 'icons/icon-16.png', 32: 'icons/icon-32.png', 48: 'icons/icon-48.png', 128: 'icons/icon-128.png' };
   return {
     manifest_version: 3,
-    name: 'EchoMeBetter',
+    // The Store listing's title and the name on chrome://extensions: the brand, then what it is (75 characters at most).
+    name: 'EchoMeBetter - Private AI Writing Assistant',
+    // Where the full name does not fit (12 characters at most).
+    short_name: 'EchoMeBetter',
     version,
     description:
       'Rewrite selected text in any text box: professional, grammar, friendly, concise or elaborate. Runs entirely on your device.',
