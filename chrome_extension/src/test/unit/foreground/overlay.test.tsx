@@ -251,6 +251,28 @@ describe('overlay', () => {
     overlay.unmount();
   });
 
+  test('the host sits inside the open modal dialog (outside it everything is inert) and returns to the document when none is open', () => {
+    // jsdom has no :modal, so the page's modal dialogs are stood in for.
+    const dialog = document.createElement('dialog');
+    document.body.append(dialog);
+    const modals: Element[] = [dialog];
+    const find = document.querySelectorAll.bind(document);
+    const spy = jest.spyOn(document, 'querySelectorAll').mockImplementation(((selector: string) =>
+      selector === 'dialog:modal' ? Object.assign(modals.slice(), { item: (i: number) => modals[i] ?? null }) : find(selector)) as typeof document.querySelectorAll);
+
+    const overlay = mountOverlay(document);
+    expect(overlay.host.parentNode).toBe(dialog);
+
+    // The dialog closes; the next job puts the overlay back on the document.
+    modals.length = 0;
+    act(() => overlay.store.startWorking({ style: 'concise', phase: 'rewriting', origin: { x: 0, y: 0 }, anchor: { top: 0, left: 0, bottom: 0, right: 0 } }));
+    expect(overlay.host.parentNode).toBe(document.documentElement);
+
+    spy.mockRestore();
+    act(() => overlay.unmount());
+    dialog.remove();
+  });
+
   test('the busy pointer leaves no trace on the page afterwards', () => {
     const before = document.documentElement.outerHTML;
     setBusyCursor(document, true);

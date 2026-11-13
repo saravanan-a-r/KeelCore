@@ -1,6 +1,6 @@
 {
   "name": "echomebetter-chrome-extension",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "description": "Rewrite selected text in any text box: professional, grammar, friendly, concise or elaborate. Runs entirely on your device.",
   "scripts": {

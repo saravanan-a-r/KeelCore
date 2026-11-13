@@ -13,6 +13,10 @@
  *   - Stacking: the host is a manual popover, i.e. in the browser's top
  *     layer. No page z-index, `overflow: hidden` or transformed ancestor can
  *     hide or offset it.
+ *   - Modal dialogs: while a page has a modal `<dialog>` open (LinkedIn's post
+ *     box, many compose windows), the browser makes everything outside it inert
+ *     -- unclickable, even in the top layer. So the host is placed inside the
+ *     topmost open modal dialog, and back on the document when there is none.
  *   - Events: clicks and keys inside the overlay are stopped at its root so
  *     page "click outside" handlers (closing a compose window, a menu) never
  *     see them.
@@ -54,7 +58,23 @@ const HOST_STYLES: Record<string, string> = {
 /** Events that must not reach the page's own listeners. */
 const CONTAINED_EVENTS = ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu', 'keydown', 'keyup', 'focusin', 'focusout'];
 
+/** The topmost open modal dialog of the page, or null. */
+function openModalDialog(doc: Document): Element | null {
+  try {
+    const dialogs = doc.querySelectorAll('dialog:modal');
+    return dialogs.item(dialogs.length - 1);
+  } catch {
+    // An engine without :modal (a test environment) has no modal dialogs either.
+    return null;
+  }
+}
+
 function showInTopLayer(host: HTMLElement): void {
+  // Inert outside a modal dialog: sit inside it, or on the document when none is open.
+  // Moving the host takes it out of the top layer, and it is shown again below.
+  const doc = host.ownerDocument;
+  const parent = openModalDialog(doc) ?? doc.documentElement;
+  if (host.parentNode !== parent) parent.appendChild(host);
   // The popover API is in every Chrome the extension supports (116+);
   // the check only keeps non-browser test environments working.
   if (typeof host.showPopover !== 'function') return;
@@ -72,7 +92,6 @@ export function mountOverlay(doc: Document = document): Overlay {
   const container = doc.createElement('div');
   container.className = 'echomebetter-root';
   shadow.append(container);
-  doc.documentElement.appendChild(host);
   showInTopLayer(host);
 
   const store = new OverlayStore();
