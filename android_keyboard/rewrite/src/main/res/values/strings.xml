@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Everything the rewrite feature says, in the keyboard and in the settings app. -->
+<resources>
+    <!-- Styles -->
+    <string name="style_grammar">Grammar</string>
+    <string name="style_grammar_hint">Fix spelling and grammar only</string>
+    <string name="style_professional">Professional</string>
+    <string name="style_professional_hint">Polished and workplace-ready</string>
+    <string name="style_friendly">Friendly</string>
+    <string name="style_friendly_hint">Warm and approachable</string>
+    <string name="style_concise">Concise</string>
+    <string name="style_concise_hint">Shorter, same meaning</string>
+    <string name="style_elaborate">Elaborate</string>
+    <string name="style_elaborate_hint">Fuller, with more detail</string>
+
+    <!-- Keyboard: the rewrite strip above the keys -->
+    <string name="strip_rewrite">Rewrite</string>
+    <string name="strip_set_up">Set up Rewrite</string>
+    <string name="strip_style_description">Style: %1$s. Choose another style.</string>
+    <string name="strip_loading">Loading the writing model…</string>
+    <string name="strip_writing">Rewriting…</string>
+    <string name="strip_done">Rewritten</string>
+    <string name="strip_unchanged">Looks good already</string>
+    <string name="strip_cancel">Cancel</string>
+    <string name="strip_undo">Undo</string>
+    <string name="strip_dismiss">Dismiss</string>
+
+    <!-- Keyboard: the style panel (in place of the keys) -->
+    <string name="panel_title">Rewrite style</string>
+    <string name="panel_back">Back to the keyboard</string>
+    <string name="panel_tag_free">Free</string>
+    <string name="panel_tag_get">Download</string>
+    <string name="panel_tag_locked">Unlock</string>
+    <string name="panel_tag_selected">Selected</string>
+
+    <!-- Keyboard: messages -->
+    <string name="message_nothing_to_rewrite">Type or select some text first</string>
+    <string name="message_too_long">Select up to %1$s characters to rewrite</string>
+    <string name="message_input_too_long">This text is too long. Select a part of it.</string>
+    <string name="message_output_too_long">The rewrite ran too long. Try a shorter part.</string>
+    <string name="message_empty_result">Couldn\'t rewrite this. Try different wording.</string>
+    <string name="message_reserved_markup">This text contains markup the model can\'t take</string>
+    <string name="message_text_changed">The text changed. Tap Rewrite again.</string>
+    <string name="message_unsupported_field">This app doesn\'t allow rewriting here</string>
+    <string name="message_load_failed">Couldn\'t load the writing model. Close some apps and try again.</string>
+    <string name="message_style_not_installed">Download %1$s in Settings first</string>
+
+    <!-- Settings: the Rewrite screen -->
+    <string name="settings_title">Rewrite</string>
+    <string name="settings_summary">Rewrite what you type, on your phone</string>
+    <string name="settings_intro">Tap Rewrite above the keys to rewrite what you typed: the selection, or the whole text. The writing model runs on your phone, so your words never leave it.</string>
+    <string name="settings_model_title">Writing model</string>
+    <string name="settings_model_body">%1$s, once. It includes the Grammar style. Best on Wi-Fi.</string>
+    <string name="settings_model_body_unknown">About 0.9 GB, once. It includes the Grammar style. Best on Wi-Fi.</string>
+    <string name="settings_model_download">Download</string>
+    <string name="settings_model_ready">Ready. Rewriting works offline.</string>
+    <string name="settings_license_consent">I agree to the Thelivu License</string>
+    <string name="settings_license_read">Read the license</string>
+    <string name="settings_memory_too_low">This phone has %1$s of memory. The writing model needs at least %2$s.</string>
+    <string name="settings_downloading">Downloading · %1$s of %2$s</string>
+    <string name="settings_waiting_wifi">Waiting for Wi-Fi…</string>
+    <string name="settings_queued">Waiting to start…</string>
+    <string name="settings_cancel">Cancel</string>
+    <string name="settings_retry">Try again</string>
+    <string name="settings_error_network">The download stopped: no connection to Hugging Face.</string>
+    <string name="settings_error_integrity">A file arrived damaged and was discarded.</string>
+    <string name="settings_error_storage">Not enough free space: %1$s more is needed.</string>
+    <string name="settings_error_base_changed">A newer model is out. Download the model again first.</string>
+    <string name="settings_error_no_adapter">This style isn\'t published yet.</string>
+    <string name="settings_error_unknown">The download failed.</string>
+    <string name="settings_metered_title">You\'re on mobile data</string>
+    <string name="settings_metered_body">The download is %1$s. Download now on mobile data, or wait for Wi-Fi?</string>
+    <string name="settings_metered_use_data">Use mobile data</string>
+    <string name="settings_metered_wait">Wait for Wi-Fi</string>
+    <string name="settings_styles_title">Styles</string>
+    <string name="settings_styles_free">Free</string>
+    <string name="settings_styles_included">Included</string>
+    <string name="settings_styles_download">Download · %1$s</string>
+    <string name="settings_styles_remove">Remove</string>
+    <string name="settings_unlock_title">Unlock 4 more styles</string>
+    <string name="settings_unlock_body">Professional, Friendly, Concise and Elaborate. One payment of $10, no subscription.</string>
+    <string name="settings_unlock_soon">Coming soon</string>
+    <string name="settings_unlocked_debug">Development build: every style is unlocked.</string>
+    <string name="settings_storage_title">Storage</string>
+    <string name="settings_storage_used">The writing model uses %1$s.</string>
+    <string name="settings_storage_none">Nothing downloaded yet.</string>
+    <string name="settings_storage_remove_all">Remove the writing model</string>
+    <string name="settings_storage_confirm_title">Remove the writing model?</string>
+    <string name="settings_storage_confirm_body">Rewrite stops working until you download it again. Typing still works.</string>
+    <string name="settings_storage_confirm">Remove</string>
+    <string name="settings_keep">Keep</string>
+    <string name="settings_privacy">Your text is rewritten on this phone and never sent anywhere. The app connects to the internet only to download the model.</string>
+
+    <!-- Setup: the extra step -->
+    <string name="setup_step_title">Set up Rewrite</string>
+    <string name="setup_step_body">Download the writing model to rewrite what you type in one tap. You can also do this later in Settings.</string>
+    <string name="setup_step_open">Open Rewrite settings</string>
+
+    <!-- Download notification -->
+    <string name="notification_channel">Model downloads</string>
+    <string name="notification_title">Downloading the writing model</string>
+    <string name="notification_progress">%1$s of %2$s</string>
+</resources>

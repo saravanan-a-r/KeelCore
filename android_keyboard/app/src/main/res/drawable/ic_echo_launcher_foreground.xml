@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The extension logo's mark (chrome_extension/src/ui/brand/Logo.tsx), centred in the adaptive icon's safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="1.25"
+        android:scaleY="1.25"
+        android:translateX="10.25"
+        android:translateY="18.4">
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M15,32 A5,5 0 1 1 25,32 A5,5 0 1 1 15,32 Z" />
+        <path
+            android:pathData="M27.7,22.8 A12,12 0 0 1 27.7,41.2"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="round"
+            android:strokeWidth="4.5" />
+        <path
+            android:pathData="M33.5,15.9 A21,21 0 0 1 33.5,48.1"
+            android:strokeAlpha="0.85"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="round"
+            android:strokeWidth="4.5" />
+        <path
+            android:fillColor="@color/better_50"
+            android:pathData="M48,9 C48.6,13.6 50.4,15.4 55,16 C50.4,16.6 48.6,18.4 48,23 C47.4,18.4 45.6,16.6 41,16 C45.6,15.4 47.4,13.6 48,9 Z" />
+    </group>
+</vector>

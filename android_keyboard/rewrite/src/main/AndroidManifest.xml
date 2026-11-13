@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Only to download the model from Hugging Face; rewriting itself never uses the network. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- The model download runs as a foreground data-sync job with a progress notification. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <application>
+        <!-- onnxruntime-android starts Microsoft's telemetry client at app launch through this provider (a device id,
+             locale and time zone, sent over HTTP). The keyboard promises that nothing leaves the phone except the
+             model download, so the provider is removed here and telemetry is also switched off in the runtime
+             (OnnxSessions). -->
+        <provider
+            android:name="ai.onnxruntime.TelemetryInitializer"
+            android:authorities="${applicationId}.onnxruntime_telemetry_initializer"
+            tools:node="remove" />
+
+        <!-- WorkManager's foreground service, declared with the type the model download needs on Android 14+. -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+    </application>
+</manifest>

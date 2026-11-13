@@ -1,0 +1,61 @@
+EchoMeBetter Keyboard: a fork of FlorisBoard
+============================================
+
+Upstream:   https://github.com/florisboard/florisboard
+Base:       v0.5.2 (tag, commit 2e82060251897226c0739b9f52d1d051b02305fb)
+License:    Apache License 2.0 (LICENSE). FlorisBoard's name and logo are not used for this app; the About screen
+            credits FlorisBoard as the project this keyboard is based on.
+
+What this fork adds
+-------------------
+On-device rewriting with the Thelivu model: the Rewrite strip in the Smartbar (where word suggestions go, whenever
+there are none), the style panel in the keyboard's place, and Settings -> Rewrite (model download, styles, storage).
+
+  engine/       Thelivu rewrite engine (port of chrome_extension/src/engine). Plain JVM.
+  modelstore/   model.json catalogue, verified resumable downloads, install store. Plain JVM.
+  rewrite/      the Android side: model repository and download worker, engine host, field editor, controller.
+  app/src/main/kotlin/com/echomebetter/keyboard/
+                the keyboard UI glue: ImeRewriteSession, ui/RewriteStrip, ui/RewriteStylePanel,
+                settings/RewriteSettingsScreen.
+
+Changes to FlorisBoard's own files (each marked "EchoMeBetter" in the code)
+---------------------------------------------------------------------------
+  settings.gradle.kts         include :engine, :modelstore, :rewrite; :lib:native removed.
+  gradle/libs.versions.toml   jetpref 20251119T222500Z-SNAPSHOT -> 0.3.0-rc01 (the snapshot is no longer published;
+                              0.3.0-rc01 is the release FlorisBoard itself moved to); rewrite dependencies added.
+  gradle.properties           this app's own version.
+  app/build.gradle.kts        applicationId com.echomebetter.keyboard, app name and icon, English resources only,
+                              64-bit ABIs only, REWRITE_* build config, :rewrite dependency; :lib:native and the NDK
+                              removed.
+  FlorisApplication.kt        hosts the rewrite feature (RewriteHost, rewriteSession); the dummy native-library
+                              load and call removed.
+  FlorisImeService.kt         ImeUiMode.REWRITE shows the style panel; a finished field resets the rewrite.
+  ime/ImeUiMode.kt            REWRITE mode.
+  ime/keyboard/KeyboardManager.kt   key input and swiped words report typing (it ends Undo).
+  ime/smartbar/Smartbar.kt    the suggestion area shows the Rewrite strip when there are no suggestions.
+  app/Routes.kt, app/settings/HomeScreen.kt, app/setup/SetupScreen.kt   Settings -> Rewrite, first on Home, and the
+                              setup ends there.
+  app/src/main/res/values/strings.xml, strings_dont_translate.xml   the app's name and links instead of FlorisBoard's.
+  app/src/main/res: ic_echo_launcher*, echomebetter_colors.xml   the app icon.
+
+Removed from the upstream tree: lib/native and libnative (a placeholder Rust library with one dummy function),
+benchmark, fastlane (FlorisBoard's store listing), utils, .github, crowdin.yml and upstream's Markdown documents.
+
+Known upstream state
+--------------------
+  - Latin word suggestions and autocorrect are not implemented in v0.5.2 (LatinLanguageProvider returns none).
+    Glide typing works from the bundled word list.
+  - lib/snygg's unit tests do not compile at v0.5.2 (SnyggThemeTest imports org.florisboard.lib.color.schemes,
+    which is not in the tree). Run the other modules' tests; the rewrite feature does not touch lib/snygg.
+
+Privacy
+-------
+onnxruntime-android 1.31.1 starts Microsoft's telemetry client at app launch through a content provider. The
+rewrite module removes that provider from the merged manifest and the engine calls OrtEnvironment.setTelemetry(false).
+Check both again after any onnxruntime upgrade.
+
+Updating to a newer FlorisBoard
+-------------------------------
+Apply the upstream changes between the base tag and the new one, then re-check each file listed above (the
+"EchoMeBetter" markers show every change). Build with ./gradlew :app:assembleDebug and run the tests:
+./gradlew :engine:test :modelstore:test :rewrite:testDebugUnitTest :app:testDebugUnitTest

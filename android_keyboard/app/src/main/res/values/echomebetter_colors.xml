@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- EchoMeBetter: brand colours for the app icon (chrome_extension/src/design/tokens.json). -->
+<resources>
+    <color name="echo_500">#7650FF</color>
+    <color name="iris_500">#5B6CFF</color>
+    <color name="better_400">#2DD4BF</color>
+    <color name="better_50">#E6FFFA</color>
+</resources>
